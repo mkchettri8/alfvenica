@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Alfvenica">
+  <rect width="64" height="64" rx="13" fill="#16324a"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#74aeb5" stroke-width="2.5"/>
+  <path d="M20 42 31.5 17 44 42M25 32h14" fill="none" stroke="#f7fafb" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="48" cy="22" r="3.2" fill="#0e7c86"/>
+</svg>

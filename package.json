@@ -1,0 +1,16 @@
+{
+  "name": "alfvenica",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Validated, unit-explicit toolkit for space and astrophysical plasma physics.",
+  "homepage": "https://alfvenica.org/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mkchettri8/alfvenica.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/physics.test.js && node tests/plots.test.js && node tests/site.test.js",
+    "build:standalone": "node build-standalone.js"
+  }
+}

@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and numerical validation.">
+  <meta name="author" content="Mani K Chettri">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#f6f8f9">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="site.webmanifest">
+  <meta property="og:site_name" content="Alfvenica">
+  <meta property="og:image" content="https://alfvenica.org/assets/social-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://alfvenica.org/">
+  <meta property="og:title" content="Alfvenica — Space Plasma Toolkit">
+  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and numerical validation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://alfvenica.org/">
+  <title>Alfvenica — Space Plasma Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="plasma-physics.js" defer></script>
+  <script src="formula-registry.js" defer></script>
+  <script src="plot-registry.js" defer></script>
+  <script src="formula-insights.js" defer></script>
+  <script src="validation.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <button class="brand" id="brandButton" type="button" aria-label="Open calculator home">
+        <span class="brand-name">Alfvenica</span>
+        <span class="brand-subtitle">Space Plasma Toolkit</span>
+      </button>
+      <nav class="top-nav" aria-label="Primary">
+        <button class="nav-button active" type="button" data-view="calculator">Calculator</button>
+        <button class="nav-button" type="button" data-view="plots">Plots</button>
+        <button class="nav-button" type="button" data-view="examples">Examples</button>
+        <button class="nav-button" type="button" data-view="validation">Validation</button>
+        <button class="nav-button" type="button" data-view="about">About</button>
+      </nav>
+      <div class="header-controls">
+        <label class="control-label" for="unitSystem">Units</label>
+        <select id="unitSystem" class="compact-select" aria-label="Unit system">
+          <option value="space">Space</option>
+          <option value="si">SI</option>
+          <option value="cgs">CGS</option>
+        </select>
+        <button id="themeToggle" class="text-button" type="button">Dark mode</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="calculatorView" class="view active" aria-labelledby="calculatorHeading">
+      <div class="intro-band">
+        <div>
+          <p class="eyebrow">Unit-explicit scientific calculator</p>
+          <h1 id="calculatorHeading">Space-plasma parameters, with assumptions visible.</h1>
+          <p>Search a formula, enter the plasma state, and inspect the calculation, units, scope, and source in one place.</p>
+        </div>
+      </div>
+
+      <div class="calculator-shell">
+        <aside class="formula-browser" aria-label="Formula browser">
+          <div class="browser-sticky">
+            <label for="formulaSearch" class="field-label">Search formulas</label>
+            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, KAW, collision" autocomplete="off">
+            <label for="categorySelect" class="field-label mobile-category-label">Category</label>
+            <select id="categorySelect" class="category-select" aria-label="Formula category"></select>
+            <nav id="categoryNav" class="category-nav" aria-label="Formula categories"></nav>
+          </div>
+          <div id="formulaList" class="formula-list" role="listbox" aria-label="Available formulas"></div>
+        </aside>
+
+        <article class="formula-detail" aria-live="polite">
+          <div id="formulaEmpty" class="empty-state" hidden>
+            <h2>No formula found</h2>
+            <p>Try a broader search term or choose another category.</p>
+          </div>
+          <div id="formulaContent">
+            <header class="formula-header">
+              <p id="formulaCategory" class="eyebrow"></p>
+              <h2 id="formulaName"></h2>
+              <div id="formulaEquation" class="equation" aria-label="Formula equation"></div>
+              <p id="formulaDescription" class="formula-description"></p>
+            </header>
+
+            <section id="environmentBar" class="environment-bar" aria-labelledby="environmentHeading">
+              <div>
+                <h3 id="environmentHeading">Environment preset</h3>
+                <p>Presets provide illustrative starting values. Review every input before scientific use.</p>
+              </div>
+              <div class="environment-controls">
+                <select id="presetSelect" class="standard-select" aria-label="Environment preset"></select>
+                <button id="applyPreset" class="secondary-button" type="button">Apply</button>
+              </div>
+            </section>
+
+            <div class="calculation-grid">
+              <section class="input-panel" aria-labelledby="inputsHeading">
+                <div class="panel-heading">
+                  <h3 id="inputsHeading">Inputs</h3>
+                  <button id="resetInputs" class="text-button" type="button">Reset</button>
+                </div>
+                <div id="inputGrid" class="input-grid"></div>
+                <div id="calculationError" class="calculation-error" role="alert" hidden></div>
+              </section>
+
+              <section class="result-panel" aria-labelledby="resultsHeading">
+                <div class="panel-heading">
+                  <h3 id="resultsHeading">Results</h3>
+                  <div class="result-actions">
+                    <button id="copyResults" class="text-button" type="button">Copy values</button>
+                    <button id="copyLatex" class="text-button" type="button">Copy LaTeX</button>
+                  </div>
+                </div>
+                <dl id="resultList" class="result-list"></dl>
+              </section>
+            </div>
+
+            <section class="scientific-notes" aria-labelledby="notesHeading">
+              <h3 id="notesHeading">Scientific context</h3>
+              <div class="interpretation-grid">
+                <div class="interpretation-block">
+                  <h4>Physical significance</h4>
+                  <p id="physicalSignificance"></p>
+                  <h4 class="subheading">Common research uses</h4>
+                  <ul id="researchUseList"></ul>
+                </div>
+                <div class="interpretation-block">
+                  <h4>How to read the result</h4>
+                  <p id="interpretationGuide"></p>
+                  <div class="related-formulas">
+                    <h4>Related calculators</h4>
+                    <div id="relatedFormulaList" class="related-formula-list"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="notes-grid">
+                <div>
+                  <h4>Assumptions and scope</h4>
+                  <ul id="assumptionList"></ul>
+                  <p id="formulaNote" class="formula-note"></p>
+                </div>
+                <div>
+                  <h4>References</h4>
+                  <ul id="referenceList" class="reference-list"></ul>
+                </div>
+              </div>
+            </section>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="plotsView" class="view" aria-labelledby="plotsHeading">
+      <div class="page-column plot-page">
+        <header class="page-header">
+          <p class="eyebrow">Reproducible visualisation</p>
+          <h1 id="plotsHeading">Scale ordering and parameter dependence.</h1>
+          <p>The plots are evaluated directly from the same physics core used by the calculators. They show the implemented equations exactly at the sampled points; physical applicability remains limited by the assumptions of each model.</p>
+        </header>
+
+        <section class="plot-state-panel" aria-labelledby="plotStateHeading">
+          <div class="plot-section-heading">
+            <div>
+              <h2 id="plotStateHeading">Reference plasma state</h2>
+              <p>Choose a preset or enter the fixed state used by both plotting tools.</p>
+            </div>
+            <div class="plot-heading-actions">
+              <select id="plotPresetSelect" class="standard-select" aria-label="Plot environment preset"></select>
+              <button id="applyPlotPreset" class="secondary-button" type="button">Apply</button>
+              <button id="resetPlotState" class="text-button" type="button">Reset</button>
+            </div>
+          </div>
+          <div class="plot-state-grid">
+            <div class="input-group"><label class="input-label" for="plotNi"><span>Ion density</span><span class="input-symbol">nᵢ</span></label><div class="number-wrap"><input id="plotNi" class="number-input" type="number" min="0" step="any"><span id="plotNiUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="input-label" for="plotB"><span>Magnetic field</span><span class="input-symbol">B</span></label><div class="number-wrap"><input id="plotB" class="number-input" type="number" min="0" step="any"><span id="plotBUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="input-label" for="plotTe"><span>Electron temperature</span><span class="input-symbol">Tₑ</span></label><div class="number-wrap"><input id="plotTe" class="number-input" type="number" min="0" step="any"><span id="plotTeUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="input-label" for="plotTi"><span>Ion temperature</span><span class="input-symbol">Tᵢ</span></label><div class="number-wrap"><input id="plotTi" class="number-input" type="number" min="0" step="any"><span id="plotTiUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="input-label" for="plotV"><span>Bulk-flow speed</span><span class="input-symbol">V</span></label><div class="number-wrap"><input id="plotV" class="number-input" type="number" min="0" step="any"><span id="plotVUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="input-label" for="plotZ"><span>Ion charge state</span><span class="input-symbol">Z</span></label><div class="number-wrap"><input id="plotZ" class="number-input" type="number" min="1" step="1"><span class="input-unit">integer</span></div></div>
+            <div class="input-group"><label class="input-label" for="plotMu"><span>Ion mass number</span><span class="input-symbol">μ</span></label><div class="number-wrap"><input id="plotMu" class="number-input" type="number" min="0" step="any"><span class="input-unit">mᵢ/mₚ</span></div></div>
+          </div>
+          <div id="plotStateError" class="calculation-error" role="alert" hidden></div>
+        </section>
+
+        <section class="plot-card" aria-labelledby="hierarchyHeading">
+          <div class="plot-section-heading">
+            <div>
+              <p class="eyebrow">Ordering diagram</p>
+              <h2 id="hierarchyHeading">Characteristic-scale hierarchy</h2>
+              <p>Logarithmic markers compare standard frequencies and spatial scales for the reference state. Their ordering may change with the selected plasma environment.</p>
+            </div>
+          </div>
+          <div class="plot-grid">
+            <figure class="plot-figure">
+              <figcaption><strong>Characteristic frequencies</strong><span>Ion, hybrid, electron, and plasma frequencies</span></figcaption>
+              <div id="frequencyHierarchyPlot" class="plot-canvas" aria-live="polite"></div>
+              <div class="plot-actions">
+                <button id="frequencyCsv" class="text-button" type="button">Download CSV</button>
+                <button id="frequencySvg" class="text-button" type="button">Download SVG</button>
+              </div>
+              <details class="plot-data-details"><summary>View numerical values</summary><div id="frequencyHierarchyTable" class="plot-table-wrap"></div></details>
+            </figure>
+            <figure class="plot-figure">
+              <figcaption><strong>Characteristic lengths</strong><span>Shielding, gyroradius, and inertial scales</span></figcaption>
+              <div id="lengthHierarchyPlot" class="plot-canvas" aria-live="polite"></div>
+              <div class="plot-actions">
+                <button id="lengthCsv" class="text-button" type="button">Download CSV</button>
+                <button id="lengthSvg" class="text-button" type="button">Download SVG</button>
+              </div>
+              <details class="plot-data-details"><summary>View numerical values</summary><div id="lengthHierarchyTable" class="plot-table-wrap"></div></details>
+            </figure>
+          </div>
+        </section>
+
+        <section class="plot-card" aria-labelledby="explorerHeading">
+          <div class="plot-section-heading">
+            <div>
+              <p class="eyebrow">Controlled parameter sweep</p>
+              <h2 id="explorerHeading">Parameter-dependence explorer</h2>
+              <p>Vary one input while all other state variables remain fixed. Up to three quantities from the same physical family share a common axis and unit.</p>
+            </div>
+          </div>
+          <div class="explorer-controls">
+            <div class="input-group"><label class="field-label" for="sweepVariable">Vary input</label><select id="sweepVariable" class="standard-select"></select></div>
+            <div class="input-group"><label class="field-label" for="sweepMin">Minimum</label><div class="number-wrap"><input id="sweepMin" class="number-input" type="number" step="any"><span id="sweepMinUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="field-label" for="sweepMax">Maximum</label><div class="number-wrap"><input id="sweepMax" class="number-input" type="number" step="any"><span id="sweepMaxUnit" class="input-unit"></span></div></div>
+            <div class="input-group"><label class="field-label" for="sweepSpacing">Sampling</label><select id="sweepSpacing" class="standard-select"><option value="log">Logarithmic</option><option value="linear">Linear</option></select></div>
+            <div class="input-group"><label class="field-label" for="plotFamily">Quantity family</label><select id="plotFamily" class="standard-select"></select></div>
+            <div class="input-group"><label class="field-label" for="plotOutput1">Quantity 1</label><select id="plotOutput1" class="standard-select"></select></div>
+            <div class="input-group"><label class="field-label" for="plotOutput2">Quantity 2</label><select id="plotOutput2" class="standard-select"></select></div>
+            <div class="input-group"><label class="field-label" for="plotOutput3">Quantity 3</label><select id="plotOutput3" class="standard-select"></select></div>
+            <div class="input-group"><label class="field-label" for="sweepYScale">Vertical scale</label><select id="sweepYScale" class="standard-select"><option value="log">Logarithmic</option><option value="linear">Linear</option></select></div>
+            <div class="explorer-update"><button id="updateSweepPlot" class="secondary-button" type="button">Update plot</button></div>
+          </div>
+          <div id="sweepWarning" class="plot-warning" role="status" hidden></div>
+          <div id="sweepPlot" class="plot-canvas plot-canvas-wide" aria-live="polite"></div>
+          <div class="plot-actions plot-actions-wide">
+            <button id="sweepCsv" class="text-button" type="button">Download CSV</button>
+            <button id="sweepSvg" class="text-button" type="button">Download SVG</button>
+          </div>
+          <p id="plotConfigSummary" class="plot-config-summary"></p>
+          <details class="plot-data-details"><summary>View sampled data</summary><div id="sweepDataTable" class="plot-table-wrap"></div></details>
+        </section>
+
+        <div class="method-note">
+          <h2>Scientific use</h2>
+          <p>These plots contain no smoothing, fitting, or interpolated physics. Curves connect direct evaluations of the implemented equations only for readability. A visually smooth trend does not establish model validity, identify a wave mode, or replace uncertainty analysis. Exported files record the displayed values and fixed state.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="examplesView" class="view" aria-labelledby="examplesHeading">
+      <div class="page-column">
+        <header class="page-header">
+          <p class="eyebrow">Worked examples</p>
+          <h1 id="examplesHeading">From a plasma state to the scales that matter.</h1>
+          <p>These examples use illustrative parameter sets to show how the core quantities fit together. They are not reconstructions of specific published events.</p>
+        </header>
+        <div id="exampleGrid" class="example-grid"></div>
+        <div class="method-note">
+          <h2>How to use the examples</h2>
+          <p>Open a state in the calculator, then review every input against the interval, instrument cadence, coordinate system, and species definition used in your analysis.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="validationView" class="view" aria-labelledby="validationHeading">
+      <div class="page-column">
+        <header class="page-header">
+          <p class="eyebrow">Numerical quality control</p>
+          <h1 id="validationHeading">Validation report</h1>
+          <p>The core is checked against standard NRL coefficients, exact definitions, and registry-wide smoke tests.</p>
+        </header>
+        <div id="validationSummary" class="validation-summary"></div>
+        <div class="table-wrap">
+          <table class="validation-table">
+            <thead><tr><th>Test</th><th>Computed</th><th>Reference</th><th>Relative error</th><th>Status</th></tr></thead>
+            <tbody id="validationBody"></tbody>
+          </table>
+        </div>
+        <div class="method-note">
+          <h2>Interpretation</h2>
+          <p>Passing these tests confirms implementation consistency for the tested definitions. It does not turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers. Each calculator states its own scope.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="aboutView" class="view" aria-labelledby="aboutHeading">
+      <div class="page-column">
+        <header class="page-header">
+          <p class="eyebrow">About the project</p>
+          <h1 id="aboutHeading">A transparent formulary for space-plasma work.</h1>
+          <p>Alfvenica is designed as a calculator, a formula reference, and a reproducibility aid—not as a substitute for kinetic dispersion codes or instrument-specific analysis pipelines.</p>
+        </header>
+        <div class="about-grid">
+          <section>
+            <h2>Design principles</h2>
+            <p>All calculations and plots run locally in the browser through a single SI physics core; no input values are transmitted. Units are converted only at the interface, while formula definitions, assumptions, sources, plot metrics, and tests remain separate from the page layout.</p>
+          </section>
+          <section>
+            <h2>Unit conventions</h2>
+            <p><strong>Space</strong> uses cm⁻³, nT, eV, km s⁻¹, and km where practical. <strong>SI</strong> uses m⁻³, T, K, m s⁻¹, and m. <strong>CGS</strong> uses cm⁻³, G, eV, cm s⁻¹, and cm. Derived quantities that are conventionally reported in SI retain SI units when a reliable CGS analogue would be ambiguous.</p>
+          </section>
+          <section>
+            <h2>Scientific basis</h2>
+            <p>Fundamental constants follow the 2022 CODATA set. Foundational plasma coefficients are cross-checked against the 2023 NRL Plasma Formulary. Empirical anisotropy thresholds retain the model assumptions and fit domain of the cited paper.</p>
+          </section>
+          <section>
+            <h2>Limitations</h2>
+            <p>Single-ion, scalar-temperature, fluid, reduced two-fluid, and frozen-flow assumptions appear in several tools. Users should not apply a result outside the stated regime without an independent derivation or a more complete numerical model.</p>
+          </section>
+          <section>
+            <h2>Reading characteristic scales</h2>
+            <p>A gyrofrequency, inertial length, gyroradius, or threshold is usually an ordering scale rather than a sharp universal boundary. Physical interpretation should compare several independent scales and retain uncertainty in density, temperature, field, flow, geometry, and species definition.</p>
+          </section>
+          <section>
+            <h2>Observational interpretation</h2>
+            <p>Spacecraft-frame frequencies, E/B ratios, current densities, and crossing thicknesses depend on frame choice, cadence, coordinate systems, and geometry. Alfvenica therefore presents them as transparent diagnostics to be combined with instrument validation and event context.</p>
+          </section>
+        </div>
+        <section class="citation-box">
+          <h2>Suggested citation</h2>
+          <p>Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em>. <a href="https://alfvenica.org">mkchettri.in/alfvenica</a>.</p>
+          <p class="small-text">This release separates the physics engine, formula registry, validation suite, interface logic, and visual design to reduce scientific drift and simplify maintenance.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Alfvenica · Mani K Chettri · MIT License</span>
+    <span><a href="https://mkchettri.in">Research website</a> · <a href="https://github.com/mkchettri8/alfvenica">Source code</a></span>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
