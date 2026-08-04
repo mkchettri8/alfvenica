@@ -1,0 +1,29 @@
+name: Scientific correction
+description: Propose a formula, convention, reference, or validation correction
+title: "[Science] "
+labels: [science]
+body:
+  - type: textarea
+    attributes:
+      label: Quantity or calculator
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Current issue
+      description: State the suspected error or ambiguity precisely.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed correction and derivation
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Authoritative reference or DOI
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Independent numerical benchmark
