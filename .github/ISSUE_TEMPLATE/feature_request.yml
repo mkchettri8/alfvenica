@@ -1,0 +1,18 @@
+name: Feature request
+description: Propose a carefully scoped improvement
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: Scientific or user need
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed capability
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Assumptions, references, and validation approach
