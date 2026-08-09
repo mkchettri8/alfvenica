@@ -74,14 +74,20 @@ The final addresses should be:
 - `https://alfvenica.org/`
 - `https://www.alfvenica.org/` → redirects to the apex domain
 
-## 8. First release and DOI
+## 8. Version 1.0.0 baseline, version 1.0.1, and DOI
 
-After the site is stable:
+The repository history shows that `9ad37ae` is the complete public 1.0.0 baseline,
+including the automated test workflow. Before publishing 1.0.1:
 
-1. Create a Git tag and GitHub release named `v1.0.0`.
-2. Archive that release with Zenodo.
-3. Add the resulting DOI to `CITATION.cff`, the README, and the About page.
-4. Run the tests again and release `v1.0.1` only if metadata changes require a new software version.
+1. Create an annotated `v1.0.0` tag on commit `9ad37ae` and publish the matching
+   historical GitHub release.
+2. Merge the reviewed v1.0.1 changes only after all local and pull-request checks
+   pass.
+3. Confirm the public site and the Tests workflow are green at the v1.0.1 commit.
+4. Create an annotated `v1.0.1` tag and a GitHub release from that exact commit.
+5. Connect the repository to Zenodo and archive the v1.0.1 release.
+6. Add the issued version DOI to `CITATION.cff`, release metadata, README, and
+   About in a separately tested metadata update. Do not display a placeholder DOI.
 
 ## Updating the site later
 

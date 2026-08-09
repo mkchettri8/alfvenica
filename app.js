@@ -1,11 +1,13 @@
 (function () {
   'use strict';
+  const Meta = window.AlfvenicaRelease;
   const Registry = window.PlasmaFormulaRegistry;
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
+  const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Registry || !PlotRegistry || !Insights || !Validation || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
@@ -26,6 +28,8 @@
     unitSystem: storage.get('alfvenica-units', 'space'),
     category: 'All formulas',
     search: '',
+    searchMatches: [],
+    suggestionIndex: -1,
     formulaId: '',
     values: new Map(),
     lastResults: [],
@@ -103,7 +107,14 @@
   }
 
   function formatQuantity(quantity, canonical) {
-    if (quantity === 'text') return { value: String(canonical), unit: '' };
+    if (quantity === 'text') {
+      const cautiousLabels = {
+        'Kinetic Alfvén limit': 'Reduced-model regime: kinetic-Alfvén ordering',
+        'Inertial Alfvén limit': 'Reduced-model regime: inertial-Alfvén ordering',
+        'Transition region': 'Reduced-model regime: broad kinetic/inertial transition',
+      };
+      return { value: cautiousLabels[canonical] || String(canonical), unit: '' };
+    }
     if (!Number.isFinite(canonical)) return { value: canonical === Infinity ? '∞' : '—', unit: unitLabel(quantity) };
 
     // Readable adaptive units for the most common space-physics outputs.
@@ -140,16 +151,107 @@
   }
 
   function searchResults() {
-    const q = state.search.trim().toLowerCase();
-    return Registry.formulas.filter(f => {
-      const categoryMatch = state.category === 'All formulas' || f.category === state.category;
-      if (!categoryMatch) return false;
-      if (!q) return true;
-      const aliases = f.category === 'Kinetic Alfvén waves' ? ' kaw kinetic alfven kinetic alfvén ' : '';
-      const insight = Insights.insights[f.id] || { significance:'', interpretation:'', uses:[] };
-      const haystack = [f.name, f.category, f.description, ...(f.keywords || []), insight.significance, insight.interpretation, ...(insight.uses || []), aliases].join(' ').toLowerCase();
-      return haystack.includes(q);
+    return Search.findMatches(Registry.formulas, Insights.insights, state.search, state.category);
+  }
+
+  function setSuggestionActive(index) {
+    const options = [...$('searchSuggestions').querySelectorAll('[role="option"]')];
+    if (!options.length) {
+      state.suggestionIndex = -1;
+      $('formulaSearch').removeAttribute('aria-activedescendant');
+      return;
+    }
+    state.suggestionIndex = Math.max(0, Math.min(index, options.length - 1));
+    options.forEach((option, optionIndex) => {
+      const active = optionIndex === state.suggestionIndex;
+      option.classList.toggle('active', active);
+      option.setAttribute('aria-selected', String(active));
+      if (active) option.scrollIntoView({ block: 'nearest' });
     });
+    $('formulaSearch').setAttribute('aria-activedescendant', options[state.suggestionIndex].id);
+  }
+
+  function closeSearchSuggestions() {
+    $('searchSuggestions').hidden = true;
+    $('formulaSearch').setAttribute('aria-expanded', 'false');
+    $('formulaSearch').removeAttribute('aria-activedescendant');
+    state.suggestionIndex = -1;
+  }
+
+  function chooseSearchSuggestion(formula) {
+    if (!formula) return;
+    selectFormula(formula.id, true, true);
+    closeSearchSuggestions();
+  }
+
+  function appendHighlightedName(element, name, query) {
+    for (const segment of Search.highlightSegments(name, query)) {
+      const node = segment.match ? document.createElement('mark') : document.createTextNode(segment.text);
+      if (segment.match) node.textContent = segment.text;
+      element.appendChild(node);
+    }
+  }
+
+  function renderSearchSuggestions() {
+    const query = state.search.trim();
+    const suggestions = $('searchSuggestions');
+    suggestions.replaceChildren();
+    if (!query) {
+      state.searchMatches = [];
+      $('searchStatus').textContent = 'Type to search formula names, parameters, and common abbreviations.';
+      closeSearchSuggestions();
+      return;
+    }
+
+    state.searchMatches = Search.findMatches(Registry.formulas, Insights.insights, query, 'All formulas');
+    const visibleMatches = state.searchMatches.slice(0, 8);
+    $('searchStatus').textContent = `${state.searchMatches.length} matching calculator${state.searchMatches.length === 1 ? '' : 's'}.`;
+    if (!visibleMatches.length) {
+      const empty = document.createElement('p');
+      empty.className = 'search-suggestions-empty';
+      empty.textContent = 'No matching calculators. Try a broader term.';
+      suggestions.appendChild(empty);
+    } else {
+      visibleMatches.forEach((formula, index) => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.id = `search-option-${formula.id}`;
+        option.className = 'search-suggestion';
+        option.setAttribute('role', 'option');
+        option.setAttribute('aria-selected', 'false');
+        const name = document.createElement('span');
+        name.className = 'search-suggestion-name';
+        appendHighlightedName(name, formula.name, query);
+        const category = document.createElement('span');
+        category.className = 'search-suggestion-category';
+        category.textContent = formula.category;
+        option.append(name, category);
+        option.addEventListener('pointerenter', () => setSuggestionActive(index));
+        option.addEventListener('click', () => chooseSearchSuggestion(formula));
+        suggestions.appendChild(option);
+      });
+    }
+    suggestions.hidden = false;
+    $('formulaSearch').setAttribute('aria-expanded', 'true');
+    setSuggestionActive(visibleMatches.length ? 0 : -1);
+  }
+
+  function onSearchKeydown(event) {
+    const visibleCount = Math.min(state.searchMatches.length, 8);
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if ($('searchSuggestions').hidden) renderSearchSuggestions();
+      if (!visibleCount) return;
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const current = state.suggestionIndex < 0 ? (direction > 0 ? -1 : 0) : state.suggestionIndex;
+      setSuggestionActive((current + direction + visibleCount) % visibleCount);
+    } else if (event.key === 'Enter' && state.suggestionIndex >= 0 && visibleCount) {
+      event.preventDefault();
+      chooseSearchSuggestion(state.searchMatches[state.suggestionIndex]);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      closeSearchSuggestions();
+    }
   }
 
   function renderCategories() {
@@ -167,7 +269,7 @@
     const empty = results.length === 0;
     $('formulaEmpty').hidden = !empty;
     $('formulaContent').hidden = empty;
-    if (!empty && !results.some(f => f.id === state.formulaId)) selectFormula(results[0].id, false);
+    if (!empty && !results.some(f => f.id === state.formulaId) && !state.search.trim()) selectFormula(results[0].id, false);
   }
 
   function renderPresets() {
@@ -231,6 +333,9 @@
     const assumptions = formula.assumptions.length ? formula.assumptions : ['Use the stated equation with the displayed units; no additional model assumptions are attached to this definition.'];
     $('assumptionList').innerHTML = assumptions.map(a => `<li>${a}</li>`).join('');
     $('referenceList').innerHTML = formula.references.map(r => `<li><a href="${r.url}" target="_blank" rel="noopener noreferrer">${r.label}</a></li>`).join('');
+    const issueUrl = new URL(Meta.scientificIssueUrl);
+    issueUrl.searchParams.set('title', `[Science] ${formula.name}`);
+    $('reportScientificIssue').href = issueUrl.toString();
 
     $('inputGrid').innerHTML = formula.inputs.map(input => {
       const displayValue = toDisplay(input.quantity, values[input.key]);
@@ -274,7 +379,12 @@
   function selectFormula(id, updateHash = true, revealOnCompactLayout = false) {
     if (!formulaById(id)) return;
     state.formulaId = id;
-    if (updateHash) history.replaceState(null, '', `#${id}`);
+    if (updateHash) {
+      const url = new URL(location.href);
+      url.searchParams.delete('view');
+      url.hash = id;
+      history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    }
     renderFormula();
     if (revealOnCompactLayout && window.matchMedia('(max-width: 900px)').matches) {
       requestAnimationFrame(() => document.querySelector('.formula-detail').scrollIntoView({ behavior: 'smooth', block: 'start' }));
@@ -321,6 +431,8 @@
     copyText(lines.join('\n'), 'Values copied');
   }
   function copyLatex() { copyText(activeFormula().latex, 'LaTeX copied'); }
+  function copyCitation() { copyText(Meta.citation, 'Citation copied'); }
+  function copyBibtex() { copyText(Meta.bibtex, 'BibTeX copied'); }
   function showToast(message) {
     const toast = $('toast'); toast.textContent = message; toast.classList.add('show');
     clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 1700);
@@ -751,8 +863,13 @@
 
   function updateViewUrl(view, mode = 'push') {
     const url = new URL(location.href);
-    if (view === 'calculator') url.searchParams.delete('view');
-    else url.searchParams.set('view', view);
+    if (view === 'calculator') {
+      url.searchParams.delete('view');
+      url.hash = state.formulaId || '';
+    } else {
+      url.searchParams.set('view', view);
+      url.hash = '';
+    }
     const next = `${url.pathname}${url.search}${url.hash}`;
     const current = `${location.pathname}${location.search}${location.hash}`;
     if (next === current) return;
@@ -762,6 +879,7 @@
   function setView(view, { updateUrl = true, scroll = true } = {}) {
     if (!validViews.has(view)) view = 'calculator';
     state.view = view;
+    if (view !== 'calculator') closeSearchSuggestions();
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `${view}View`));
     document.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
     if (view === 'plots') renderPlotsPage();
@@ -781,7 +899,7 @@
         ['Ion-sound gyroradius', formatQuantity('length', q.rhoS)],
         ['Total beta', formatQuantity('dimensionless', q.betaTotal)],
         ['Alfvén Mach number', formatQuantity('dimensionless', q.machA)],
-        ['Alfvén regime', { value:q.kaw.label, unit:'' }],
+        ['Alfvén regime', formatQuantity('text', q.kaw.label)],
       ];
       const table = rows.map(([label,val]) => `<tr><td>${label}</td><td>${val.value}${val.unit ? ` ${val.unit}` : ''}</td></tr>`).join('');
       return `<article class="example-card"><p class="eyebrow">Illustrative state</p><h2>${example.title}</h2><p>${example.description}</p><table class="example-table"><tbody>${table}</tbody></table><button class="secondary-button" type="button" data-example-preset="${example.preset}">Open in calculator</button></article>`;
@@ -797,8 +915,25 @@
   function renderValidation() {
     const tests = Validation.run();
     const passed = tests.filter(t => t.pass).length;
-    $('validationSummary').innerHTML = `<strong>${passed === tests.length ? 'All checks passed' : `${passed} of ${tests.length} checks passed`}</strong><span>Default registry calculations and numerical coefficients are tested at load time.</span>`;
-    $('validationBody').innerHTML = tests.map(t => `<tr><td>${t.name}<br><span class="small-text">${t.source}</span></td><td>${formatNumber(t.actual,6)}</td><td>${formatNumber(t.expected,6)}</td><td>${formatNumber(t.error*100,4)}%</td><td class="${t.pass?'status-pass':'status-fail'}">${t.pass?'Pass':'Check'}</td></tr>`).join('');
+    const referenceCount = tests.filter(test => test.kind === 'reference').length;
+    const identityCount = tests.filter(test => test.kind === 'identity').length;
+    const domainCount = tests.filter(test => test.kind === 'domain').length;
+    $('validationSummary').innerHTML = `<strong>${passed === tests.length ? 'All validation groups passed' : `${passed} of ${tests.length} validation records passed`}</strong><span>${referenceCount} reference benchmarks · ${identityCount} analytical identities · ${domainCount} domain safeguard · ${Meta.formulaSmokeCount}/${Meta.formulaSmokeCount} calculator defaults execute</span>`;
+
+    const groupDefinitions = [
+      ['reference', 'Numerically verified against reference values', 'Published coefficients, constants, and empirical fits checked at stated points.'],
+      ['identity', 'Analytical consistency checks', 'Definitions, limiting cases, exact identities, and scaling relations.'],
+      ['domain', 'Domain safeguards', 'Checks that representative valid-domain calculations remain finite and meaningful.'],
+    ];
+    $('validationGroups').innerHTML = groupDefinitions.map(([kind, title, description], index) => {
+      const group = tests.filter(test => test.kind === kind);
+      const groupPassed = group.filter(test => test.pass).length;
+      const rows = group.map(test => `<tr><td>${test.name}<br><span class="small-text">${test.source}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`).join('');
+      return `<details class="validation-group"${index === 0 ? ' open' : ''}><summary><span><span class="validation-group-title">${title}</span><br><span class="validation-group-summary">${description}</span></span><span class="validation-group-summary">${groupPassed}/${group.length} passed</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Test</th><th>Computed</th><th>Reference</th><th>Relative error</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+    }).join('');
+
+    const smoke = tests.find(test => test.kind === 'smoke');
+    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation integrity</h2><p>These checks confirm execution and structural consistency. They do not independently verify every numerical result.</p><div class="integrity-grid"><div class="integrity-item"><strong>${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error</span></div><div class="integrity-item"><strong>${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values, with hierarchy and scaling checks</span></div><div class="integrity-item"><strong>${Meta.htmlIdCount}</strong><span>unique interface identifiers, plus asset, reference, and interpretation-integrity checks</span></div></div>`;
   }
 
   function applyTheme() {
@@ -822,7 +957,17 @@
     bindPlotEvents();
     setView(state.view, { updateUrl: false, scroll: false });
 
-    $('formulaSearch').addEventListener('input', e => { state.search = e.target.value; renderFormulaList(); });
+    $('formulaSearch').addEventListener('input', event => {
+      state.search = event.target.value;
+      if (state.search.trim() && state.category !== 'All formulas') {
+        state.category = 'All formulas';
+        renderCategories();
+      }
+      renderFormulaList();
+      renderSearchSuggestions();
+    });
+    $('formulaSearch').addEventListener('focus', renderSearchSuggestions);
+    $('formulaSearch').addEventListener('keydown', onSearchKeydown);
     $('categorySelect').addEventListener('change', e => { state.category = e.target.value; renderCategories(); renderFormulaList(); });
     $('unitSystem').addEventListener('change', e => { state.unitSystem = e.target.value; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); });
     $('themeToggle').addEventListener('click', () => { state.theme = state.theme === 'light' ? 'dark' : 'light'; storage.set('alfvenica-theme', state.theme); applyTheme(); if (state.view === 'plots') renderPlots(); });
@@ -830,13 +975,25 @@
     $('applyPreset').addEventListener('click', applyPreset);
     $('copyResults').addEventListener('click', copyResults);
     $('copyLatex').addEventListener('click', copyLatex);
+    $('copyCitation').addEventListener('click', copyCitation);
+    $('copyBibtex').addEventListener('click', copyBibtex);
     $('brandButton').addEventListener('click', () => setView('calculator'));
     document.querySelectorAll('.nav-button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
     window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (formulaById(id)) selectFormula(id, false); });
-    window.addEventListener('popstate', () => setView(viewFromUrl(), { updateUrl: false, scroll: false }));
+    window.addEventListener('popstate', () => {
+      const id = location.hash.slice(1);
+      if (formulaById(id)) selectFormula(id, false);
+      setView(viewFromUrl(), { updateUrl: false, scroll: false });
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!event.target.closest('.global-search')) closeSearchSuggestions();
+    });
     document.addEventListener('keydown', e => {
-      if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); $('formulaSearch').focus(); }
-      if (e.key === 'Escape' && document.activeElement === $('formulaSearch')) { $('formulaSearch').value = ''; state.search = ''; renderFormulaList(); }
+      if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) {
+        e.preventDefault();
+        if (state.view !== 'calculator') setView('calculator');
+        requestAnimationFrame(() => $('formulaSearch').focus());
+      }
     });
   }
 

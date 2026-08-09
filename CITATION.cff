@@ -6,8 +6,8 @@ authors:
   - family-names: Chettri
     given-names: Mani K
     orcid: "https://orcid.org/0009-0000-1368-9263"
-version: 1.0.0
-date-released: 2026-08-05
+version: 1.0.1
+date-released: 2026-08-10
 url: "https://alfvenica.org/"
 repository-code: "https://github.com/mkchettri8/alfvenica"
 license: MIT

@@ -5,7 +5,8 @@ labels: [science]
 body:
   - type: textarea
     attributes:
-      label: Quantity or calculator
+      label: Formula or calculator
+      description: Give the displayed name and formula ID or URL, if available.
     validations:
       required: true
   - type: textarea
@@ -16,14 +17,19 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: Proposed correction and derivation
-    validations:
-      required: true
-  - type: input
-    attributes:
-      label: Authoritative reference or DOI
+      label: Authoritative reference or derivation
+      description: Link the primary paper, DOI, formulary section, or derivation that supports the report.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: Independent numerical benchmark
+      label: Expected result
+      description: State the corrected equation, value, unit, convention, wording, or behaviour.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction values
+      description: List the unit system, every input value, the current output, and any independent benchmark.
+    validations:
+      required: true

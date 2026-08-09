@@ -19,6 +19,9 @@ The audit applies four rules:
 - **Sweet–Parker reconnection:** Parker (1957) and Sweet (1958).
 - **Frozen-flow mapping:** Taylor (1938).
 - **Proton anisotropy contours:** Hellinger et al. (2006), using the stated growth-rate contour and fit domain.
+- **Simplified mirror threshold:** Hasegawa (1969) and Pokhotelov et al. (2004),
+  with the implemented single-species long-wavelength approximation labelled as
+  simplified and its finite-Larmor-radius limitation stated.
 - **Dispersive/KAW reductions:** Hasegawa & Chen (1976), Lysak & Lotko (1996), Hollweg (1999), and Stasiewicz et al. (2000).
 
 ## Core conventions
@@ -47,16 +50,24 @@ The audit applies four rules:
 
 ## Validation coverage
 
-The automated suite contains:
+The automated suite reports four distinct levels of evidence:
 
-- benchmark coefficients for gyrofrequencies, plasma frequencies, Debye length, thermal speeds, inertial lengths, gyroradius, Alfvén speed, and collision frequencies;
-- CODATA conversion checks;
-- exact pressure, beta, scale, wave, Taylor, Sweet–Parker, Alfvénicity, and reduced-KAW identities;
-- Hellinger contour checks;
-- a default calculation smoke test for every registry entry;
-- duplicate-ID, reference-metadata, and static-asset checks.
+- **External numerical benchmarks:** NRL coefficients for gyrofrequencies,
+  plasma frequencies, Debye length, thermal speeds, inertial lengths, gyroradius,
+  Alfvén speed, and collision frequencies; CODATA conversion values; and
+  Hellinger contour fits evaluated at stated points.
+- **Analytical consistency checks:** exact pressure, beta, scale, wave, Taylor,
+  Sweet–Parker, Alfvénicity, and reduced-KAW identities and limiting cases.
+- **Domain safeguards:** representative valid-domain results remain finite and
+  physically admissible.
+- **Implementation-integrity tests:** every registry entry executes on its valid
+  defaults, plot metrics remain finite under controlled sweeps, and identifiers,
+  references, interpretations, links, and local assets remain internally valid.
 
-Passing tests establish consistency for the tested equations. They do not validate application outside each formula's stated regime.
+A default-execution smoke test does not independently establish that a numerical
+value is correct. Passing the full suite establishes consistency for the tested
+equations and cases; it does not validate application outside each formula's
+stated regime.
 
 ## Interpretation coverage
 
@@ -183,4 +194,3 @@ Plot-specific automated tests cover registry integrity, finite default results, 
 - **Hellinger mirror contour** — A = 1 + 0.77/(β∥p + 0.016)0.76
 - **Hellinger parallel-firehose contour** — A = 1 − 0.47/(β∥p − 0.59)0.53
 - **Hellinger oblique-firehose contour** — A = 1 − 1.4/(β∥p + 0.11)
-
