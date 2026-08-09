@@ -5,11 +5,14 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const requiredFiles = ['styles.css', 'plasma-physics.js', 'formula-registry.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'app.js'];
+const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'formula-registry.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js'];
 for (const file of requiredFiles) assert.ok(fs.existsSync(path.join(root, file)), `Missing local asset: ${file}`);
+const Meta = require(path.join(root, 'release-metadata.js'));
+const packageMetadata = require(path.join(root, 'package.json'));
 
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'HTML IDs must be unique');
+assert.equal(ids.length, Meta.htmlIdCount, 'Displayed HTML identifier count is stale');
 const appSource = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const literalLookups = [...appSource.matchAll(/\$\('([^']+)'\)/g)].map(match => match[1]);
 for (const id of literalLookups) assert.ok(ids.includes(id), `app.js references missing HTML ID: ${id}`);
@@ -21,6 +24,10 @@ assert.match(appSource, /No preset values apply to this calculator/, 'Preset no-
 assert.match(appSource, /hellingerFormulaIds\.has\(formula\.id\).*input\.key === 'beta'/s, 'Hellinger beta preset derivation missing');
 assert.match(appSource, /new URLSearchParams\(location\.search\)\.get\('view'\)/, 'View URL persistence missing');
 assert.match(appSource, /addEventListener\('popstate'/, 'Back-forward view restoration missing');
+assert.match(appSource, /url\.hash = ''/, 'Non-calculator views must remove stale formula hashes');
+assert.match(appSource, /ArrowDown.*ArrowUp/s, 'Autocomplete arrow-key handling missing');
+assert.match(appSource, /chooseSearchSuggestion/, 'Autocomplete selection handling missing');
+assert.match(appSource, /Reduced-model regime: kinetic-Alfvén ordering/, 'Cautious KAW ordering label missing');
 
 for (const file of requiredFiles) {
   const escaped = file.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -30,6 +37,46 @@ for (const file of requiredFiles) {
 assert.match(html, /<link rel="canonical" href="https:\/\/alfvenica\.org\/">/, 'Alfvenica canonical URL missing');
 assert.doesNotMatch(html, /\b\d+\s+formulas?\b/i, 'Formula count should not be displayed in the interface');
 assert.doesNotMatch(html, /MathJax|Chart\.js|chart\.umd/i, 'Unexpected heavy runtime dependency');
+assert.match(html, /role="combobox"[^>]+aria-autocomplete="list"[^>]+aria-controls="searchSuggestions"/, 'Accessible autocomplete combobox missing');
+assert.match(html, /id="searchSuggestions"[^>]+role="listbox"/, 'Autocomplete listbox missing');
+assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
+
+const plainText = value => value.replace(/<[^>]+>/g, ' ').replace(/[\r\n*]+/g, ' ').replace(/\s+/g, ' ').trim();
+assert.ok(plainText(html).includes(Meta.citation), 'Website citation differs from release metadata');
+const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+assert.ok(plainText(readme).includes(Meta.citation), 'README citation differs from release metadata');
+const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
+assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
+assert.match(citationCff, new RegExp(`date-released: ${Meta.releaseDate}`), 'CITATION.cff date mismatch');
+assert.equal(packageMetadata.version, Meta.version, 'package.json version mismatch');
+assert.match(fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8'), new RegExp(`## ${Meta.version.replace(/\./g, '\\.')}`), 'Changelog version missing');
+const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+assert.ok(jsonLdMatch, 'SoftwareApplication JSON-LD missing');
+const jsonLd = JSON.parse(jsonLdMatch[1]);
+assert.equal(jsonLd['@type'], 'SoftwareApplication', 'Unexpected JSON-LD type');
+assert.equal(jsonLd.softwareVersion, Meta.version, 'JSON-LD version mismatch');
+assert.equal(jsonLd.dateModified, Meta.releaseDate, 'JSON-LD date mismatch');
+const identityMatch = html.match(/<aside class="about-identity"[^>]*>([\s\S]*?)<\/aside>/);
+assert.ok(identityMatch, 'Understated project identity presentation missing');
+const identityHtml = identityMatch[1];
+assert.match(identityHtml, /Alfvenica is independently developed and maintained by/, 'Independent-development statement missing');
+assert.match(identityHtml, /<a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a>/, 'Maintainer website link missing or incorrect');
+assert.match(identityHtml, /<a href="https:\/\/orcid\.org\/0009-0000-1368-9263">ORCID<\/a>/, 'ORCID link missing or incorrect');
+assert.match(identityHtml, /No dedicated external funding supported this release\./, 'No-funding disclosure missing');
+assert.doesNotMatch(html, /Author and independence/, 'Old authorship heading remains');
+assert.doesNotMatch(html, /final-year PhD candidate/, 'Old PhD-candidate biography remains');
+assert.doesNotMatch(html, /Sikkim University/, 'Old institutional affiliation remains in the authorship presentation');
+assert.doesNotMatch(html, /does not imply institutional endorsement/, 'Old institutional-endorsement disclaimer remains');
+for (const model of ['ChatGPT','Claude','Gemini','DeepSeek','Kimi']) assert.ok(html.includes(model), `${model} AI disclosure missing`);
+assert.match(html, /Final responsibility for the scientific content and implementation remains with the author/, 'AI responsibility statement missing');
+assert.ok(html.includes(Meta.formulaAuditUrl), 'Formula-audit link missing');
+assert.ok(html.includes(Meta.ciUrl), 'CI link missing');
+assert.ok(html.includes('scientific_correction.yml'), 'Scientific issue route missing');
+
+const workflow = fs.readFileSync(path.join(root, '.github/workflows/tests.yml'), 'utf8');
+assert.match(workflow, /actions\/checkout@v5/, 'Checkout action is not on the Node-24 runtime');
+assert.match(workflow, /actions\/setup-node@v5/, 'Setup-node action is not on the Node-24 runtime');
+assert.match(workflow, /node-version: 24/, 'CI is not testing Node.js 24');
 
 const P = require(path.join(root, 'plasma-physics.js'));
 global.PlasmaPhysics = P;
@@ -58,4 +105,10 @@ for (const formula of Registry.formulas) {
 
 assert.match(html, /data-view="plots"/, 'Plots navigation entry missing');
 assert.ok(ids.includes('frequencyHierarchyPlot') && ids.includes('sweepPlot'), 'Plot containers missing');
+const standalone = fs.readFileSync(path.join(root, 'alfvenica_standalone.html'), 'utf8');
+for (const file of requiredFiles) {
+  const escaped = file.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  assert.doesNotMatch(standalone, new RegExp(`(?:href|src)="${escaped}"`), `Standalone output still depends on ${file}`);
+}
+assert.ok(standalone.includes(Meta.citation), 'Standalone citation differs from release metadata');
 console.log(`Alfvenica site checks passed: ${ids.length} unique HTML IDs, ${Registry.formulas.length} interpreted calculators, and ${PlotRegistry.metrics.length} plot metrics.`);

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -19,6 +19,32 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alfvenica.org/">
   <title>Alfvenica — Space Plasma Toolkit</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Alfvenica: Interactive Space Plasma Toolkit",
+    "alternateName": "Alfvenica",
+    "url": "https://alfvenica.org/",
+    "codeRepository": "https://github.com/mkchettri8/alfvenica",
+    "applicationCategory": "ScientificApplication",
+    "applicationSubCategory": "Space and astrophysical plasma physics",
+    "operatingSystem": "Any modern web browser",
+    "softwareVersion": "1.0.1",
+    "datePublished": "2026-08-05",
+    "dateModified": "2026-08-10",
+    "isAccessibleForFree": true,
+    "license": "https://opensource.org/licenses/MIT",
+    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and numerical validation.",
+    "keywords": ["space plasma physics", "plasma calculator", "kinetic Alfvén waves", "heliophysics", "research software"],
+    "author": {
+      "@type": "Person",
+      "name": "Mani K Chettri",
+      "url": "https://mkchettri.in/",
+      "sameAs": "https://orcid.org/0009-0000-1368-9263"
+    }
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
@@ -64,7 +90,9 @@ button{color:inherit}
 .skip-link:focus{top:1rem}
 .site-header{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
 .header-inner{max-width:1260px;margin:0 auto;min-height:64px;padding:0 22px;display:flex;align-items:center;gap:28px}
-.brand{border:0;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;line-height:1.1}
+.brand{border:0;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;align-items:center;gap:9px;line-height:1.1}
+.brand-mark{display:block;width:30px;height:30px;flex:0 0 auto}
+.brand-copy{display:flex;flex-direction:column}
 .brand-name{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--primary)}
 .brand-subtitle{font-size:.69rem;color:var(--muted);margin-top:3px}
 .top-nav{display:flex;gap:20px}
@@ -79,17 +107,29 @@ button{color:inherit}
 .text-button:hover{text-decoration:underline;text-underline-offset:3px}
 .view{display:none}
 .view.active{display:block}
-.intro-band{max-width:1260px;margin:0 auto;padding:38px 22px 26px}
+.intro-band{max-width:1260px;margin:0 auto;padding:38px 22px 26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,390px);gap:44px;align-items:end}
+.intro-copy{min-width:0}
 .intro-band h1,.page-header h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);line-height:1.08;letter-spacing:-.02em;color:var(--primary);margin:.15rem 0 .65rem;max-width:860px}
 .intro-band p:not(.eyebrow),.page-header>p:last-child{color:var(--muted);font-size:1rem;max-width:760px;margin:0}
 .eyebrow{margin:0;color:var(--accent-deep);font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.global-search{position:relative;z-index:20;padding-bottom:2px}
+.search-combobox{position:relative}
+.global-search .search-input{background:var(--surface);padding:.76rem .82rem;box-shadow:var(--shadow)}
+.search-status{min-height:1.2em;margin:.4rem 0 0!important;font-size:.72rem!important;line-height:1.4;color:var(--muted)!important}
+.search-suggestions{position:absolute;top:calc(100% + 7px);left:0;right:0;max-height:390px;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 16px 34px -20px rgba(22,50,74,.55);padding:6px;z-index:30}
+.search-suggestion{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:baseline;border:0;background:transparent;color:var(--text);text-align:left;padding:10px 11px;border-radius:6px;cursor:pointer}
+.search-suggestion:hover,.search-suggestion.active{background:var(--surface-soft)}
+.search-suggestion-name{font-size:.84rem;font-weight:600;line-height:1.3}
+.search-suggestion-category{font-size:.68rem;color:var(--muted);white-space:nowrap}
+.search-suggestion mark{background:color-mix(in srgb,var(--accent) 20%,transparent);color:inherit;border-radius:2px;padding:0}
+.search-suggestions-empty{margin:0;padding:12px;color:var(--muted);font-size:.8rem}
 .calculator-shell{max-width:1260px;margin:0 auto 42px;padding:0 22px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
 .formula-browser,.formula-detail{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow)}
 .formula-browser{overflow:hidden}
 .browser-sticky{padding:18px;border-bottom:1px solid var(--border-soft)}
 .field-label{display:block;font-size:.72rem;font-weight:600;color:var(--primary);margin-bottom:6px}
 .search-input{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:.65rem .7rem;outline:none}
-.category-nav{margin-top:16px;display:flex;flex-direction:column}
+.category-nav{margin-top:10px;display:flex;flex-direction:column}
 .category-button{border:0;background:transparent;color:var(--muted);text-align:left;padding:.42rem 0;cursor:pointer;font-size:.82rem}
 .category-button:hover{color:var(--text)}
 .category-button.active{color:var(--primary);font-weight:700}
@@ -144,14 +184,26 @@ button{color:inherit}
 .notes-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;margin-top:18px}
 .formula-note{color:var(--muted);font-size:.8rem;margin:.75rem 0 0}
 .reference-list{list-style:none!important;padding-left:0!important}
+.scientific-feedback{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--border-soft);font-size:.78rem}
 .empty-state{padding:80px 20px;text-align:center}
 .empty-state h2{font-family:var(--serif);color:var(--primary)}
 .empty-state p{color:var(--muted)}
 .page-column{max-width:1080px;margin:0 auto;padding:44px 22px 60px}
 .page-header{padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.release-status{display:flex;align-items:center;flex-wrap:wrap;gap:10px 24px;background:var(--surface-soft);border:1px solid var(--border);border-radius:9px;padding:12px 16px;margin-bottom:14px;color:var(--muted);font-size:.76rem}
+.release-status strong{color:var(--primary);margin-right:4px}
 .validation-summary{display:flex;align-items:baseline;justify-content:space-between;gap:18px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:18px 20px;margin-bottom:18px}
 .validation-summary strong{font-family:var(--serif);font-size:1.45rem;color:var(--primary)}
 .validation-summary span{color:var(--muted);font-size:.85rem}
+.validation-groups{display:grid;gap:14px}
+.validation-group{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.validation-group summary{display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:15px 18px;cursor:pointer;background:var(--surface);list-style:none}
+.validation-group summary::-webkit-details-marker{display:none}
+.validation-group summary::after{content:'+';color:var(--accent-deep);font-size:1.05rem;font-weight:600}
+.validation-group[open] summary::after{content:'−'}
+.validation-group-title{font-family:var(--serif);font-size:1.1rem;color:var(--primary);font-weight:600}
+.validation-group-summary{font-size:.76rem;color:var(--muted)}
+.validation-group .table-wrap{border:0;border-top:1px solid var(--border);border-radius:0}
 .table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:9px}
 .validation-table{width:100%;border-collapse:collapse;min-width:760px}
 .validation-table th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;background:var(--surface-soft);padding:.7rem .8rem;border-bottom:1px solid var(--border)}
@@ -159,6 +211,13 @@ button{color:inherit}
 .validation-table tr:last-child td{border-bottom:0}
 .status-pass{color:var(--accent-deep);font-weight:700}
 .status-fail{color:var(--danger);font-weight:700}
+.integrity-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:20px;margin-top:14px}
+.integrity-card h2{font-family:var(--serif);font-size:1.2rem;color:var(--primary);margin:0 0 4px}
+.integrity-card>p{color:var(--muted);font-size:.82rem;margin:0 0 14px}
+.integrity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.integrity-item{background:var(--surface-soft);border-radius:7px;padding:14px}
+.integrity-item strong{display:block;font-family:var(--serif);font-size:1.25rem;color:var(--primary)}
+.integrity-item span{display:block;margin-top:2px;color:var(--muted);font-size:.75rem;line-height:1.45}
 .method-note,.citation-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px;margin-top:20px}
 .method-note h2,.citation-box h2,.about-grid h2{font-family:var(--serif);color:var(--primary);font-size:1.25rem;margin:0 0 .5rem}
 .method-note p,.citation-box p,.about-grid p{color:var(--muted);margin:0}
@@ -172,21 +231,27 @@ button{color:inherit}
 .example-table td:last-child{text-align:right;color:var(--primary);font-weight:600}
 .example-card .secondary-button{margin-top:auto;align-self:flex-start}
 .about-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.about-grid section{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px}
+.about-grid section,.about-identity{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px}
+.about-identity{display:flex;align-items:center}
+.about-identity p{color:var(--muted);margin:0}
+.about-author-note{font-size:.8rem}
 .small-text{font-size:.8rem;margin-top:.7rem!important}
+.citation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .site-footer{max-width:1260px;margin:0 auto;padding:20px 22px 32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:.75rem}
 .toast{position:fixed;right:18px;bottom:18px;background:var(--primary);color:var(--surface);padding:.65rem .85rem;border-radius:6px;opacity:0;pointer-events:none;transform:translateY(8px);transition:.18s;z-index:500;font-size:.8rem}
 .toast.show{opacity:1;transform:none}
 @media(max-width:900px){
+  .intro-band{grid-template-columns:1fr;gap:22px}
+  .global-search{max-width:620px}
   .example-grid{grid-template-columns:1fr 1fr}
   .header-inner{gap:16px}.brand-subtitle{display:none}.top-nav{gap:12px}.control-label{display:none}
   .calculator-shell{grid-template-columns:1fr}.formula-browser{display:grid;grid-template-columns:280px 1fr}.browser-sticky{border-bottom:0;border-right:1px solid var(--border-soft)}.formula-list{max-height:300px}
-  .category-nav{display:none}.mobile-category-label,.category-select{display:block}.category-select{width:100%;margin-top:6px}.calculation-grid{grid-template-columns:1fr}.interpretation-grid,.notes-grid{grid-template-columns:1fr}
+  .category-nav,.desktop-category-label{display:none}.mobile-category-label,.category-select{display:block}.category-select{width:100%;margin-top:6px}.calculation-grid{grid-template-columns:1fr}.interpretation-grid,.notes-grid{grid-template-columns:1fr}
 }
 @media(max-width:680px){
   .formula-detail{scroll-margin-top:110px}
-  .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;flex-direction:row;align-items:baseline;gap:8px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
-  .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
+  .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
+  .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.integrity-grid{grid-template-columns:1fr}.validation-summary,.validation-group summary{align-items:flex-start;flex-direction:column;gap:4px}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
@@ -248,6 +313,35 @@ button{color:inherit}
 }
 
   </style>
+  <script>
+/* Alfvenica release metadata shared by the interface and automated checks. */
+(function initReleaseMetadata(root, factory) {
+  const metadata = factory();
+  if (typeof module === 'object' && module.exports) module.exports = metadata;
+  root.AlfvenicaRelease = metadata;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildReleaseMetadata() {
+  'use strict';
+
+  return Object.freeze({
+    version: '1.0.1',
+    releaseDate: '2026-08-10',
+    validationDate: '2026-08-10',
+    physicsCoreBaseline: '9ad37ae',
+    physicsCoreSha256: '3b55dd4e641aa6fb2de32de2b656a990055cf93ef8809f494c90f9d7f00d2f92',
+    formulaSmokeCount: 70,
+    plotMetricCount: 28,
+    htmlIdCount: 100,
+    repositoryUrl: 'https://github.com/mkchettri8/alfvenica',
+    physicsBaselineUrl: 'https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9',
+    ciUrl: 'https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml',
+    formulaAuditUrl: 'https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md',
+    scientificIssueUrl: 'https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml',
+    citation: 'Chettri, M. K. (2026). Alfvenica: Interactive Space Plasma Toolkit (Version 1.0.1) [Computer software]. https://alfvenica.org/',
+    bibtex: '@software{chettri_alfvenica_2026,\n  author  = {Chettri, Mani K},\n  title   = {Alfvenica: Interactive Space Plasma Toolkit},\n  version = {1.0.1},\n  year    = {2026},\n  url     = {https://alfvenica.org/}\n}',
+  });
+}));
+
+  </script>
   <script>
 /*
  * Alfvenica physics core
@@ -758,6 +852,8 @@ button{color:inherit}
     nrl: { label: 'NRL Plasma Formulary (2023)', url: 'https://www.nrl.navy.mil/News-Media/Publications/' },
     codata: { label: 'NIST CODATA 2022 constants', url: 'https://physics.nist.gov/cuu/Constants/' },
     hellinger: { label: 'Hellinger et al. (2006), GRL 33, L09101', url: 'https://doi.org/10.1029/2006GL025925' },
+    hasegawaMirror: { label: 'Hasegawa (1969), Physics of Fluids 12, 2642', url: 'https://doi.org/10.1063/1.1692407' },
+    pokhotelovMirror: { label: 'Pokhotelov et al. (2004), JGR 109, A09213', url: 'https://doi.org/10.1029/2004JA010568' },
     cgl: { label: 'Chew, Goldberger & Low (1956), Proc. R. Soc. A 236', url: 'https://doi.org/10.1098/rspa.1956.0116' },
     taylor: { label: 'Taylor (1938), Proc. R. Soc. A 164', url: 'https://doi.org/10.1098/rspa.1938.0032' },
     sweet: { label: 'Sweet (1958), IAU Symposium 6', url: 'https://doi.org/10.1017/S0074180900237704' },
@@ -882,7 +978,7 @@ button{color:inherit}
 
     // Instability thresholds
     entry('fluid-firehose','Instability thresholds','Classical fluid firehose criterion','β<sub>∥</sub> − β<sub>⊥</sub> > 2','\\beta_\\parallel-\\beta_\\perp>2','CGL fluid firehose threshold for a pressure-anisotropic species.',[I('n','Species density','n','density',n(5),{min:0}),I('Tpar','Parallel temperature','T∥','temperature',20,{min:0}),I('Tperp','Perpendicular temperature','T⊥','temperature',10,{min:0}),common.B()],x=>{const bp=P.speciesBeta(x.n,x.Tpar,x.B),bt=P.speciesBeta(x.n,x.Tperp,x.B),r=P.fluidFirehoseCriterion(bp,bt);return[O('Parallel beta','β∥','dimensionless',bp),O('Perpendicular beta','β⊥','dimensionless',bt),O('Criterion','β∥−β⊥','dimensionless',r.criterion),O('Margin to threshold','margin','dimensionless',r.margin),T('Result',r.exceeded?'Fluid threshold exceeded':'Fluid threshold not exceeded')];},{references:[REF.cgl],assumptions:['Single-fluid CGL criterion; not a kinetic growth-rate calculation.']}),
-    entry('fluid-mirror','Instability thresholds','Simplified mirror criterion','β<sub>⊥</sub>(T<sub>⊥</sub>/T<sub>∥</sub>−1) > 1','\\beta_\\perp(T_\\perp/T_\\parallel-1)>1','Long-wavelength single-species mirror threshold.',[I('n','Species density','n','density',n(15),{min:0}),I('Tpar','Parallel temperature','T∥','temperature',100,{min:0}),I('Tperp','Perpendicular temperature','T⊥','temperature',300,{min:0}),common.B()],x=>{const b=P.speciesBeta(x.n,x.Tperp,x.B),a=x.Tperp/x.Tpar,r=P.fluidMirrorCriterion(b,a);return[O('Perpendicular beta','β⊥','dimensionless',b),O('Anisotropy','T⊥/T∥','dimensionless',a),O('Criterion','C','dimensionless',r.criterion),O('Margin to threshold','margin','dimensionless',r.margin),T('Result',r.exceeded?'Simplified threshold exceeded':'Simplified threshold not exceeded')];},{assumptions:['Single species, long wavelength; multi-species and finite-Larmor-radius corrections omitted.']}),
+    entry('fluid-mirror','Instability thresholds','Simplified mirror criterion','β<sub>⊥</sub>(T<sub>⊥</sub>/T<sub>∥</sub>−1) > 1','\\beta_\\perp(T_\\perp/T_\\parallel-1)>1','Long-wavelength single-species mirror threshold.',[I('n','Species density','n','density',n(15),{min:0}),I('Tpar','Parallel temperature','T∥','temperature',100,{min:0}),I('Tperp','Perpendicular temperature','T⊥','temperature',300,{min:0}),common.B()],x=>{const b=P.speciesBeta(x.n,x.Tperp,x.B),a=x.Tperp/x.Tpar,r=P.fluidMirrorCriterion(b,a);return[O('Perpendicular beta','β⊥','dimensionless',b),O('Anisotropy','T⊥/T∥','dimensionless',a),O('Criterion','C','dimensionless',r.criterion),O('Margin to threshold','margin','dimensionless',r.margin),T('Result',r.exceeded?'Simplified threshold exceeded':'Simplified threshold not exceeded')];},{references:[REF.hasegawaMirror,REF.pokhotelovMirror],assumptions:['Single species, long wavelength; multi-species and finite-Larmor-radius corrections omitted.']}),
     entry('hellinger-proton-cyclotron','Instability thresholds','Hellinger proton-cyclotron contour','A = 1 + 0.43/(β<sub>∥p</sub> + 0.0004)<sup>0.42</sup>','A=1+0.43/(\\beta_{\\parallel p}+0.0004)^{0.42}','Approximate γmax = 10⁻³ Ωp proton-cyclotron contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',1,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',1.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,0.43,0.42,-0.0004);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','A−Ath','dimensionless',x.A-th),T('Relative to contour',x.A>th?'Above contour':'Below contour')];},{references:[REF.hellinger],assumptions:['Fit domain 0.01 ≤ β∥p ≤ 30, bi-Maxwellian protons, βe=1, ωpe/Ωce=100.']}),
     entry('hellinger-mirror','Instability thresholds','Hellinger mirror contour','A = 1 + 0.77/(β<sub>∥p</sub> + 0.016)<sup>0.76</sup>','A=1+0.77/(\\beta_{\\parallel p}+0.016)^{0.76}','Approximate γmax = 10⁻³ Ωp mirror contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',1,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',1.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,0.77,0.76,-0.016);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','A−Ath','dimensionless',x.A-th),T('Relative to contour',x.A>th?'Above contour':'Below contour')];},{references:[REF.hellinger],assumptions:['Fit domain and model assumptions follow Hellinger et al. (2006).']}),
     entry('hellinger-parallel-firehose','Instability thresholds','Hellinger parallel-firehose contour','A = 1 − 0.47/(β<sub>∥p</sub> − 0.59)<sup>0.53</sup>','A=1-0.47/(\\beta_{\\parallel p}-0.59)^{0.53}','Approximate γmax = 10⁻³ Ωp parallel-firehose contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',2,{min:0.591}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',0.6,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,-0.47,0.53,0.59);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','Ath−A','dimensionless',th-x.A),T('Relative to contour',x.A<th?'Below contour':'Above contour')];},{references:[REF.hellinger],assumptions:['Fit is undefined for β∥p ≤ 0.59; model assumptions follow Hellinger et al. (2006).']}),
@@ -1527,33 +1623,33 @@ button{color:inherit}
 
   const twoPi = 2 * Math.PI;
   function rel(actual, expected) { return Math.abs(actual - expected) / Math.max(Math.abs(expected), Number.MIN_VALUE); }
-  function test(name, actual, expected, tolerance, source) {
+  function test(name, actual, expected, tolerance, source, kind = 'identity') {
     const error = rel(actual, expected);
-    return Object.freeze({ name, actual, expected, tolerance, error, pass: error <= tolerance, source });
+    return Object.freeze({ name, actual, expected, tolerance, error, pass: error <= tolerance, source, kind });
   }
 
   function run() {
     const B1G = 1e-4;
     const n1cc = 1e6;
     const out = [
-      test('Electron gyrofrequency coefficient', P.electronGyroAngular(B1G)/twoPi, 2.799249e6, 5e-6, 'NRL 2023 / CODATA 2022'),
-      test('Proton gyrofrequency coefficient', P.ionGyroAngular(B1G,1,1)/twoPi, 1.524e3, 8e-4, 'NRL 2023'),
-      test('Electron plasma-frequency coefficient', P.electronPlasmaAngular(n1cc)/twoPi, 8.97866e3, 2e-5, 'NRL 2023 / CODATA 2022'),
-      test('Proton plasma-frequency coefficient', P.ionPlasmaAngular(n1cc,1,1)/twoPi, 2.095e2, 8e-4, 'NRL 2023'),
-      test('Electron Debye-length coefficient', P.electronDebyeLength(1,n1cc)*100, 7.4339e2, 2e-4, 'NRL 2023'),
-      test('Electron thermal-speed coefficient', P.electronThermalSpeed(1)*100, 4.1938e7, 2e-4, 'NRL 2023, sqrt(kT/m)'),
-      test('Proton thermal-speed coefficient', P.ionThermalSpeed(1,1)*100, 9.7872e5, 2e-4, 'NRL 2023, sqrt(kT/m)'),
-      test('Electron inertial-length coefficient', P.electronInertialLength(n1cc)*100, 5.3141e5, 2e-4, 'NRL 2023'),
-      test('Proton inertial-length coefficient', P.ionInertialLength(n1cc,1,1)*100, 2.2771e7, 2e-4, 'NRL 2023'),
-      test('Proton gyroradius coefficient', P.ionGyroradius(1,B1G,1,1)*100, 1.0219e2, 3e-4, 'NRL 2023'),
-      test('Alfvén-speed coefficient', P.alfvenSpeed(B1G,n1cc,1)*100, 2.1812e11, 3e-4, 'NRL 2023'),
-      test('Electron-ion collision coefficient', P.electronIonCollisionFrequency(n1cc,1,1,1), 2.9063e-6, 3e-5, 'NRL 2023'),
-      test('Ion-ion collision coefficient', P.ionIonCollisionFrequency(n1cc,1,1,1,1), 4.7959e-8, 3e-5, 'NRL 2023'),
+      test('Electron gyrofrequency coefficient', P.electronGyroAngular(B1G)/twoPi, 2.799249e6, 5e-6, 'NRL 2023 / CODATA 2022', 'reference'),
+      test('Proton gyrofrequency coefficient', P.ionGyroAngular(B1G,1,1)/twoPi, 1.524e3, 8e-4, 'NRL 2023', 'reference'),
+      test('Electron plasma-frequency coefficient', P.electronPlasmaAngular(n1cc)/twoPi, 8.97866e3, 2e-5, 'NRL 2023 / CODATA 2022', 'reference'),
+      test('Proton plasma-frequency coefficient', P.ionPlasmaAngular(n1cc,1,1)/twoPi, 2.095e2, 8e-4, 'NRL 2023', 'reference'),
+      test('Electron Debye-length coefficient', P.electronDebyeLength(1,n1cc)*100, 7.4339e2, 2e-4, 'NRL 2023', 'reference'),
+      test('Electron thermal-speed coefficient', P.electronThermalSpeed(1)*100, 4.1938e7, 2e-4, 'NRL 2023, sqrt(kT/m)', 'reference'),
+      test('Proton thermal-speed coefficient', P.ionThermalSpeed(1,1)*100, 9.7872e5, 2e-4, 'NRL 2023, sqrt(kT/m)', 'reference'),
+      test('Electron inertial-length coefficient', P.electronInertialLength(n1cc)*100, 5.3141e5, 2e-4, 'NRL 2023', 'reference'),
+      test('Proton inertial-length coefficient', P.ionInertialLength(n1cc,1,1)*100, 2.2771e7, 2e-4, 'NRL 2023', 'reference'),
+      test('Proton gyroradius coefficient', P.ionGyroradius(1,B1G,1,1)*100, 1.0219e2, 3e-4, 'NRL 2023', 'reference'),
+      test('Alfvén-speed coefficient', P.alfvenSpeed(B1G,n1cc,1)*100, 2.1812e11, 3e-4, 'NRL 2023', 'reference'),
+      test('Electron-ion collision coefficient', P.electronIonCollisionFrequency(n1cc,1,1,1), 2.9063e-6, 3e-5, 'NRL 2023', 'reference'),
+      test('Ion-ion collision coefficient', P.ionIonCollisionFrequency(n1cc,1,1,1,1), 4.7959e-8, 3e-5, 'NRL 2023', 'reference'),
     ];
 
     const ne=5e6, ni=5e6, B=5e-9, Te=12, Ti=10;
     const betaSum=P.speciesBeta(ne,Te,B)+P.speciesBeta(ni,Ti,B);
-    out.push(test('eV-to-kelvin conversion', P.conversions.evToKelvin(1), 11604.518121550082, 2e-13, 'CODATA 2022 exact e and k_B'));
+    out.push(test('eV-to-kelvin conversion', P.conversions.evToKelvin(1), 11604.518121550082, 2e-13, 'CODATA 2022 exact e and k_B', 'reference'));
     out.push(test('Upper-hybrid identity', P.upperHybridAngular(B,ne), Math.hypot(P.electronPlasmaAngular(ne),P.electronGyroAngular(B)), 1e-13, 'Cold-plasma definition'));
     const totalDebye=P.totalDebyeLength(ne,Te,ni,Ti,1);
     const inverseDebye=ne*P.constants.elementaryCharge**2/(P.constants.vacuumPermittivity*Te*P.constants.electronVolt)+ni*P.constants.elementaryCharge**2/(P.constants.vacuumPermittivity*Ti*P.constants.electronVolt);
@@ -1583,10 +1679,10 @@ button{color:inherit}
     out.push(test('Aligned Alfvénicity cross helicity', al.normalizedCrossHelicity, 1, 1e-13, 'Elsasser-variable identity'));
     out.push(test('Aligned Alfvénicity residual energy', Math.abs(al.normalizedResidualEnergy)<1e-12?1:0, 1, 0, 'Elsasser-variable identity'));
     const logei=P.coulombLogElectronIon(ne,Te,Ti,1,1);
-    out.push(test('Solar-wind Coulomb logarithm is finite', Number.isFinite(logei)&&logei>0?1:0, 1, 0, 'Weak-coupling domain check'));
+    out.push(test('Solar-wind Coulomb logarithm is finite', Number.isFinite(logei)&&logei>0?1:0, 1, 0, 'Weak-coupling domain check', 'domain'));
     const h=P.hellingerThreshold(1,0.43,0.42,-0.0004);
-    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Hellinger et al. 2006'));
-    out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Hellinger et al. 2006'));
+    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Hellinger et al. 2006', 'reference'));
+    out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Hellinger et al. 2006', 'reference'));
 
     if (Registry && Registry.formulas) {
       let smokePass = 0;
@@ -1597,7 +1693,7 @@ button{color:inherit}
           if (Array.isArray(result) && result.length) smokePass += 1;
         } catch (_) { /* captured by aggregate test */ }
       }
-      out.push(test('Formula-registry default smoke test', smokePass, Registry.formulas.length, 0, 'Alfvenica registry'));
+      out.push(test('Formula-registry default smoke test', smokePass, Registry.formulas.length, 0, 'Alfvenica registry', 'smoke'));
     }
     return Object.freeze(out);
   }
@@ -1607,14 +1703,129 @@ button{color:inherit}
 
   </script>
   <script>
+/* Dependency-free search and ranking for the Alfvenica formula registry. */
+(function initSearch(root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.AlfvenicaSearch = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildSearch() {
+  'use strict';
+
+  function normalizeText(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/×/g, 'x')
+      .replace(/[^a-zA-Z0-9]+/g, ' ')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ');
+  }
+
+  function stripMarkup(value) {
+    return String(value || '').replace(/<[^>]*>/g, ' ');
+  }
+
+  function searchableFields(formula, insight = {}) {
+    const keywords = formula.keywords || [];
+    const uses = insight.uses || [];
+    return {
+      name: normalizeText(formula.name),
+      category: normalizeText(formula.category),
+      description: normalizeText(formula.description),
+      equation: normalizeText(stripMarkup(formula.equation)),
+      keywords: keywords.map(normalizeText),
+      context: normalizeText([
+        insight.significance || '',
+        insight.interpretation || '',
+        ...uses,
+      ].join(' ')),
+    };
+  }
+
+  function scoreFormula(formula, insight, query) {
+    const q = normalizeText(query);
+    if (!q) return 0;
+    const fields = searchableFields(formula, insight);
+    const words = fields.name.split(' ');
+    const haystack = [
+      fields.name,
+      fields.category,
+      fields.description,
+      fields.equation,
+      ...fields.keywords,
+      fields.context,
+    ].join(' ');
+    const tokens = q.split(' ');
+    if (!tokens.every(token => haystack.includes(token))) return Infinity;
+
+    if (fields.name === q) return 0;
+    if (fields.name.startsWith(q)) return 10;
+    if (words.some(word => word.startsWith(q))) return 20;
+    if (fields.name.includes(q)) return 30;
+    if (fields.keywords.some(keyword => keyword === q)) return 35;
+    if (fields.keywords.some(keyword => keyword.startsWith(q))) return 40;
+    if (fields.category.startsWith(q)) return 45;
+    if (fields.description.includes(q) || fields.equation.includes(q)) return 50;
+    return 60;
+  }
+
+  function findMatches(formulas, insights, query, category = 'All formulas') {
+    return formulas
+      .map((formula, index) => ({
+        formula,
+        index,
+        score: scoreFormula(formula, insights[formula.id] || {}, query),
+      }))
+      .filter(item => (category === 'All formulas' || item.formula.category === category) && Number.isFinite(item.score))
+      .sort((a, b) => a.score - b.score || a.index - b.index)
+      .map(item => item.formula);
+  }
+
+  function highlightSegments(text, query) {
+    const raw = String(text || '');
+    const needle = normalizeText(query);
+    if (!needle) return [{ text: raw, match: false }];
+    const normalized = [];
+    const offsets = [];
+    const lengths = [];
+    let offset = 0;
+    for (const character of raw) {
+      const mapped = character.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/×/g, 'x').toLocaleLowerCase('en');
+      for (const mappedCharacter of mapped) {
+        normalized.push(mappedCharacter);
+        offsets.push(offset);
+        lengths.push(character.length);
+      }
+      offset += character.length;
+    }
+    const index = normalized.join('').indexOf(needle);
+    if (index < 0) return [{ text: raw, match: false }];
+    const start = offsets[index];
+    const last = index + needle.length - 1;
+    const end = offsets[last] + lengths[last];
+    return [
+      { text: raw.slice(0, start), match: false },
+      { text: raw.slice(start, end), match: true },
+      { text: raw.slice(end), match: false },
+    ].filter(segment => segment.text);
+  }
+
+  return Object.freeze({ normalizeText, scoreFormula, findMatches, highlightSegments });
+}));
+
+  </script>
+  <script>
 (function () {
   'use strict';
+  const Meta = window.AlfvenicaRelease;
   const Registry = window.PlasmaFormulaRegistry;
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
+  const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Registry || !PlotRegistry || !Insights || !Validation || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
@@ -1635,6 +1846,8 @@ button{color:inherit}
     unitSystem: storage.get('alfvenica-units', 'space'),
     category: 'All formulas',
     search: '',
+    searchMatches: [],
+    suggestionIndex: -1,
     formulaId: '',
     values: new Map(),
     lastResults: [],
@@ -1712,7 +1925,14 @@ button{color:inherit}
   }
 
   function formatQuantity(quantity, canonical) {
-    if (quantity === 'text') return { value: String(canonical), unit: '' };
+    if (quantity === 'text') {
+      const cautiousLabels = {
+        'Kinetic Alfvén limit': 'Reduced-model regime: kinetic-Alfvén ordering',
+        'Inertial Alfvén limit': 'Reduced-model regime: inertial-Alfvén ordering',
+        'Transition region': 'Reduced-model regime: broad kinetic/inertial transition',
+      };
+      return { value: cautiousLabels[canonical] || String(canonical), unit: '' };
+    }
     if (!Number.isFinite(canonical)) return { value: canonical === Infinity ? '∞' : '—', unit: unitLabel(quantity) };
 
     // Readable adaptive units for the most common space-physics outputs.
@@ -1749,16 +1969,107 @@ button{color:inherit}
   }
 
   function searchResults() {
-    const q = state.search.trim().toLowerCase();
-    return Registry.formulas.filter(f => {
-      const categoryMatch = state.category === 'All formulas' || f.category === state.category;
-      if (!categoryMatch) return false;
-      if (!q) return true;
-      const aliases = f.category === 'Kinetic Alfvén waves' ? ' kaw kinetic alfven kinetic alfvén ' : '';
-      const insight = Insights.insights[f.id] || { significance:'', interpretation:'', uses:[] };
-      const haystack = [f.name, f.category, f.description, ...(f.keywords || []), insight.significance, insight.interpretation, ...(insight.uses || []), aliases].join(' ').toLowerCase();
-      return haystack.includes(q);
+    return Search.findMatches(Registry.formulas, Insights.insights, state.search, state.category);
+  }
+
+  function setSuggestionActive(index) {
+    const options = [...$('searchSuggestions').querySelectorAll('[role="option"]')];
+    if (!options.length) {
+      state.suggestionIndex = -1;
+      $('formulaSearch').removeAttribute('aria-activedescendant');
+      return;
+    }
+    state.suggestionIndex = Math.max(0, Math.min(index, options.length - 1));
+    options.forEach((option, optionIndex) => {
+      const active = optionIndex === state.suggestionIndex;
+      option.classList.toggle('active', active);
+      option.setAttribute('aria-selected', String(active));
+      if (active) option.scrollIntoView({ block: 'nearest' });
     });
+    $('formulaSearch').setAttribute('aria-activedescendant', options[state.suggestionIndex].id);
+  }
+
+  function closeSearchSuggestions() {
+    $('searchSuggestions').hidden = true;
+    $('formulaSearch').setAttribute('aria-expanded', 'false');
+    $('formulaSearch').removeAttribute('aria-activedescendant');
+    state.suggestionIndex = -1;
+  }
+
+  function chooseSearchSuggestion(formula) {
+    if (!formula) return;
+    selectFormula(formula.id, true, true);
+    closeSearchSuggestions();
+  }
+
+  function appendHighlightedName(element, name, query) {
+    for (const segment of Search.highlightSegments(name, query)) {
+      const node = segment.match ? document.createElement('mark') : document.createTextNode(segment.text);
+      if (segment.match) node.textContent = segment.text;
+      element.appendChild(node);
+    }
+  }
+
+  function renderSearchSuggestions() {
+    const query = state.search.trim();
+    const suggestions = $('searchSuggestions');
+    suggestions.replaceChildren();
+    if (!query) {
+      state.searchMatches = [];
+      $('searchStatus').textContent = 'Type to search formula names, parameters, and common abbreviations.';
+      closeSearchSuggestions();
+      return;
+    }
+
+    state.searchMatches = Search.findMatches(Registry.formulas, Insights.insights, query, 'All formulas');
+    const visibleMatches = state.searchMatches.slice(0, 8);
+    $('searchStatus').textContent = `${state.searchMatches.length} matching calculator${state.searchMatches.length === 1 ? '' : 's'}.`;
+    if (!visibleMatches.length) {
+      const empty = document.createElement('p');
+      empty.className = 'search-suggestions-empty';
+      empty.textContent = 'No matching calculators. Try a broader term.';
+      suggestions.appendChild(empty);
+    } else {
+      visibleMatches.forEach((formula, index) => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.id = `search-option-${formula.id}`;
+        option.className = 'search-suggestion';
+        option.setAttribute('role', 'option');
+        option.setAttribute('aria-selected', 'false');
+        const name = document.createElement('span');
+        name.className = 'search-suggestion-name';
+        appendHighlightedName(name, formula.name, query);
+        const category = document.createElement('span');
+        category.className = 'search-suggestion-category';
+        category.textContent = formula.category;
+        option.append(name, category);
+        option.addEventListener('pointerenter', () => setSuggestionActive(index));
+        option.addEventListener('click', () => chooseSearchSuggestion(formula));
+        suggestions.appendChild(option);
+      });
+    }
+    suggestions.hidden = false;
+    $('formulaSearch').setAttribute('aria-expanded', 'true');
+    setSuggestionActive(visibleMatches.length ? 0 : -1);
+  }
+
+  function onSearchKeydown(event) {
+    const visibleCount = Math.min(state.searchMatches.length, 8);
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if ($('searchSuggestions').hidden) renderSearchSuggestions();
+      if (!visibleCount) return;
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const current = state.suggestionIndex < 0 ? (direction > 0 ? -1 : 0) : state.suggestionIndex;
+      setSuggestionActive((current + direction + visibleCount) % visibleCount);
+    } else if (event.key === 'Enter' && state.suggestionIndex >= 0 && visibleCount) {
+      event.preventDefault();
+      chooseSearchSuggestion(state.searchMatches[state.suggestionIndex]);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      closeSearchSuggestions();
+    }
   }
 
   function renderCategories() {
@@ -1776,7 +2087,7 @@ button{color:inherit}
     const empty = results.length === 0;
     $('formulaEmpty').hidden = !empty;
     $('formulaContent').hidden = empty;
-    if (!empty && !results.some(f => f.id === state.formulaId)) selectFormula(results[0].id, false);
+    if (!empty && !results.some(f => f.id === state.formulaId) && !state.search.trim()) selectFormula(results[0].id, false);
   }
 
   function renderPresets() {
@@ -1840,6 +2151,9 @@ button{color:inherit}
     const assumptions = formula.assumptions.length ? formula.assumptions : ['Use the stated equation with the displayed units; no additional model assumptions are attached to this definition.'];
     $('assumptionList').innerHTML = assumptions.map(a => `<li>${a}</li>`).join('');
     $('referenceList').innerHTML = formula.references.map(r => `<li><a href="${r.url}" target="_blank" rel="noopener noreferrer">${r.label}</a></li>`).join('');
+    const issueUrl = new URL(Meta.scientificIssueUrl);
+    issueUrl.searchParams.set('title', `[Science] ${formula.name}`);
+    $('reportScientificIssue').href = issueUrl.toString();
 
     $('inputGrid').innerHTML = formula.inputs.map(input => {
       const displayValue = toDisplay(input.quantity, values[input.key]);
@@ -1883,7 +2197,12 @@ button{color:inherit}
   function selectFormula(id, updateHash = true, revealOnCompactLayout = false) {
     if (!formulaById(id)) return;
     state.formulaId = id;
-    if (updateHash) history.replaceState(null, '', `#${id}`);
+    if (updateHash) {
+      const url = new URL(location.href);
+      url.searchParams.delete('view');
+      url.hash = id;
+      history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    }
     renderFormula();
     if (revealOnCompactLayout && window.matchMedia('(max-width: 900px)').matches) {
       requestAnimationFrame(() => document.querySelector('.formula-detail').scrollIntoView({ behavior: 'smooth', block: 'start' }));
@@ -1930,6 +2249,8 @@ button{color:inherit}
     copyText(lines.join('\n'), 'Values copied');
   }
   function copyLatex() { copyText(activeFormula().latex, 'LaTeX copied'); }
+  function copyCitation() { copyText(Meta.citation, 'Citation copied'); }
+  function copyBibtex() { copyText(Meta.bibtex, 'BibTeX copied'); }
   function showToast(message) {
     const toast = $('toast'); toast.textContent = message; toast.classList.add('show');
     clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 1700);
@@ -2360,8 +2681,13 @@ button{color:inherit}
 
   function updateViewUrl(view, mode = 'push') {
     const url = new URL(location.href);
-    if (view === 'calculator') url.searchParams.delete('view');
-    else url.searchParams.set('view', view);
+    if (view === 'calculator') {
+      url.searchParams.delete('view');
+      url.hash = state.formulaId || '';
+    } else {
+      url.searchParams.set('view', view);
+      url.hash = '';
+    }
     const next = `${url.pathname}${url.search}${url.hash}`;
     const current = `${location.pathname}${location.search}${location.hash}`;
     if (next === current) return;
@@ -2371,6 +2697,7 @@ button{color:inherit}
   function setView(view, { updateUrl = true, scroll = true } = {}) {
     if (!validViews.has(view)) view = 'calculator';
     state.view = view;
+    if (view !== 'calculator') closeSearchSuggestions();
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `${view}View`));
     document.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
     if (view === 'plots') renderPlotsPage();
@@ -2390,7 +2717,7 @@ button{color:inherit}
         ['Ion-sound gyroradius', formatQuantity('length', q.rhoS)],
         ['Total beta', formatQuantity('dimensionless', q.betaTotal)],
         ['Alfvén Mach number', formatQuantity('dimensionless', q.machA)],
-        ['Alfvén regime', { value:q.kaw.label, unit:'' }],
+        ['Alfvén regime', formatQuantity('text', q.kaw.label)],
       ];
       const table = rows.map(([label,val]) => `<tr><td>${label}</td><td>${val.value}${val.unit ? ` ${val.unit}` : ''}</td></tr>`).join('');
       return `<article class="example-card"><p class="eyebrow">Illustrative state</p><h2>${example.title}</h2><p>${example.description}</p><table class="example-table"><tbody>${table}</tbody></table><button class="secondary-button" type="button" data-example-preset="${example.preset}">Open in calculator</button></article>`;
@@ -2406,8 +2733,25 @@ button{color:inherit}
   function renderValidation() {
     const tests = Validation.run();
     const passed = tests.filter(t => t.pass).length;
-    $('validationSummary').innerHTML = `<strong>${passed === tests.length ? 'All checks passed' : `${passed} of ${tests.length} checks passed`}</strong><span>Default registry calculations and numerical coefficients are tested at load time.</span>`;
-    $('validationBody').innerHTML = tests.map(t => `<tr><td>${t.name}<br><span class="small-text">${t.source}</span></td><td>${formatNumber(t.actual,6)}</td><td>${formatNumber(t.expected,6)}</td><td>${formatNumber(t.error*100,4)}%</td><td class="${t.pass?'status-pass':'status-fail'}">${t.pass?'Pass':'Check'}</td></tr>`).join('');
+    const referenceCount = tests.filter(test => test.kind === 'reference').length;
+    const identityCount = tests.filter(test => test.kind === 'identity').length;
+    const domainCount = tests.filter(test => test.kind === 'domain').length;
+    $('validationSummary').innerHTML = `<strong>${passed === tests.length ? 'All validation groups passed' : `${passed} of ${tests.length} validation records passed`}</strong><span>${referenceCount} reference benchmarks · ${identityCount} analytical identities · ${domainCount} domain safeguard · ${Meta.formulaSmokeCount}/${Meta.formulaSmokeCount} calculator defaults execute</span>`;
+
+    const groupDefinitions = [
+      ['reference', 'Numerically verified against reference values', 'Published coefficients, constants, and empirical fits checked at stated points.'],
+      ['identity', 'Analytical consistency checks', 'Definitions, limiting cases, exact identities, and scaling relations.'],
+      ['domain', 'Domain safeguards', 'Checks that representative valid-domain calculations remain finite and meaningful.'],
+    ];
+    $('validationGroups').innerHTML = groupDefinitions.map(([kind, title, description], index) => {
+      const group = tests.filter(test => test.kind === kind);
+      const groupPassed = group.filter(test => test.pass).length;
+      const rows = group.map(test => `<tr><td>${test.name}<br><span class="small-text">${test.source}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`).join('');
+      return `<details class="validation-group"${index === 0 ? ' open' : ''}><summary><span><span class="validation-group-title">${title}</span><br><span class="validation-group-summary">${description}</span></span><span class="validation-group-summary">${groupPassed}/${group.length} passed</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Test</th><th>Computed</th><th>Reference</th><th>Relative error</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+    }).join('');
+
+    const smoke = tests.find(test => test.kind === 'smoke');
+    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation integrity</h2><p>These checks confirm execution and structural consistency. They do not independently verify every numerical result.</p><div class="integrity-grid"><div class="integrity-item"><strong>${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error</span></div><div class="integrity-item"><strong>${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values, with hierarchy and scaling checks</span></div><div class="integrity-item"><strong>${Meta.htmlIdCount}</strong><span>unique interface identifiers, plus asset, reference, and interpretation-integrity checks</span></div></div>`;
   }
 
   function applyTheme() {
@@ -2431,7 +2775,17 @@ button{color:inherit}
     bindPlotEvents();
     setView(state.view, { updateUrl: false, scroll: false });
 
-    $('formulaSearch').addEventListener('input', e => { state.search = e.target.value; renderFormulaList(); });
+    $('formulaSearch').addEventListener('input', event => {
+      state.search = event.target.value;
+      if (state.search.trim() && state.category !== 'All formulas') {
+        state.category = 'All formulas';
+        renderCategories();
+      }
+      renderFormulaList();
+      renderSearchSuggestions();
+    });
+    $('formulaSearch').addEventListener('focus', renderSearchSuggestions);
+    $('formulaSearch').addEventListener('keydown', onSearchKeydown);
     $('categorySelect').addEventListener('change', e => { state.category = e.target.value; renderCategories(); renderFormulaList(); });
     $('unitSystem').addEventListener('change', e => { state.unitSystem = e.target.value; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); });
     $('themeToggle').addEventListener('click', () => { state.theme = state.theme === 'light' ? 'dark' : 'light'; storage.set('alfvenica-theme', state.theme); applyTheme(); if (state.view === 'plots') renderPlots(); });
@@ -2439,13 +2793,25 @@ button{color:inherit}
     $('applyPreset').addEventListener('click', applyPreset);
     $('copyResults').addEventListener('click', copyResults);
     $('copyLatex').addEventListener('click', copyLatex);
+    $('copyCitation').addEventListener('click', copyCitation);
+    $('copyBibtex').addEventListener('click', copyBibtex);
     $('brandButton').addEventListener('click', () => setView('calculator'));
     document.querySelectorAll('.nav-button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
     window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (formulaById(id)) selectFormula(id, false); });
-    window.addEventListener('popstate', () => setView(viewFromUrl(), { updateUrl: false, scroll: false }));
+    window.addEventListener('popstate', () => {
+      const id = location.hash.slice(1);
+      if (formulaById(id)) selectFormula(id, false);
+      setView(viewFromUrl(), { updateUrl: false, scroll: false });
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!event.target.closest('.global-search')) closeSearchSuggestions();
+    });
     document.addEventListener('keydown', e => {
-      if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); $('formulaSearch').focus(); }
-      if (e.key === 'Escape' && document.activeElement === $('formulaSearch')) { $('formulaSearch').value = ''; state.search = ''; renderFormulaList(); }
+      if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) {
+        e.preventDefault();
+        if (state.view !== 'calculator') setView('calculator');
+        requestAnimationFrame(() => $('formulaSearch').focus());
+      }
     });
   }
 
@@ -2459,8 +2825,11 @@ button{color:inherit}
   <header class="site-header">
     <div class="header-inner">
       <button class="brand" id="brandButton" type="button" aria-label="Open calculator home">
-        <span class="brand-name">Alfvenica</span>
-        <span class="brand-subtitle">Space Plasma Toolkit</span>
+        <img class="brand-mark" src="assets/favicon.svg" alt="" width="30" height="30">
+        <span class="brand-copy">
+          <span class="brand-name">Alfvenica</span>
+          <span class="brand-subtitle">Space Plasma Toolkit</span>
+        </span>
       </button>
       <nav class="top-nav" aria-label="Primary">
         <button class="nav-button active" type="button" data-view="calculator">Calculator</button>
@@ -2484,18 +2853,25 @@ button{color:inherit}
   <main id="main">
     <section id="calculatorView" class="view active" aria-labelledby="calculatorHeading">
       <div class="intro-band">
-        <div>
+        <div class="intro-copy">
           <p class="eyebrow">Unit-explicit scientific calculator</p>
           <h1 id="calculatorHeading">Space-plasma parameters, with assumptions visible.</h1>
           <p>Search a formula, enter the plasma state, and inspect the calculation, units, scope, and source in one place.</p>
+        </div>
+        <div class="global-search">
+          <label for="formulaSearch" class="field-label">Search all calculators</label>
+          <div class="search-combobox">
+            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, Alfvén, KAW" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" aria-describedby="searchStatus">
+            <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Matching calculators" hidden></div>
+          </div>
+          <p id="searchStatus" class="search-status" aria-live="polite">Type to search formula names, parameters, and common abbreviations.</p>
         </div>
       </div>
 
       <div class="calculator-shell">
         <aside class="formula-browser" aria-label="Formula browser">
           <div class="browser-sticky">
-            <label for="formulaSearch" class="field-label">Search formulas</label>
-            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, KAW, collision" autocomplete="off">
+            <p class="field-label desktop-category-label">Browse by category</p>
             <label for="categorySelect" class="field-label mobile-category-label">Category</label>
             <select id="categorySelect" class="category-select" aria-label="Formula category"></select>
             <nav id="categoryNav" class="category-nav" aria-label="Formula categories"></nav>
@@ -2511,8 +2887,8 @@ button{color:inherit}
           <div id="formulaContent">
             <header class="formula-header">
               <p id="formulaCategory" class="eyebrow"></p>
-              <h2 id="formulaName"></h2>
-              <div id="formulaEquation" class="equation" aria-label="Formula equation"></div>
+              <h2 id="formulaName">Total electron-ion beta</h2>
+              <div id="formulaEquation" class="equation" role="math" aria-label="Formula equation"></div>
               <p id="formulaDescription" class="formula-description"></p>
             </header>
 
@@ -2578,6 +2954,7 @@ button{color:inherit}
                   <ul id="referenceList" class="reference-list"></ul>
                 </div>
               </div>
+              <p class="scientific-feedback"><a id="reportScientificIssue" href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Report a scientific issue with this calculator</a></p>
             </section>
           </div>
         </article>
@@ -2703,18 +3080,20 @@ button{color:inherit}
         <header class="page-header">
           <p class="eyebrow">Numerical quality control</p>
           <h1 id="validationHeading">Validation report</h1>
-          <p>The core is checked against standard NRL coefficients, exact definitions, and registry-wide smoke tests.</p>
+          <p>Reference benchmarks, analytical identities, domain safeguards, and execution checks are reported separately so that “tested” has a precise meaning.</p>
         </header>
-        <div id="validationSummary" class="validation-summary"></div>
-        <div class="table-wrap">
-          <table class="validation-table">
-            <thead><tr><th>Test</th><th>Computed</th><th>Reference</th><th>Relative error</th><th>Status</th></tr></thead>
-            <tbody id="validationBody"></tbody>
-          </table>
+        <div class="release-status" role="group" aria-label="Release provenance">
+          <span><strong>Version</strong> 1.0.1</span>
+          <span><strong>Last validated</strong> 10 August 2026</span>
+          <span><strong>Physics-core baseline</strong> <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a></span>
         </div>
+        <div id="validationSummary" class="validation-summary"></div>
+        <div id="validationGroups" class="validation-groups"></div>
+        <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
         <div class="method-note">
           <h2>Interpretation</h2>
-          <p>Passing these tests confirms implementation consistency for the tested definitions. It does not turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers. Each calculator states its own scope.</p>
+          <p>A smoke test confirms that a calculator executes on its valid default inputs; it is not an independent numerical benchmark. Passing all checks confirms implementation consistency for the tested definitions, but it does not turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers. Each calculator states its own scope.</p>
+          <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
       </div>
     </section>
@@ -2724,46 +3103,57 @@ button{color:inherit}
         <header class="page-header">
           <p class="eyebrow">About the project</p>
           <h1 id="aboutHeading">A transparent formulary for space-plasma work.</h1>
-          <p>Alfvenica is designed as a calculator, a formula reference, and a reproducibility aid—not as a substitute for kinetic dispersion codes or instrument-specific analysis pipelines.</p>
+          <p>Alfvenica is an independent, open-source browser toolkit that brings commonly used space- and astrophysical-plasma calculations together with their units, assumptions, interpretation, and sources. It is intended for researchers, educators, and learners who want to inspect the model behind a number rather than use a black-box result.</p>
         </header>
         <div class="about-grid">
           <section>
-            <h2>Design principles</h2>
-            <p>All calculations and plots run locally in the browser through a single SI physics core; no input values are transmitted. Units are converted only at the interface, while formula definitions, assumptions, sources, plot metrics, and tests remain separate from the page layout.</p>
+            <h2>Why I built it</h2>
+            <p>I began developing Alfvenica while working with spacecraft observations and kinetic-Alfvén-wave problems. Repeatedly checking units, conventions, assumptions, and limiting cases was often as important as obtaining the numerical result. The toolkit grew from that practical need.</p>
           </section>
           <section>
-            <h2>Unit conventions</h2>
-            <p><strong>Space</strong> uses cm⁻³, nT, eV, km s⁻¹, and km where practical. <strong>SI</strong> uses m⁻³, T, K, m s⁻¹, and m. <strong>CGS</strong> uses cm⁻³, G, eV, cm s⁻¹, and cm. Derived quantities that are conventionally reported in SI retain SI units when a reliable CGS analogue would be ambiguous.</p>
+            <h2>What it is for</h2>
+            <p>Alfvenica combines a searchable calculator, physical interpretation, controlled plotting, illustrative plasma states, explicit model assumptions, primary references, and an in-browser validation report. It supports first-pass estimates, teaching, consistency checks, and transparent methods—not automated wave identification.</p>
           </section>
           <section>
-            <h2>Scientific basis</h2>
-            <p>Fundamental constants follow the 2022 CODATA set. Foundational plasma coefficients are cross-checked against the 2023 NRL Plasma Formulary. Empirical anisotropy thresholds retain the model assumptions and fit domain of the cited paper.</p>
+            <h2>Design, units, and privacy</h2>
+            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI, and CGS choices are interface conversions only. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
           </section>
           <section>
-            <h2>Limitations</h2>
-            <p>Single-ion, scalar-temperature, fluid, reduced two-fluid, and frozen-flow assumptions appear in several tools. Users should not apply a result outside the stated regime without an independent derivation or a more complete numerical model.</p>
+            <h2>Scientific basis and validation</h2>
+            <p>Constants follow CODATA 2022. Foundational coefficients are checked against the 2023 NRL Plasma Formulary, while model-specific entries retain primary references and validity conditions. Reference benchmarks, analytical identities, domain checks, smoke tests, and interface checks are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
           </section>
           <section>
-            <h2>Reading characteristic scales</h2>
-            <p>A gyrofrequency, inertial length, gyroradius, or threshold is usually an ordering scale rather than a sharp universal boundary. Physical interpretation should compare several independent scales and retain uncertainty in density, temperature, field, flow, geometry, and species definition.</p>
+            <h2>Scope and limitations</h2>
+            <p>Single-ion, scalar-temperature, fluid, reduced two-fluid, bi-Maxwellian, and frozen-flow assumptions appear in several tools. Characteristic scales are usually ordering scales, not sharp universal boundaries. Alfvenica does not replace kinetic dispersion solvers, instrument pipelines, event context, or uncertainty analysis.</p>
           </section>
           <section>
-            <h2>Observational interpretation</h2>
-            <p>Spacecraft-frame frequencies, E/B ratios, current densities, and crossing thicknesses depend on frame choice, cadence, coordinate systems, and geometry. Alfvenica therefore presents them as transparent diagnostics to be combined with instrument validation and event context.</p>
+            <h2>AI-assisted development</h2>
+            <p>ChatGPT, Claude, Gemini, DeepSeek, and Kimi assisted parts of coding, documentation, testing, and critical review. Their outputs were not accepted as scientific authority: formulas, assumptions, units, and numerical behaviour were checked against primary sources, analytical limits, and automated tests. Final responsibility for the scientific content and implementation remains with the author.</p>
           </section>
+          <section>
+            <h2>Collaboration and feedback</h2>
+            <p>Alfvenica is under continuing development. Scientific corrections, independent benchmarks, documentation improvements, code contributions, feedback, and genuine research collaboration are welcome. <a href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Report a scientific issue</a> or read the <a href="https://github.com/mkchettri8/alfvenica/blob/main/CONTRIBUTING.md">contribution guide</a>.</p>
+          </section>
+          <aside class="about-identity" aria-label="Project identity">
+            <p class="about-author-note">Alfvenica is independently developed and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a> (<a href="https://orcid.org/0009-0000-1368-9263">ORCID</a>). No dedicated external funding supported this release.</p>
+          </aside>
         </div>
         <section class="citation-box">
           <h2>Suggested citation</h2>
-          <p>Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em>. <a href="https://alfvenica.org">mkchettri.in/alfvenica</a>.</p>
-          <p class="small-text">This release separates the physics engine, formula registry, validation suite, interface logic, and visual design to reduce scientific drift and simplify maintenance.</p>
+          <p id="citationText">Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em> (Version 1.0.1) [Computer software]. <a href="https://alfvenica.org/">https://alfvenica.org/</a></p>
+          <div class="citation-actions">
+            <button id="copyCitation" class="secondary-button" type="button">Copy citation</button>
+            <button id="copyBibtex" class="secondary-button" type="button">Copy BibTeX</button>
+          </div>
+          <p class="small-text">Version 1.0.1 · validated 10 August 2026 · physics core unchanged from baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. A DOI will be added only after the release is formally archived.</p>
         </section>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <span>Alfvenica · Mani K Chettri · MIT License</span>
-    <span><a href="https://mkchettri.in">Research website</a> · <a href="https://github.com/mkchettri8/alfvenica">Source code</a></span>
+    <span>Alfvenica · Created and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a></span>
+    <span><a href="https://mkchettri.in">Research website</a> · <a href="https://github.com/mkchettri8/alfvenica">Source code</a> · <a href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Scientific feedback</a></span>
   </footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
