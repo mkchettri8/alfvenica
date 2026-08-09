@@ -63,8 +63,11 @@
   <header class="site-header">
     <div class="header-inner">
       <button class="brand" id="brandButton" type="button" aria-label="Open calculator home">
-        <span class="brand-name">Alfvenica</span>
-        <span class="brand-subtitle">Space Plasma Toolkit</span>
+        <img class="brand-mark" src="assets/favicon.svg" alt="" width="30" height="30">
+        <span class="brand-copy">
+          <span class="brand-name">Alfvenica</span>
+          <span class="brand-subtitle">Space Plasma Toolkit</span>
+        </span>
       </button>
       <nav class="top-nav" aria-label="Primary">
         <button class="nav-button active" type="button" data-view="calculator">Calculator</button>
@@ -362,10 +365,6 @@
             <p>Single-ion, scalar-temperature, fluid, reduced two-fluid, bi-Maxwellian, and frozen-flow assumptions appear in several tools. Characteristic scales are usually ordering scales, not sharp universal boundaries. Alfvenica does not replace kinetic dispersion solvers, instrument pipelines, event context, or uncertainty analysis.</p>
           </section>
           <section>
-            <h2>Author and independence</h2>
-            <p>Alfvenica is created and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a>, a final-year PhD candidate in Physics at Sikkim University (<a href="https://orcid.org/0009-0000-1368-9263">ORCID</a>). It is independently developed; the affiliation identifies the author and does not imply institutional endorsement. No dedicated external funding supported this release.</p>
-          </section>
-          <section>
             <h2>AI-assisted development</h2>
             <p>ChatGPT, Claude, Gemini, DeepSeek, and Kimi assisted parts of coding, documentation, testing, and critical review. Their outputs were not accepted as scientific authority: formulas, assumptions, units, and numerical behaviour were checked against primary sources, analytical limits, and automated tests. Final responsibility for the scientific content and implementation remains with the author.</p>
           </section>
@@ -373,6 +372,9 @@
             <h2>Collaboration and feedback</h2>
             <p>Alfvenica is under continuing development. Scientific corrections, independent benchmarks, documentation improvements, code contributions, feedback, and genuine research collaboration are welcome. <a href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Report a scientific issue</a> or read the <a href="https://github.com/mkchettri8/alfvenica/blob/main/CONTRIBUTING.md">contribution guide</a>.</p>
           </section>
+          <aside class="about-identity" aria-label="Project identity">
+            <p class="about-author-note">Alfvenica is independently developed and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a> (<a href="https://orcid.org/0009-0000-1368-9263">ORCID</a>). No dedicated external funding supported this release.</p>
+          </aside>
         </div>
         <section class="citation-box">
           <h2>Suggested citation</h2>
@@ -388,7 +390,7 @@
   </main>
 
   <footer class="site-footer">
-    <span>Alfvenica v1.0.1 · Mani K Chettri · MIT License</span>
+    <span>Alfvenica · Created and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a></span>
     <span><a href="https://mkchettri.in">Research website</a> · <a href="https://github.com/mkchettri8/alfvenica">Source code</a> · <a href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Scientific feedback</a></span>
   </footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

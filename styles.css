@@ -39,7 +39,9 @@ button{color:inherit}
 .skip-link:focus{top:1rem}
 .site-header{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
 .header-inner{max-width:1260px;margin:0 auto;min-height:64px;padding:0 22px;display:flex;align-items:center;gap:28px}
-.brand{border:0;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;line-height:1.1}
+.brand{border:0;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;align-items:center;gap:9px;line-height:1.1}
+.brand-mark{display:block;width:30px;height:30px;flex:0 0 auto}
+.brand-copy{display:flex;flex-direction:column}
 .brand-name{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--primary)}
 .brand-subtitle{font-size:.69rem;color:var(--muted);margin-top:3px}
 .top-nav{display:flex;gap:20px}
@@ -178,7 +180,10 @@ button{color:inherit}
 .example-table td:last-child{text-align:right;color:var(--primary);font-weight:600}
 .example-card .secondary-button{margin-top:auto;align-self:flex-start}
 .about-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.about-grid section{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px}
+.about-grid section,.about-identity{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px}
+.about-identity{display:flex;align-items:center}
+.about-identity p{color:var(--muted);margin:0}
+.about-author-note{font-size:.8rem}
 .small-text{font-size:.8rem;margin-top:.7rem!important}
 .citation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .site-footer{max-width:1260px;margin:0 auto;padding:20px 22px 32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:.75rem}
@@ -194,7 +199,7 @@ button{color:inherit}
 }
 @media(max-width:680px){
   .formula-detail{scroll-margin-top:110px}
-  .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;flex-direction:row;align-items:baseline;gap:8px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
+  .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
   .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.integrity-grid{grid-template-columns:1fr}.validation-summary,.validation-group summary{align-items:flex-start;flex-direction:column;gap:4px}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
