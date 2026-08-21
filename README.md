@@ -56,13 +56,17 @@ npm run build:standalone
 
 The validation taxonomy uses `A_REFERENCE`, `B_IDENTITY`, `C_UNIT`,
 `D_PROPERTY`, `E_DOMAIN`, `F_REGRESSION`, and `P_PROVENANCE`. The current 38
-in-browser records comprise 9 analytical/property identities and 29 regression,
-implementation-consistency, nominal-example, or smoke checks. No current record
-is claimed as an independent `A_REFERENCE` benchmark. Development tests also
-cover plotting properties, search behaviour, formula defaults, interpretation
-and reference coverage, internal links, unique identifiers, release metadata,
-and local assets. The physics-core hash is a `P_PROVENANCE` change detector, not
-evidence of scientific correctness. See the [`FORMULA_AUDIT.md`](FORMULA_AUDIT.md) and public
+in-browser records comprise 6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, and 22
+`F_REGRESSION` records. The independent anchors are generated without importing
+the production physics implementation and are frozen with source, constants,
+full-precision expected values, source comparisons, CODATA uncertainties,
+method, and separate zero-ULP software comparison criteria in
+[`tests/reference/`](tests/reference/README.md). Development tests also cover
+plotting properties, search behaviour, formula defaults, interpretation and
+reference coverage, internal links, unique identifiers, release metadata, and
+local assets. The physics-core hash is a `P_PROVENANCE` change detector, not
+evidence of scientific correctness. See [`FORMULA_AUDIT.md`](FORMULA_AUDIT.md)
+and the public
 [test workflow](https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml).
 
 ## Deployment

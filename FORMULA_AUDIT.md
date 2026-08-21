@@ -68,25 +68,50 @@ Every in-browser validation record has exactly one semantic class:
 - **`P_PROVENANCE` — provenance, tamper, or hash verification:** an artifact
   identity check, explicitly not evidence of scientific correctness.
 
-The 38 current in-browser records comprise **9 `B_IDENTITY`** checks and **29
-`F_REGRESSION`** checks. There are currently no record-level `A_REFERENCE`,
-`C_UNIT`, `D_PROPERTY`, `E_DOMAIN`, or `P_PROVENANCE` claims. Each record carries
-an evidence-basis identifier, source/provenance note, and tolerance rationale.
+The 38 current in-browser records comprise **6 `A_REFERENCE`**, **9
+`B_IDENTITY`**, **1 `C_UNIT`**, and **22 `F_REGRESSION`** checks. There are no
+record-level `D_PROPERTY`, `E_DOMAIN`, or `P_PROVENANCE` claims. Each record
+carries an evidence-basis identifier, source/provenance note, tolerance
+rationale, and—only for independently anchored records—a stable benchmark ID.
 
-The fixed NRL/CODATA coefficient targets remain useful regressions, but their
-independent generation lineage and tolerance derivation are not documented well
-enough to call them `A_REFERENCE`. The eV-to-kelvin expected value is tied to the
-same production constants and is therefore not yet `C_UNIT`. The two Hellinger
-point checks repeat production coefficients in their expected expressions, and
-the positive solar-wind Coulomb-log example exercises no applicability boundary;
-all are conservatively `F_REGRESSION`.
+The six `A_REFERENCE` records cover the electron gyrofrequency coefficient,
+electron and proton plasma-frequency coefficients, electron Debye-length
+coefficient, and electron and proton inertial-length coefficients. Their frozen
+artifact is generated from documented definitions using constants declared
+independently of the production implementation. The artifact cites the 2023 NRL
+Plasma Formulary, “Fundamental Plasma Parameters,” printed page 28, and the 2022
+CODATA values in NIST SP 959, pages 1–2. The eV-to-kelvin record is `C_UNIT`,
+anchored separately to the exact SI values of the elementary charge and
+Boltzmann constant and the BIPM kelvin definition. The generator, artifact,
+audit procedure, source comparisons, CODATA uncertainties, and generated
+software-comparison criteria are tracked under
+[`tests/reference/`](tests/reference/README.md).
+
+The six `A_REFERENCE` expected values are the unrounded results of the
+independent definitions and declared CODATA constants; they are not rounded to
+the former v1.0.1 regression targets. The NRL three-significant-digit values and
+legacy targets remain separate audit metadata. Relative comparison tolerances
+are not derived from those uncertainties. `referenceUncertainty` records
+propagated CODATA relative standard uncertainty and a separately labelled
+factor-two expanded value without assigning an exact confidence level.
+`softwareComparison` independently requires zero ULP because each fixed
+reference and production path evaluates the same explicitly ordered binary64
+expression. CODATA uncertainty and `legacyV101Target` never determine pass/fail.
+
+The proton gyrofrequency, thermal-speed, gyroradius, and Alfvén-speed fixed
+targets remain `F_REGRESSION`: their source precision, convention, or lineage is
+not sufficient for promotion in this batch. The two Hellinger point checks
+repeat production coefficients in their expected expressions, and the positive
+solar-wind Coulomb-log example exercises no applicability boundary; all remain
+conservatively `F_REGRESSION`.
 
 The Node plot suite contains seven `D_PROPERTY` scaling checks alongside
 `F_REGRESSION` execution and registry checks. Search and static-site checks are
 `F_REGRESSION`. The physics-core SHA-256 assertion is `P_PROVENANCE`; it detects
 an implementation change but cannot establish that the unchanged formula is
-scientifically correct. No current automated check is represented as independent
-reference evidence.
+scientifically correct. The reference artifact establishes only the documented
+coefficient and unit anchors; it does not independently validate the remaining
+production formulas or their domains.
 
 Passing the current suite establishes only the stated identities, properties,
 implementation consistency, execution behaviour, and provenance controls. It

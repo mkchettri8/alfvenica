@@ -43,7 +43,7 @@ assert.doesNotMatch(html, /MathJax|Chart\.js|chart\.umd/i, 'Unexpected heavy run
 assert.match(html, /role="combobox"[^>]+aria-autocomplete="list"[^>]+aria-controls="searchSuggestions"/, 'Accessible autocomplete combobox missing');
 assert.match(html, /id="searchSuggestions"[^>]+role="listbox"/, 'Autocomplete listbox missing');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
-assert.match(html, /none is presently claimed as an independent A_REFERENCE benchmark/, 'Current absence of independent in-browser benchmarks is not disclosed');
+assert.match(html, /six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor/, 'Independent in-browser evidence inventory is not disclosed');
 assert.match(html, /hash and baseline identify code provenance; they do not prove scientific correctness/, 'Hash limitation is not disclosed');
 assert.match(html, /<strong>Release date<\/strong> 10 August 2026/, 'v1.0.1 release date is not labelled accurately');
 assert.match(html, /Version 1\.0\.1 · released 10 August 2026 ·/, 'Footer does not identify 10 August 2026 as the release date');
@@ -57,7 +57,9 @@ assert.ok(plainText(html).includes(Meta.citation), 'Website citation differs fro
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 assert.ok(plainText(readme).includes(Meta.citation), 'README citation differs from release metadata');
 assert.doesNotMatch(readme, /is a validated, unit-explicit/i, 'README retains an unqualified validated claim');
-assert.match(readme, /No current record\s+is claimed as an independent `A_REFERENCE` benchmark/, 'README independent-evidence limitation missing');
+assert.match(readme, /6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, and 22\s+`F_REGRESSION`/, 'README evidence inventory is inaccurate');
+assert.equal(packageMetadata.scripts['test:reference'], 'node tests/reference.test.js', 'Reference test script missing');
+assert.equal(packageMetadata.scripts['generate:reference'], 'node tests/reference/generate-reference-benchmarks.js', 'Reference generator script missing');
 const formulaAudit = fs.readFileSync(path.join(root, 'FORMULA_AUDIT.md'), 'utf8');
 for (const validationClass of ['A_REFERENCE','B_IDENTITY','C_UNIT','D_PROPERTY','E_DOMAIN','F_REGRESSION','P_PROVENANCE']) {
   assert.ok(formulaAudit.includes(validationClass), `Formula audit omits ${validationClass}`);

@@ -17,7 +17,7 @@ const permittedClasses = ['A_REFERENCE','B_IDENTITY','C_UNIT','D_PROPERTY','E_DO
 assert.deepEqual(Object.keys(Validation.validationClasses), permittedClasses, 'Semantic validation taxonomy changed unexpectedly');
 assert.deepEqual(
   Object.fromEntries(permittedClasses.map(validationClass => [validationClass, tests.filter(test => test.validationClass === validationClass).length])),
-  { A_REFERENCE:0, B_IDENTITY:9, C_UNIT:0, D_PROPERTY:0, E_DOMAIN:0, F_REGRESSION:29, P_PROVENANCE:0 },
+  { A_REFERENCE:6, B_IDENTITY:9, C_UNIT:1, D_PROPERTY:0, E_DOMAIN:0, F_REGRESSION:22, P_PROVENANCE:0 },
   'Validation evidence classifications changed unexpectedly',
 );
 const evidenceBasisIds = new Set(Object.keys(Validation.evidenceBases));
@@ -34,6 +34,9 @@ for (const test of tests) {
   }
   if (test.validationClass === 'A_REFERENCE' || test.validationClass === 'C_UNIT') {
     assert.equal(test.evidenceBasis, 'EXTERNAL_INDEPENDENT', `${test.name}: independent class lacks an independent expected result`);
+    assert.match(test.benchmarkId, /^ref-[a-z0-9-]+$/, `${test.name}: independent benchmark ID missing`);
+  } else {
+    assert.equal(test.benchmarkId, null, `${test.name}: non-independent record must not claim a benchmark ID`);
   }
 }
 const smoke = tests.find(test => test.evidenceBasis === 'EXECUTION_SMOKE');
@@ -62,4 +65,4 @@ const simplifiedMirror = Registry.formulas.find(formula => formula.id === 'fluid
 assert.ok(simplifiedMirror.references.some(reference => reference.url === 'https://doi.org/10.1063/1.1692407'), 'Hasegawa mirror reference missing');
 assert.ok(simplifiedMirror.references.some(reference => reference.url === 'https://doi.org/10.1029/2004JA010568'), 'Pokhotelov mirror reference missing');
 
-console.log(`Alfvenica physics checks passed: ${tests.length} classified records (0 independent benchmarks, 9 identities, 29 regression/implementation checks), ${smoke.actual} calculator smoke executions, and one P_PROVENANCE core-hash control.`);
+console.log(`Alfvenica physics checks passed: ${tests.length} classified records (6 independent reference benchmarks, 1 independently anchored unit conversion, 9 identities, 22 regression/implementation checks), ${smoke.actual} calculator smoke executions, and one P_PROVENANCE core-hash control.`);
