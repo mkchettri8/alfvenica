@@ -14,11 +14,11 @@ The audit applies four rules:
 ## Source hierarchy
 
 - **Fundamental constants:** NIST CODATA 2022.
-- **Standard plasma definitions and coefficients:** 2023 NRL Plasma Formulary.
+- **Standard plasma definitions and coefficient targets:** cited to the 2023 NRL Plasma Formulary; equation-level target lineage remains to be documented.
 - **CGL firehose physics:** Chew, Goldberger & Low (1956).
 - **Sweet–Parker reconnection:** Parker (1957) and Sweet (1958).
 - **Frozen-flow mapping:** Taylor (1938).
-- **Proton anisotropy contours:** Hellinger et al. (2006), using the stated growth-rate contour and fit domain.
+- **Proton anisotropy contours:** Hellinger et al. (2006) is the cited source; coefficient, contour-condition, and fit-domain verification remains a separate human/source-level task.
 - **Simplified mirror threshold:** Hasegawa (1969) and Pokhotelov et al. (2004),
   with the implemented single-species long-wavelength approximation labelled as
   simplified and its finite-Larmor-radius limitation stated.
@@ -50,24 +50,48 @@ The audit applies four rules:
 
 ## Validation coverage
 
-The automated suite reports four distinct levels of evidence:
+Every in-browser validation record has exactly one semantic class:
 
-- **External numerical benchmarks:** NRL coefficients for gyrofrequencies,
-  plasma frequencies, Debye length, thermal speeds, inertial lengths, gyroradius,
-  Alfvén speed, and collision frequencies; CODATA conversion values; and
-  Hellinger contour fits evaluated at stated points.
-- **Analytical consistency checks:** exact pressure, beta, scale, wave, Taylor,
-  Sweet–Parker, Alfvénicity, and reduced-KAW identities and limiting cases.
-- **Domain safeguards:** representative valid-domain results remain finite and
-  physically admissible.
-- **Implementation-integrity tests:** every registry entry executes on its valid
-  defaults, plot metrics remain finite under controlled sweeps, and identifiers,
-  references, interpretations, links, and local assets remain internally valid.
+- **`A_REFERENCE` — independent external/reference benchmark:** the expected
+  result and its documented provenance are independent of the production path.
+- **`B_IDENTITY` — analytical or property identity:** a genuine identity,
+  limiting case, or invariant property rather than a direct production-code
+  restatement.
+- **`C_UNIT` — independently anchored unit conversion:** a conversion checked
+  against an independent dimensional or metrological anchor.
+- **`D_PROPERTY` — scaling or scientific property test:** behaviour across
+  controlled input changes, such as a power-law scaling.
+- **`E_DOMAIN` — applicability, domain, or guardrail test:** an actual boundary,
+  rejection, warning, or guardrail is exercised.
+- **`F_REGRESSION` — regression, implementation-consistency, or smoke test:** a
+  fixed target, shared-path restatement, nominal example, or execution check.
+- **`P_PROVENANCE` — provenance, tamper, or hash verification:** an artifact
+  identity check, explicitly not evidence of scientific correctness.
 
-A default-execution smoke test does not independently establish that a numerical
-value is correct. Passing the full suite establishes consistency for the tested
-equations and cases; it does not validate application outside each formula's
-stated regime.
+The 38 current in-browser records comprise **9 `B_IDENTITY`** checks and **29
+`F_REGRESSION`** checks. There are currently no record-level `A_REFERENCE`,
+`C_UNIT`, `D_PROPERTY`, `E_DOMAIN`, or `P_PROVENANCE` claims. Each record carries
+an evidence-basis identifier, source/provenance note, and tolerance rationale.
+
+The fixed NRL/CODATA coefficient targets remain useful regressions, but their
+independent generation lineage and tolerance derivation are not documented well
+enough to call them `A_REFERENCE`. The eV-to-kelvin expected value is tied to the
+same production constants and is therefore not yet `C_UNIT`. The two Hellinger
+point checks repeat production coefficients in their expected expressions, and
+the positive solar-wind Coulomb-log example exercises no applicability boundary;
+all are conservatively `F_REGRESSION`.
+
+The Node plot suite contains seven `D_PROPERTY` scaling checks alongside
+`F_REGRESSION` execution and registry checks. Search and static-site checks are
+`F_REGRESSION`. The physics-core SHA-256 assertion is `P_PROVENANCE`; it detects
+an implementation change but cannot establish that the unchanged formula is
+scientifically correct. No current automated check is represented as independent
+reference evidence.
+
+Passing the current suite establishes only the stated identities, properties,
+implementation consistency, execution behaviour, and provenance controls. It
+does not establish model applicability outside a stated regime or replace future
+independent benchmark and domain-guardrail work.
 
 ## Interpretation coverage
 

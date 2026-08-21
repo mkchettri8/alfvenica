@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and numerical validation.">
+  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and classified validation evidence.">
   <meta name="author" content="Mani K Chettri">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#f6f8f9">
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://alfvenica.org/">
   <meta property="og:title" content="Alfvenica — Space Plasma Toolkit">
-  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and numerical validation.">
+  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alfvenica.org/">
   <title>Alfvenica — Space Plasma Toolkit</title>
@@ -35,7 +35,7 @@
     "dateModified": "2026-08-10",
     "isAccessibleForFree": true,
     "license": "https://opensource.org/licenses/MIT",
-    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and numerical validation.",
+    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.",
     "keywords": ["space plasma physics", "plasma calculator", "kinetic Alfvén waves", "heliophysics", "research software"],
     "author": {
       "@type": "Person",
@@ -316,21 +316,21 @@
     <section id="validationView" class="view" aria-labelledby="validationHeading">
       <div class="page-column">
         <header class="page-header">
-          <p class="eyebrow">Numerical quality control</p>
-          <h1 id="validationHeading">Validation report</h1>
-          <p>Reference benchmarks, analytical identities, domain safeguards, and execution checks are reported separately so that “tested” has a precise meaning.</p>
+          <p class="eyebrow">Semantic evidence taxonomy</p>
+          <h1 id="validationHeading">Classified validation evidence</h1>
+          <p>Every in-browser record has one explicit semantic class. Independent benchmarks, identities, unit checks, scientific properties, domain guardrails, regressions, and provenance controls are distinguished rather than treated as equivalent evidence.</p>
         </header>
         <div class="release-status" role="group" aria-label="Release provenance">
           <span><strong>Version</strong> 1.0.1</span>
-          <span><strong>Last validated</strong> 10 August 2026</span>
-          <span><strong>Physics-core baseline</strong> <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a></span>
+          <span><strong>Release date</strong> 10 August 2026</span>
+          <span><strong>Physics-core provenance baseline</strong> <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a></span>
         </div>
         <div id="validationSummary" class="validation-summary"></div>
         <div id="validationGroups" class="validation-groups"></div>
         <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
         <div class="method-note">
           <h2>Interpretation</h2>
-          <p>A smoke test confirms that a calculator executes on its valid default inputs; it is not an independent numerical benchmark. Passing all checks confirms implementation consistency for the tested definitions, but it does not turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers. Each calculator states its own scope.</p>
+          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
       </div>
@@ -357,8 +357,8 @@
             <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI, and CGS choices are interface conversions only. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
           </section>
           <section>
-            <h2>Scientific basis and validation</h2>
-            <p>Constants follow CODATA 2022. Foundational coefficients are checked against the 2023 NRL Plasma Formulary, while model-specific entries retain primary references and validity conditions. Reference benchmarks, analytical identities, domain checks, smoke tests, and interface checks are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
+            <h2>Scientific basis and validation evidence</h2>
+            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. The current in-browser records comprise analytical identities and regression or implementation checks; none is presently claimed as an independent A_REFERENCE benchmark. Development-only scaling checks and the P_PROVENANCE core hash are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
           </section>
           <section>
             <h2>Scope and limitations</h2>
@@ -383,7 +383,7 @@
             <button id="copyCitation" class="secondary-button" type="button">Copy citation</button>
             <button id="copyBibtex" class="secondary-button" type="button">Copy BibTeX</button>
           </div>
-          <p class="small-text">Version 1.0.1 · validated 10 August 2026 · physics core unchanged from baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. A DOI will be added only after the release is formally archived.</p>
+          <p class="small-text">Version 1.0.1 · released 10 August 2026 · physics-core provenance baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. The hash and baseline identify code provenance; they do not prove scientific correctness. A DOI will be added only after the release is formally archived.</p>
         </section>
       </div>
     </section>

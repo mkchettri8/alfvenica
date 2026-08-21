@@ -1,4 +1,4 @@
-/* Alfvenica numerical validation suite. */
+/* Alfvenica classified validation-evidence suite. */
 (function initValidation(root, factory) {
   const api = factory(root.PlasmaPhysics, root.PlasmaFormulaRegistry);
   if (typeof module === 'object' && module.exports) module.exports = api;
@@ -7,68 +7,128 @@
   'use strict';
   if (!P) throw new Error('PlasmaPhysics is required');
 
+  const validationClasses = Object.freeze({
+    A_REFERENCE: Object.freeze({
+      id: 'A_REFERENCE',
+      label: 'Independent external/reference benchmarks',
+      description: 'Expected results come from a documented source and generation path independent of the production implementation.',
+    }),
+    B_IDENTITY: Object.freeze({
+      id: 'B_IDENTITY',
+      label: 'Analytical or property identities',
+      description: 'Genuine analytical identities, limiting cases, or invariant properties rather than direct restatements of production code.',
+    }),
+    C_UNIT: Object.freeze({
+      id: 'C_UNIT',
+      label: 'Independently anchored unit conversions',
+      description: 'Unit or dimensional conversions checked against an independently documented anchor.',
+    }),
+    D_PROPERTY: Object.freeze({
+      id: 'D_PROPERTY',
+      label: 'Scaling or scientific property checks',
+      description: 'Expected scaling behaviour or another scientific property is tested across controlled inputs.',
+    }),
+    E_DOMAIN: Object.freeze({
+      id: 'E_DOMAIN',
+      label: 'Applicability, domain, or guardrail checks',
+      description: 'A validity boundary, rejected input, warning, or other actual domain guardrail is exercised.',
+    }),
+    F_REGRESSION: Object.freeze({
+      id: 'F_REGRESSION',
+      label: 'Regression, implementation-consistency, or smoke checks',
+      description: 'Fixed targets, internal restatements, nominal examples, and execution checks that guard behaviour but are not independent scientific evidence.',
+    }),
+    P_PROVENANCE: Object.freeze({
+      id: 'P_PROVENANCE',
+      label: 'Provenance, tamper, or hash verification',
+      description: 'Version and hash checks detect artifact changes; they do not establish scientific correctness.',
+    }),
+  });
+
+  const evidenceBases = Object.freeze({
+    EXTERNAL_INDEPENDENT: Object.freeze({ id: 'EXTERNAL_INDEPENDENT', label: 'independent external result' }),
+    PUBLISHED_TARGET_UNVERIFIED: Object.freeze({ id: 'PUBLISHED_TARGET_UNVERIFIED', label: 'cited fixed target; independent lineage pending' }),
+    ANALYTICAL_RELATION: Object.freeze({ id: 'ANALYTICAL_RELATION', label: 'analytical relation or limiting case' }),
+    INTERNAL_DERIVATION: Object.freeze({ id: 'INTERNAL_DERIVATION', label: 'production-path restatement or shared constants' }),
+    NOMINAL_EXAMPLE: Object.freeze({ id: 'NOMINAL_EXAMPLE', label: 'nominal positive example' }),
+    EXECUTION_SMOKE: Object.freeze({ id: 'EXECUTION_SMOKE', label: 'execution-only smoke result' }),
+  });
+
+  const rationale = Object.freeze({
+    publishedTarget: 'Retained v1.0.1 tolerance around a cited fixed target; independent generation and tolerance lineage remain to be documented.',
+    identity: 'Near-roundoff relative tolerance for the stated analytical identity or limiting case.',
+    asymptote: 'Tolerance covers the finite-Mach proxy difference from the gamma=5/3 asymptote plus floating-point roundoff.',
+    internal: 'Retained v1.0.1 near-roundoff tolerance for an implementation-consistency comparison.',
+    exact: 'Exact Boolean or integer equality.',
+  });
+
   const twoPi = 2 * Math.PI;
   function rel(actual, expected) { return Math.abs(actual - expected) / Math.max(Math.abs(expected), Number.MIN_VALUE); }
-  function test(name, actual, expected, tolerance, source, kind = 'identity') {
+  function test(name, actual, expected, tolerance, source, validationClass, evidenceBasis, toleranceRationale) {
+    if (!validationClasses[validationClass]) throw new Error(`${name}: invalid validation class ${validationClass}`);
+    if (!evidenceBases[evidenceBasis]) throw new Error(`${name}: invalid evidence basis ${evidenceBasis}`);
+    if ((validationClass === 'A_REFERENCE' || validationClass === 'C_UNIT') && evidenceBasis !== 'EXTERNAL_INDEPENDENT') {
+      throw new Error(`${name}: ${validationClass} requires an independent external expected result`);
+    }
     const error = rel(actual, expected);
-    return Object.freeze({ name, actual, expected, tolerance, error, pass: error <= tolerance, source, kind });
+    return Object.freeze({ name, actual, expected, tolerance, error, pass: error <= tolerance, source, validationClass, evidenceBasis, toleranceRationale });
   }
 
   function run() {
     const B1G = 1e-4;
     const n1cc = 1e6;
     const out = [
-      test('Electron gyrofrequency coefficient', P.electronGyroAngular(B1G)/twoPi, 2.799249e6, 5e-6, 'NRL 2023 / CODATA 2022', 'reference'),
-      test('Proton gyrofrequency coefficient', P.ionGyroAngular(B1G,1,1)/twoPi, 1.524e3, 8e-4, 'NRL 2023', 'reference'),
-      test('Electron plasma-frequency coefficient', P.electronPlasmaAngular(n1cc)/twoPi, 8.97866e3, 2e-5, 'NRL 2023 / CODATA 2022', 'reference'),
-      test('Proton plasma-frequency coefficient', P.ionPlasmaAngular(n1cc,1,1)/twoPi, 2.095e2, 8e-4, 'NRL 2023', 'reference'),
-      test('Electron Debye-length coefficient', P.electronDebyeLength(1,n1cc)*100, 7.4339e2, 2e-4, 'NRL 2023', 'reference'),
-      test('Electron thermal-speed coefficient', P.electronThermalSpeed(1)*100, 4.1938e7, 2e-4, 'NRL 2023, sqrt(kT/m)', 'reference'),
-      test('Proton thermal-speed coefficient', P.ionThermalSpeed(1,1)*100, 9.7872e5, 2e-4, 'NRL 2023, sqrt(kT/m)', 'reference'),
-      test('Electron inertial-length coefficient', P.electronInertialLength(n1cc)*100, 5.3141e5, 2e-4, 'NRL 2023', 'reference'),
-      test('Proton inertial-length coefficient', P.ionInertialLength(n1cc,1,1)*100, 2.2771e7, 2e-4, 'NRL 2023', 'reference'),
-      test('Proton gyroradius coefficient', P.ionGyroradius(1,B1G,1,1)*100, 1.0219e2, 3e-4, 'NRL 2023', 'reference'),
-      test('Alfvén-speed coefficient', P.alfvenSpeed(B1G,n1cc,1)*100, 2.1812e11, 3e-4, 'NRL 2023', 'reference'),
-      test('Electron-ion collision coefficient', P.electronIonCollisionFrequency(n1cc,1,1,1), 2.9063e-6, 3e-5, 'NRL 2023', 'reference'),
-      test('Ion-ion collision coefficient', P.ionIonCollisionFrequency(n1cc,1,1,1,1), 4.7959e-8, 3e-5, 'NRL 2023', 'reference'),
+      test('Electron gyrofrequency coefficient', P.electronGyroAngular(B1G)/twoPi, 2.799249e6, 5e-6, 'Fixed v1.0.1 target attributed to NRL 2023 / CODATA 2022; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Proton gyrofrequency coefficient', P.ionGyroAngular(B1G,1,1)/twoPi, 1.524e3, 8e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Electron plasma-frequency coefficient', P.electronPlasmaAngular(n1cc)/twoPi, 8.97866e3, 2e-5, 'Fixed v1.0.1 target attributed to NRL 2023 / CODATA 2022; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Proton plasma-frequency coefficient', P.ionPlasmaAngular(n1cc,1,1)/twoPi, 2.095e2, 8e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Electron Debye-length coefficient', P.electronDebyeLength(1,n1cc)*100, 7.4339e2, 2e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Electron thermal-speed coefficient', P.electronThermalSpeed(1)*100, 4.1938e7, 2e-4, 'Fixed v1.0.1 target attributed to NRL 2023 for sqrt(kT/m); equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Proton thermal-speed coefficient', P.ionThermalSpeed(1,1)*100, 9.7872e5, 2e-4, 'Fixed v1.0.1 target attributed to NRL 2023 for sqrt(kT/m); equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Electron inertial-length coefficient', P.electronInertialLength(n1cc)*100, 5.3141e5, 2e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Proton inertial-length coefficient', P.ionInertialLength(n1cc,1,1)*100, 2.2771e7, 2e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Proton gyroradius coefficient', P.ionGyroradius(1,B1G,1,1)*100, 1.0219e2, 3e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Alfvén-speed coefficient', P.alfvenSpeed(B1G,n1cc,1)*100, 2.1812e11, 3e-4, 'Fixed v1.0.1 target attributed to NRL 2023; equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Electron-ion collision coefficient', P.electronIonCollisionFrequency(n1cc,1,1,1), 2.9063e-6, 3e-5, 'Fixed v1.0.1 target attributed to NRL 2023; convention and equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
+      test('Ion-ion collision coefficient', P.ionIonCollisionFrequency(n1cc,1,1,1,1), 4.7959e-8, 3e-5, 'Fixed v1.0.1 target attributed to NRL 2023; convention and equation-level lineage pending.', 'F_REGRESSION', 'PUBLISHED_TARGET_UNVERIFIED', rationale.publishedTarget),
     ];
 
     const ne=5e6, ni=5e6, B=5e-9, Te=12, Ti=10;
     const betaSum=P.speciesBeta(ne,Te,B)+P.speciesBeta(ni,Ti,B);
-    out.push(test('eV-to-kelvin conversion', P.conversions.evToKelvin(1), 11604.518121550082, 2e-13, 'CODATA 2022 exact e and k_B', 'reference'));
-    out.push(test('Upper-hybrid identity', P.upperHybridAngular(B,ne), Math.hypot(P.electronPlasmaAngular(ne),P.electronGyroAngular(B)), 1e-13, 'Cold-plasma definition'));
+    out.push(test('eV-to-kelvin conversion', P.conversions.evToKelvin(1), 11604.518121550082, 2e-13, 'Expected value is tied to the same CODATA 2022 constants used by production; no independent conversion artifact exists yet.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Upper-hybrid identity', P.upperHybridAngular(B,ne), Math.hypot(P.electronPlasmaAngular(ne),P.electronGyroAngular(B)), 1e-13, 'Cold-plasma definition restated through production functions.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     const totalDebye=P.totalDebyeLength(ne,Te,ni,Ti,1);
     const inverseDebye=ne*P.constants.elementaryCharge**2/(P.constants.vacuumPermittivity*Te*P.constants.electronVolt)+ni*P.constants.elementaryCharge**2/(P.constants.vacuumPermittivity*Ti*P.constants.electronVolt);
-    out.push(test('Combined Debye-length identity', totalDebye, 1/Math.sqrt(inverseDebye), 1e-13, 'Definition'));
-    out.push(test('Total beta identity', P.totalBeta(ne,Te,ni,Ti,B), betaSum, 1e-13, 'Internal identity'));
-    out.push(test('Beta-pressure identity', P.speciesBeta(ne,Te,B), P.speciesPressure(ne,Te)/P.magneticPressure(B), 1e-13, 'Definition'));
-    out.push(test('Electron inertial identity c/omega_pe', P.electronInertialLength(ne), P.constants.speedOfLight/P.electronPlasmaAngular(ne), 1e-13, 'Definition'));
-    out.push(test('Ion gyroradius identity vTi/Omega_ci', P.ionGyroradius(Ti,B,1,1), P.ionThermalSpeed(Ti,1)/P.ionGyroAngular(B,1,1), 1e-13, 'Definition'));
-    out.push(test('E cross B drift identity', P.exbDrift(1,1), 1, 1e-13, 'Guiding-centre definition'));
-    out.push(test('Poynting-flux identity', P.poyntingFluxMagnitude(1,1,Math.PI/2), 1/P.constants.vacuumPermeability, 1e-13, 'Electromagnetic definition'));
+    out.push(test('Combined Debye-length identity', totalDebye, 1/Math.sqrt(inverseDebye), 1e-13, 'Definition restated with the production constants.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Total beta identity', P.totalBeta(ne,Te,ni,Ti,B), betaSum, 1e-13, 'Production total compared with the sum of production species-beta calls.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Beta-pressure identity', P.speciesBeta(ne,Te,B), P.speciesPressure(ne,Te)/P.magneticPressure(B), 1e-13, 'Consistency comparison among production pressure and beta functions.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Electron inertial identity c/omega_pe', P.electronInertialLength(ne), P.constants.speedOfLight/P.electronPlasmaAngular(ne), 1e-13, 'Definition restated through production functions and constants.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Ion gyroradius identity vTi/Omega_ci', P.ionGyroradius(Ti,B,1,1), P.ionThermalSpeed(Ti,1)/P.ionGyroAngular(B,1,1), 1e-13, 'Definition restated through production functions.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('E cross B drift identity', P.exbDrift(1,1), 1, 1e-13, 'Single-point implementation check of the guiding-centre expression.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Poynting-flux identity', P.poyntingFluxMagnitude(1,1,Math.PI/2), 1/P.constants.vacuumPermeability, 1e-13, 'Single-point implementation check using the production permeability constant.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     const va=P.alfvenSpeed(B,ni,1), cs=P.mhdSoundSpeed(Te,Ti,1,1), ms=P.magnetosonicSpeeds(va,cs,Math.PI/2);
-    out.push(test('Perpendicular fast-mode identity', ms.fast, Math.hypot(va,cs), 1e-13, 'Ideal-MHD identity'));
-    out.push(test('Perpendicular slow-mode identity', ms.slow, 0, 1e-12, 'Ideal-MHD identity'));
-    out.push(test('Mach-one shock compression', P.shockCompressionRatio(1,5/3), 1, 1e-13, 'Rankine-Hugoniot identity'));
-    out.push(test('Strong-shock compression limit', P.shockCompressionRatio(1e7,5/3), 4, 5e-14, 'Gamma=5/3 asymptote'));
+    out.push(test('Perpendicular fast-mode identity', ms.fast, Math.hypot(va,cs), 1e-13, 'Perpendicular-propagation limit of the ideal-MHD magnetosonic roots.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
+    out.push(test('Perpendicular slow-mode identity', ms.slow, 0, 1e-12, 'Perpendicular-propagation limit of the ideal-MHD magnetosonic roots.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
+    out.push(test('Mach-one shock compression', P.shockCompressionRatio(1,5/3), 1, 1e-13, 'Mach-one limit of the stated Rankine-Hugoniot expression.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
+    out.push(test('Strong-shock compression limit', P.shockCompressionRatio(1e7,5/3), 4, 5e-14, 'Large-Mach-number asymptote for gamma=5/3.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.asymptote));
     const sp=P.sweetParker(1e6,1e5,1e-6,1e-8);
-    out.push(test('Sweet-Parker layer identity', sp.delta/1e6, 1/Math.sqrt(sp.S), 1e-13, 'Sweet-Parker scaling'));
-    out.push(test('Sweet-Parker electric-field identity', sp.electricField, sp.inflow*1e-8, 1e-13, 'Ideal inflow electric field'));
+    out.push(test('Sweet-Parker layer identity', sp.delta/1e6, 1/Math.sqrt(sp.S), 1e-13, 'Returned production quantities compared with the production Sweet-Parker scaling.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Sweet-Parker electric-field identity', sp.electricField, sp.inflow*1e-8, 1e-13, 'Returned production quantities compared with the stated production relation.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     const mappedK=P.taylorWavenumber(2,4e5);
-    out.push(test('Taylor mapping round trip', P.taylorFrequency(1/mappedK,4e5), 2, 1e-13, 'Frozen-flow definition'));
-    out.push(test('Doppler zero-flow identity', P.dopplerShiftedFrequency(3,2e-3,0,0), 3, 1e-13, 'Galilean frequency mapping'));
+    out.push(test('Taylor mapping round trip', P.taylorFrequency(1/mappedK,4e5), 2, 1e-13, 'Round-trip property of the paired Taylor mapping functions.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
+    out.push(test('Doppler zero-flow identity', P.dopplerShiftedFrequency(3,2e-3,0,0), 3, 1e-13, 'Zero-flow limit of the stated Galilean frequency mapping.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     const aw=P.reducedAlfvenDispersion(1e-6,0,1e5,100,0);
-    out.push(test('Reduced Alfvén MHD limit', aw.phaseParallel, 1e5, 1e-13, 'Reduced dispersion relation'));
+    out.push(test('Reduced Alfvén MHD limit', aw.phaseParallel, 1e5, 1e-13, 'Zero-perpendicular-wavenumber limit of the implemented reduced dispersion relation.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     const lowRatio=P.reducedKawParallelElectricRatio(1e-6,1e-3,10);
-    out.push(test('Reduced KAW parallel-field formula', lowRatio, (1e-6/1e-3)*((1e-3*10)**2/(1+(1e-3*10)**2)), 1e-13, 'Reduced scaling identity'));
+    out.push(test('Reduced KAW parallel-field formula', lowRatio, (1e-6/1e-3)*((1e-3*10)**2/(1+(1e-3*10)**2)), 1e-13, 'Expected expression duplicates the implemented reduced expression and coefficients.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     const al=P.alfvenicityDiagnostics(50e3,50e3*Math.sqrt(P.constants.vacuumPermeability*ni*P.constants.protonMass),ni,1);
-    out.push(test('Aligned Alfvénicity cross helicity', al.normalizedCrossHelicity, 1, 1e-13, 'Elsasser-variable identity'));
-    out.push(test('Aligned Alfvénicity residual energy', Math.abs(al.normalizedResidualEnergy)<1e-12?1:0, 1, 0, 'Elsasser-variable identity'));
+    out.push(test('Aligned Alfvénicity cross helicity', al.normalizedCrossHelicity, 1, 1e-13, 'Perfectly aligned, energy-balanced Elsasser-variable limit.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
+    out.push(test('Aligned Alfvénicity residual energy', Math.abs(al.normalizedResidualEnergy)<1e-12?1:0, 1, 0, 'Energy-balanced Elsasser-variable limit, reduced to an exact Boolean assertion.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.exact));
     const logei=P.coulombLogElectronIon(ne,Te,Ti,1,1);
-    out.push(test('Solar-wind Coulomb logarithm is finite', Number.isFinite(logei)&&logei>0?1:0, 1, 0, 'Weak-coupling domain check', 'domain'));
+    out.push(test('Solar-wind Coulomb logarithm is finite', Number.isFinite(logei)&&logei>0?1:0, 1, 0, 'Nominal positive example only; no applicability boundary, rejection, or warning is exercised.', 'F_REGRESSION', 'NOMINAL_EXAMPLE', rationale.exact));
     const h=P.hellingerThreshold(1,0.43,0.42,-0.0004);
-    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Hellinger et al. 2006', 'reference'));
-    out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Hellinger et al. 2006', 'reference'));
+    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
 
     if (Registry && Registry.formulas) {
       let smokePass = 0;
@@ -79,10 +139,10 @@
           if (Array.isArray(result) && result.length) smokePass += 1;
         } catch (_) { /* captured by aggregate test */ }
       }
-      out.push(test('Formula-registry default smoke test', smokePass, Registry.formulas.length, 0, 'Alfvenica registry', 'smoke'));
+      out.push(test('Formula-registry default smoke test', smokePass, Registry.formulas.length, 0, 'Alfvenica registry default execution; no expected scientific value is asserted.', 'F_REGRESSION', 'EXECUTION_SMOKE', rationale.exact));
     }
     return Object.freeze(out);
   }
 
-  return Object.freeze({ run });
+  return Object.freeze({ validationClasses, evidenceBases, run });
 }));

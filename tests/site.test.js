@@ -9,6 +9,7 @@ const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js',
 for (const file of requiredFiles) assert.ok(fs.existsSync(path.join(root, file)), `Missing local asset: ${file}`);
 const Meta = require(path.join(root, 'release-metadata.js'));
 const packageMetadata = require(path.join(root, 'package.json'));
+const manifestMetadata = JSON.parse(fs.readFileSync(path.join(root, 'site.webmanifest'), 'utf8'));
 
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'HTML IDs must be unique');
@@ -28,6 +29,8 @@ assert.match(appSource, /url\.hash = ''/, 'Non-calculator views must remove stal
 assert.match(appSource, /ArrowDown.*ArrowUp/s, 'Autocomplete arrow-key handling missing');
 assert.match(appSource, /chooseSearchSuggestion/, 'Autocomplete selection handling missing');
 assert.match(appSource, /Reduced-model regime: kinetic-Alfvén ordering/, 'Cautious KAW ordering label missing');
+assert.match(appSource, /P_PROVENANCE/, 'Provenance controls are not labelled in the validation UI');
+assert.doesNotMatch(appSource, /Numerically verified against reference values/, 'Old independent-reference wording remains in the validation UI');
 
 for (const file of requiredFiles) {
   const escaped = file.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -40,11 +43,25 @@ assert.doesNotMatch(html, /MathJax|Chart\.js|chart\.umd/i, 'Unexpected heavy run
 assert.match(html, /role="combobox"[^>]+aria-autocomplete="list"[^>]+aria-controls="searchSuggestions"/, 'Accessible autocomplete combobox missing');
 assert.match(html, /id="searchSuggestions"[^>]+role="listbox"/, 'Autocomplete listbox missing');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
+assert.match(html, /none is presently claimed as an independent A_REFERENCE benchmark/, 'Current absence of independent in-browser benchmarks is not disclosed');
+assert.match(html, /hash and baseline identify code provenance; they do not prove scientific correctness/, 'Hash limitation is not disclosed');
+assert.match(html, /<strong>Release date<\/strong> 10 August 2026/, 'v1.0.1 release date is not labelled accurately');
+assert.match(html, /Version 1\.0\.1 · released 10 August 2026 ·/, 'Footer does not identify 10 August 2026 as the release date');
+assert.doesNotMatch(html, /<strong>Last validated<\/strong>/, 'Ambiguous last-validated release label remains');
+assert.doesNotMatch(html, /Evidence record date|evidence record dated/i, 'Invented evidence-record date remains');
+assert.doesNotMatch(packageMetadata.description, /^Validated\b/i, 'package.json overstates validation status');
+assert.doesNotMatch(manifestMetadata.description, /^Validated\b/i, 'Web manifest overstates validation status');
 
 const plainText = value => value.replace(/<[^>]+>/g, ' ').replace(/[\r\n*]+/g, ' ').replace(/\s+/g, ' ').trim();
 assert.ok(plainText(html).includes(Meta.citation), 'Website citation differs from release metadata');
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 assert.ok(plainText(readme).includes(Meta.citation), 'README citation differs from release metadata');
+assert.doesNotMatch(readme, /is a validated, unit-explicit/i, 'README retains an unqualified validated claim');
+assert.match(readme, /No current record\s+is claimed as an independent `A_REFERENCE` benchmark/, 'README independent-evidence limitation missing');
+const formulaAudit = fs.readFileSync(path.join(root, 'FORMULA_AUDIT.md'), 'utf8');
+for (const validationClass of ['A_REFERENCE','B_IDENTITY','C_UNIT','D_PROPERTY','E_DOMAIN','F_REGRESSION','P_PROVENANCE']) {
+  assert.ok(formulaAudit.includes(validationClass), `Formula audit omits ${validationClass}`);
+}
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
 assert.match(citationCff, new RegExp(`date-released: ${Meta.releaseDate}`), 'CITATION.cff date mismatch');
@@ -81,8 +98,12 @@ assert.match(workflow, /node-version: 24/, 'CI is not testing Node.js 24');
 const P = require(path.join(root, 'plasma-physics.js'));
 global.PlasmaPhysics = P;
 const Registry = require(path.join(root, 'formula-registry.js'));
+global.PlasmaFormulaRegistry = Registry;
 const PlotRegistry = require(path.join(root, 'plot-registry.js'));
 const Insights = require(path.join(root, 'formula-insights.js'));
+const Validation = require(path.join(root, 'validation.js'));
+const permittedValidationClasses = new Set(['A_REFERENCE','B_IDENTITY','C_UNIT','D_PROPERTY','E_DOMAIN','F_REGRESSION','P_PROVENANCE']);
+for (const record of Validation.run()) assert.ok(permittedValidationClasses.has(record.validationClass), `${record.name}: invalid semantic validation class`);
 const formulaIds = new Set(Registry.formulas.map(formula => formula.id));
 assert.ok(PlotRegistry.metrics.length >= 20, 'Plot registry is unexpectedly small');
 assert.equal(Object.keys(Insights.insights).length, Registry.formulas.length, 'Every formula must have one interpretation record');

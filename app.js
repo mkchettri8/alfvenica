@@ -915,25 +915,26 @@
   function renderValidation() {
     const tests = Validation.run();
     const passed = tests.filter(t => t.pass).length;
-    const referenceCount = tests.filter(test => test.kind === 'reference').length;
-    const identityCount = tests.filter(test => test.kind === 'identity').length;
-    const domainCount = tests.filter(test => test.kind === 'domain').length;
-    $('validationSummary').innerHTML = `<strong>${passed === tests.length ? 'All validation groups passed' : `${passed} of ${tests.length} validation records passed`}</strong><span>${referenceCount} reference benchmarks · ${identityCount} analytical identities · ${domainCount} domain safeguard · ${Meta.formulaSmokeCount}/${Meta.formulaSmokeCount} calculator defaults execute</span>`;
+    const groupDefinitions = Object.values(Validation.validationClasses);
+    const classCounts = Object.fromEntries(groupDefinitions.map(definition => [definition.id, tests.filter(test => test.validationClass === definition.id).length]));
+    const countSummary = groupDefinitions.map(definition => `${definition.id} ${classCounts[definition.id]}`).join(' · ');
+    $('validationSummary').innerHTML = `<strong>${passed}/${tests.length} classified validation records passed</strong><span>${countSummary}</span>`;
 
-    const groupDefinitions = [
-      ['reference', 'Numerically verified against reference values', 'Published coefficients, constants, and empirical fits checked at stated points.'],
-      ['identity', 'Analytical consistency checks', 'Definitions, limiting cases, exact identities, and scaling relations.'],
-      ['domain', 'Domain safeguards', 'Checks that representative valid-domain calculations remain finite and meaningful.'],
-    ];
-    $('validationGroups').innerHTML = groupDefinitions.map(([kind, title, description], index) => {
-      const group = tests.filter(test => test.kind === kind);
+    const firstNonEmptyClass = groupDefinitions.find(definition => classCounts[definition.id] > 0)?.id;
+    $('validationGroups').innerHTML = groupDefinitions.map(definition => {
+      const group = tests.filter(test => test.validationClass === definition.id);
       const groupPassed = group.filter(test => test.pass).length;
-      const rows = group.map(test => `<tr><td>${test.name}<br><span class="small-text">${test.source}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`).join('');
-      return `<details class="validation-group"${index === 0 ? ' open' : ''}><summary><span><span class="validation-group-title">${title}</span><br><span class="validation-group-summary">${description}</span></span><span class="validation-group-summary">${groupPassed}/${group.length} passed</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Test</th><th>Computed</th><th>Reference</th><th>Relative error</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+      const rows = group.length
+        ? group.map(test => {
+          const basis = Validation.evidenceBases[test.evidenceBasis];
+          return `<tr><td>${test.name}<br><span class="small-text">Evidence basis: ${basis.label}. ${test.source}<br>Tolerance: ${test.toleranceRationale}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`;
+        }).join('')
+        : '<tr><td colspan="5"><span class="small-text">No current in-browser validation record is assigned to this class.</span></td></tr>';
+      return `<details class="validation-group"${definition.id === firstNonEmptyClass ? ' open' : ''}><summary><span><span class="validation-group-title">${definition.id} — ${definition.label}</span><br><span class="validation-group-summary">${definition.description}</span></span><span class="validation-group-summary">${group.length ? `${groupPassed}/${group.length} passed` : '0 records'}</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Check and evidence basis</th><th>Computed</th><th>Expected</th><th>Relative difference</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
     }).join('');
 
-    const smoke = tests.find(test => test.kind === 'smoke');
-    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation integrity</h2><p>These checks confirm execution and structural consistency. They do not independently verify every numerical result.</p><div class="integrity-grid"><div class="integrity-item"><strong>${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error</span></div><div class="integrity-item"><strong>${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values, with hierarchy and scaling checks</span></div><div class="integrity-item"><strong>${Meta.htmlIdCount}</strong><span>unique interface identifiers, plus asset, reference, and interpretation-integrity checks</span></div></div>`;
+    const smoke = tests.find(test => test.evidenceBasis === 'EXECUTION_SMOKE');
+    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation and provenance controls</h2><p>F_REGRESSION checks guard implementation behaviour. P_PROVENANCE checks detect artifact changes. Neither class is independent evidence that a formula is scientifically correct.</p><div class="integrity-grid"><div class="integrity-item"><strong>F_REGRESSION · ${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error; this is an execution-only smoke result</span></div><div class="integrity-item"><strong>F_REGRESSION · ${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values; separate D_PROPERTY scaling checks run in the development test suite</span></div><div class="integrity-item"><strong>P_PROVENANCE · SHA-256</strong><span>the physics-core hash is pinned in development tests as a change detector, not as scientific correctness evidence</span></div></div>`;
   }
 
   function applyTheme() {

@@ -2,7 +2,7 @@
   "name": "alfvenica",
   "version": "1.0.1",
   "private": true,
-  "description": "Validated, unit-explicit toolkit for space and astrophysical plasma physics.",
+  "description": "Unit-explicit toolkit for space and astrophysical plasma physics with classified validation evidence.",
   "homepage": "https://alfvenica.org/",
   "repository": {
     "type": "git",

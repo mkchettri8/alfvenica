@@ -1,7 +1,7 @@
 {
   "name": "Alfvenica \u2014 Space Plasma Toolkit",
   "short_name": "Alfvenica",
-  "description": "Validated tools for space and astrophysical plasma calculations, interpretation, and visualisation.",
+  "description": "Unit-explicit tools for space and astrophysical plasma calculations, interpretation, and visualisation.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f6f8f9",
