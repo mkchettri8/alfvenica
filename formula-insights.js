@@ -52,8 +52,8 @@
       ['electron-plasma-frequency', 'electron-gyrofrequency', 'electron-magnetization-ratio']
     ),
     'lower-hybrid-frequency': I(
-      'The lower-hybrid frequency couples magnetized electron motion to the slower ion response. It is a natural frequency for cross-field electrostatic dynamics, lower-hybrid drift activity, and several collisionless heating processes.',
-      'Its value usually lies well above Ωci and below electron characteristic frequencies. A spectral feature near fLH is suggestive only when polarization, propagation, gradients, and Doppler shifting are also checked.',
+      'This cold-plasma lower-hybrid approximation couples magnetized electron motion to the slower selected-ion response and retains the finite electron-plasma-frequency correction.',
+      'It assumes a cold, quasineutral, single-ion plasma with magnetized electrons and ions. Ion thermal/kinetic and finite-Larmor-radius corrections are omitted, so it is not a completely general lower-hybrid resonance formula. The calculation is angular-rate based and reports fLH only through ωLH/(2π).',
       ['Estimate the lower-hybrid wave band.', 'Normalize lower-hybrid drift and gradient-driven activity.', 'Compare ion and electron timescales in boundary layers.'],
       ['ion-gyrofrequency', 'electron-gyrofrequency', 'doppler-shift']
     ),
@@ -242,14 +242,14 @@
       ['debye-sphere-population', 'coulomb-log-ei', 'species-pressure']
     ),
     'electron-hall-parameter': I(
-      'The electron Hall parameter compares electron gyro motion with electron-ion collisional scattering. It measures whether electrons complete many gyro-orbits before collisions randomize their motion.',
-      'χe much greater than one indicates magnetized electron transport; χe much less than one indicates collision-dominated motion. Transport remains tensorial and geometry dependent even when this ratio is large.',
+      'The electron Hall/magnetization parameter χe=|Ωce|/νei compares the electron cyclotron angular-rate magnitude with the adopted characteristic electron-ion collision rate.',
+      'Both quantities are reciprocal-time rates: Ωce is recorded in rad s⁻¹ and νei in s⁻¹. Radians are dimensionless in SI, so no cyclic-hertz conversion or factor of 2π is applied. Transport remains tensorial and geometry dependent even when this ratio is large.',
       ['Assess anisotropic electron conductivity and transport.', 'Compare gyro and collision timescales.', 'Classify collisional magnetization in laboratory or ionospheric plasma.'],
       ['electron-ion-collision-frequency', 'electron-gyrofrequency', 'spitzer-transport']
     ),
     'ion-hall-parameter': I(
-      'The ion Hall parameter compares ion gyromotion with ion-ion collisions. It indicates whether the selected ion species remains magnetized over a collisional scattering time.',
-      'χi much greater than one supports magnetized ion transport; χi below unity indicates that collisions interrupt gyro motion. Different ion species can occupy different regimes in the same plasma.',
+      'The ion Hall/magnetization parameter χi=|Ωci|/νii compares the selected-ion cyclotron angular-rate magnitude with the adopted characteristic ion-ion collision rate.',
+      'Both quantities are reciprocal-time rates: Ωci is recorded in rad s⁻¹ and νii in s⁻¹. Radians are dimensionless in SI, so no cyclic-hertz conversion or factor of 2π is applied. Different ion species can occupy different magnetization regimes in the same plasma.',
       ['Assess ion magnetization in partially collisional environments.', 'Compare collision and gyro timescales.', 'Support transport and drift ordering.'],
       ['ion-ion-collision-frequency', 'ion-gyrofrequency', 'ion-mean-free-path']
     ),
@@ -261,25 +261,25 @@
     ),
 
     'coulomb-log-ei': I(
-      'The electron-ion Coulomb logarithm represents the logarithmic range of impact parameters that contribute to many small-angle Coulomb encounters. It packages scale separation between long-range shielding and short-range deflection or diffraction.',
+      'This electron-ion impact-parameter Coulomb-logarithm estimate represents the logarithmic range between combined Debye screening and the larger of classical 90-degree deflection and quantum-diffraction cutoffs.',
       'A comfortably positive value supports weak-coupling Fokker-Planck transport. Very small values indicate that the scale separation behind classical Coulomb-collision formulas is poor and a more complete treatment is needed.',
       ['Supply collision-frequency and Spitzer-transport calculations.', 'Check weak-coupling scale separation.', 'Compare classical and quantum short-distance cutoffs.'],
       ['electron-ion-collision-frequency', 'electron-debye-length', 'spitzer-transport']
     ),
     'coulomb-log-ii': I(
-      'The ion-ion Coulomb logarithm gives the effective range of impact parameters contributing to cumulative small-angle scattering between identical ions. It is the slowly varying factor in classical ion collision rates.',
+      'This identical-ion impact-parameter Coulomb-logarithm estimate uses ion Debye screening and the larger of classical 90-degree deflection and quantum-diffraction cutoffs.',
       'Use a species-appropriate density, charge, mass, and temperature. Small or nonpositive estimates signal that the weakly coupled binary-collision approximation is not trustworthy.',
       ['Supply ion-ion collision and mean-free-path estimates.', 'Compare ion collisionality across species.', 'Check classical weak-coupling validity.'],
       ['ion-ion-collision-frequency', 'ion-mean-free-path', 'plasma-coupling']
     ),
     'electron-ion-collision-frequency': I(
-      'The electron-ion collision frequency estimates the rate at which Coulomb encounters transfer electron momentum to ions. It controls classical electrical resistivity and contributes to thermalization and transport.',
+      'The characteristic electron-ion Coulomb collision rate follows Alfvenica’s adopted NRL-style collision-time convention. It has unit s⁻¹ and is not a cyclic oscillation frequency.',
       'The strong Te^−3/2 dependence makes hot tenuous space plasmas weakly collisional. Compare νei with wave, gyro, transit, and expansion frequencies rather than treating collisionality as an absolute label.',
       ['Estimate resistive and momentum-relaxation times.', 'Calculate electron mean free paths and Hall parameters.', 'Assess whether collisionless wave-particle physics is required.'],
       ['electron-mean-free-path', 'electron-hall-parameter', 'spitzer-transport']
     ),
     'ion-ion-collision-frequency': I(
-      'The ion-ion collision frequency estimates pitch-angle and momentum scattering among like ions. It controls how rapidly ion distributions relax toward isotropy and local equilibrium in a classical plasma.',
+      'The characteristic identical-ion Coulomb collision rate follows Alfvenica’s adopted NRL-style collision-time convention. It has unit s⁻¹ and is not a cyclic oscillation frequency.',
       'Compare νii with expansion, transit, gyro, and instability timescales. A small collision rate allows temperature anisotropy, beams, and non-Maxwellian structure to persist.',
       ['Estimate ion isotropization and relaxation times.', 'Calculate ion mean free paths and Hall parameters.', 'Assess persistence of ion anisotropy in the solar wind.'],
       ['ion-mean-free-path', 'ion-hall-parameter', 'hellinger-mirror']
@@ -297,8 +297,8 @@
       ['knudsen-number', 'ion-ion-collision-frequency', 'fluid-firehose']
     ),
     'spitzer-transport': I(
-      'Spitzer transport converts electron-ion collisionality into classical electrical resistivity, conductivity, and magnetic diffusivity for a fully ionized plasma. It supplies the resistive scale used in classical MHD reconnection and diffusion estimates.',
-      'Use it only when classical Coulomb collisions dominate. Anomalous scattering, turbulence, partial ionization, strong magnetization, and kinetic electron physics can make the effective transport very different.',
+      'This calculator evaluates classical electron-ion collisional resistive transport through eta_coll=m_e nu_ei/(n_e e²), plus its reciprocal conductivity and SI magnetic diffusivity.',
+      'It is not an unqualified complete scalar Spitzer coefficient. Source-specific Spitzer or Braginskii parallel and perpendicular transport can carry additional coefficients tied to the collision-time convention and plasma assumptions.',
       ['Estimate classical magnetic diffusion.', 'Supply Lundquist and magnetic Reynolds numbers.', 'Build a Sweet-Parker reconnection estimate.'],
       ['lundquist-number', 'magnetic-reynolds-number', 'sweet-parker']
     ),
@@ -371,9 +371,9 @@
       ['current-sheet-crossing', 'magnetic-pressure', 'diamagnetic-drift']
     ),
     'alfvenicity': I(
-      'Alfvénicity diagnostics compare velocity and magnetic fluctuations in common velocity units. Cross helicity measures propagation imbalance, residual energy compares kinetic and magnetic fluctuation energy, and Elsasser variables separate counterpropagating Alfvénic components.',
-      'Scalar values are illustrative only. A proper Walén or turbulence analysis uses vector fluctuations, consistent averaging, density treatment, propagation sign, regression, and uncertainty estimates.',
-      ['Characterize Alfvénic solar-wind intervals.', 'Measure imbalance and residual energy in turbulence.', 'Test reconnection exhausts with a Walén relation.'],
+      'These scalar Alfvénicity diagnostics compare signed one-dimensional velocity and magnetic fluctuations in common velocity units. They retain z+, z−, normalized cross helicity, normalized residual energy, the Alfvén ratio, and delta_v/delta_b.',
+      'This is not a complete vector Walén test: it does not determine a de Hoffmann–Teller frame, perform vector/component regression, infer propagation direction, or apply pressure-anisotropy corrections. It does not replace spacecraft-specific Walén analysis.',
+      ['Characterize scalar Alfvénic fluctuation intervals.', 'Measure one-dimensional imbalance and residual-energy diagnostics.', 'Screen intervals for later vector, frame-aware analysis.'],
       ['alfven-speed', 'eb-phase-speed', 'total-beta']
     ),
 
@@ -390,8 +390,8 @@
       ['kaw-dispersion', 'kinetic-break-frequencies', 'ion-gyroradius']
     ),
     'kaw-dispersion': I(
-      'The reduced kinetic/inertial Alfvén dispersion shows how electron pressure raises the parallel phase speed through ρs while electron inertia modifies it through de. It connects large-scale shear-Alfvén behavior to dispersive sub-ion dynamics.',
-      'Use only within the stated anisotropic, low-frequency two-fluid ordering. The result does not include a kinetic damping rate, full ion finite-Larmor-radius response, temperature anisotropy, or arbitrary distribution functions.',
+      'The reduced low-frequency two-fluid dispersive-Alfvén approximation shows how an electron-pressure ρs term and electron inertia de modify the parallel phase speed.',
+      'Use only within the qualitative ordering ω much less than Ωci. This combined reduced form is not the full kinetic Lysak–Lotko dispersion relation and does not include kinetic damping or a general warm kinetic closure.',
       ['Estimate KAW or inertial-Alfvén phase speed.', 'Map model frequencies into the spacecraft frame.', 'Assess electron Landau-resonance accessibility.'],
       ['kaw-regime', 'kaw-landau-accessibility', 'doppler-shift']
     ),
@@ -408,9 +408,9 @@
       ['eb-phase-speed', 'kaw-dispersion', 'field-energy-density']
     ),
     'kaw-parallel-electric-field': I(
-      'The reduced parallel-electric ratio illustrates how finite perpendicular structure can generate E∥ in the kinetic-Alfvén limit. Parallel electric fields enable electron acceleration, phase mixing, and collisionless energy transfer.',
-      'The expression is an order-of-magnitude Padé-style scaling. It omits kinetic eigenfunctions, damping, electron inertia in the polarization, ion finite-Larmor-radius structure, and realistic distribution functions; use it for trends, not precision inversion.',
-      ['Estimate how E∥ grows as k⊥ρs approaches unity.', 'Build qualitative KAW energy-transfer arguments.', 'Compare anisotropy k∥/k⊥ across models.'],
+      'The reduced low-FLR relation |E∥/E⊥|=|k∥k⊥|ρs² illustrates the retained electron-pressure contribution to warm/kinetic Alfvén polarization.',
+      'It is not a full kinetic or all-k⊥ polarization relation. Finite-ion-gyroradius corrections, electron-inertial polarization, kinetic damping, and realistic distribution functions are omitted.',
+      ['Estimate the reduced low-FLR E∥/E⊥ scaling.', 'Build qualitative KAW energy-transfer arguments.', 'Compare anisotropy k∥/k⊥ across reduced models.'],
       ['kaw-dispersion', 'kaw-landau-accessibility', 'kaw-normalizations']
     ),
 
@@ -427,8 +427,8 @@
       ['hellinger-mirror', 'species-beta', 'ion-gyroradius']
     ),
     'hellinger-proton-cyclotron': I(
-      'This empirical fit represents a constant maximum-growth-rate contour for the proton-cyclotron instability in the model studied by Hellinger et al. It provides a reference boundary in proton anisotropy–beta space.',
-      'Being above the contour means the point lies beyond that fitted linear-theory contour under its assumptions; it does not establish that the instability is present or dominant in an observation.',
+      'This source-verified empirical fit represents the gamma_max=10⁻³ Omega_p proton-cyclotron contour of Hellinger et al. (2006) over 0.01≤beta_parallel_p≤30.',
+      'The source model uses bi-Maxwellian protons, Maxwellian electrons with beta_e=1, and omega_pe/Omega_ce=100. Being above the contour does not establish that the instability is present or dominant in an observation.',
       ['Plot proton temperature anisotropy against β∥p.', 'Compare observed bounds with linear-theory contours.', 'Distinguish cyclotron and mirror-side constraints.'],
       ['hellinger-mirror', 'fluid-mirror', 'ion-gyrofrequency']
     ),
@@ -439,8 +439,8 @@
       ['hellinger-proton-cyclotron', 'fluid-mirror', 'species-beta']
     ),
     'hellinger-parallel-firehose': I(
-      'This fit represents a constant-growth-rate parallel-firehose contour for proton temperature anisotropy below unity. It provides a kinetic reference beyond the simple CGL firehose threshold.',
-      'The fit is defined only over its stated beta domain. Falling below the curve means the point is beyond that model contour, not that a measured fluctuation has been identified as a parallel firehose mode.',
+      'This source-verified fit represents the gamma_max=10⁻³ Omega_p parallel-firehose contour of Hellinger et al. (2006). The fitted branch is real-valued only for beta_parallel_p>0.59.',
+      'The source survey extends to beta_parallel_p=30, while the lower survey region cannot be evaluated by this branch because beta0=0.59. That mathematical boundary is not itself a physical instability threshold.',
       ['Compare low-anisotropy solar-wind observations with kinetic theory.', 'Distinguish parallel and oblique firehose constraints.', 'Evaluate the limitations of the fluid firehose criterion.'],
       ['hellinger-oblique-firehose', 'fluid-firehose', 'ion-gyrofrequency']
     ),

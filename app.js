@@ -2,19 +2,23 @@
   'use strict';
   const Meta = window.AlfvenicaRelease;
   const Registry = window.PlasmaFormulaRegistry;
+  const Symbols = window.PlasmaSymbolRegistry;
+  const Units = window.PlasmaUnitRegistry;
+  const Guardrails = window.PlasmaDomainGuardrails;
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
+  const Exporter = window.AlfvenicaReproducibleExport;
   const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Meta || !Registry || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Exporter || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
     get(key, fallback) { try { return localStorage.getItem(key) || fallback; } catch (_) { return fallback; } },
     set(key, value) { try { localStorage.setItem(key, value); } catch (_) { /* local file or privacy mode */ } },
   };
-  const validViews = new Set(['calculator', 'plots', 'examples', 'validation', 'about']);
+  const validViews = new Set(['calculator', 'plots', 'examples', 'validation', 'notation', 'about']);
   const hellingerFormulaIds = new Set([
     'hellinger-proton-cyclotron',
     'hellinger-mirror',
@@ -22,10 +26,11 @@
     'hellinger-oblique-firehose',
   ]);
 
+  const storedUnitSystem = storage.get('alfvenica-units', 'space');
   const state = {
     view: 'calculator',
     theme: storage.get('alfvenica-theme', 'light'),
-    unitSystem: storage.get('alfvenica-units', 'space'),
+    unitSystem: Units.hasSystem(storedUnitSystem) ? storedUnitSystem : 'space',
     category: 'All formulas',
     search: '',
     searchMatches: [],
@@ -33,39 +38,11 @@
     formulaId: '',
     values: new Map(),
     lastResults: [],
+    lastWarnings: [],
+    lastDomainDiagnostics: [],
     plotValues: { ...PlotRegistry.defaultState },
     plotSweep: { variable:'ni', min:0.1e6, max:100e6, spacing:'log', family:'length', outputs:['lambdaDe','de','di'], yScale:'log' },
     plotCache: { hierarchy:{}, sweep:null },
-  };
-
-  const unitSystems = {
-    space: {
-      density: ['cm⁻³', 1e-6], magneticField: ['nT', 1e9], temperature: ['eV', 1],
-      speed: ['km s⁻¹', 1e-3], length: ['km', 1e-3], electricField: ['mV m⁻¹', 1e3],
-      pressure: ['nPa', 1e9], energyDensity: ['nJ m⁻³', 1e9], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['km⁻¹', 1e3], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['km² s⁻¹', 1e-6],
-      currentDensity: ['nA m⁻²', 1e9], flux: ['mW m⁻²', 1e3],
-    },
-    si: {
-      density: ['m⁻³', 1], magneticField: ['T', 1], temperature: ['K', P.constants.electronVolt / P.constants.boltzmannConstant],
-      speed: ['m s⁻¹', 1], length: ['m', 1], electricField: ['V m⁻¹', 1],
-      pressure: ['Pa', 1], energyDensity: ['J m⁻³', 1], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['m⁻¹', 1], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['m² s⁻¹', 1],
-      currentDensity: ['A m⁻²', 1], flux: ['W m⁻²', 1],
-    },
-    cgs: {
-      density: ['cm⁻³', 1e-6], magneticField: ['G', 1e4], temperature: ['eV', 1],
-      speed: ['cm s⁻¹', 1e2], length: ['cm', 1e2], electricField: ['statV cm⁻¹', 3.33564095198152e-5],
-      pressure: ['dyn cm⁻²', 10], energyDensity: ['erg cm⁻³', 10], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['cm⁻¹', 1e-2], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['cm² s⁻¹', 1e4],
-      currentDensity: ['statA cm⁻²', 299792.458], flux: ['erg cm⁻² s⁻¹', 1e3],
-    },
   };
 
   const presets = [
@@ -88,12 +65,20 @@
     div.innerHTML = value;
     return div.textContent || '';
   }
+  function semanticSymbol(id) {
+    const symbol = Symbols.get(id);
+    if (!symbol) throw new Error(`Unknown semantic symbol ID: ${id}`);
+    return symbol;
+  }
+  function inputLabel(input) {
+    return input.canonicalLabel ? semanticSymbol(input.semanticId).canonicalName : input.label;
+  }
   function formulaById(id) { return Registry.formulas.find(f => f.id === id); }
   function activeFormula() { return formulaById(state.formulaId) || Registry.formulas[0]; }
-  function quantityDef(quantity) { return unitSystems[state.unitSystem][quantity] || ['', 1]; }
-  function toDisplay(quantity, canonical) { return canonical * quantityDef(quantity)[1]; }
-  function toCanonical(quantity, displayed) { return displayed / quantityDef(quantity)[1]; }
-  function unitLabel(quantity) { return quantityDef(quantity)[0]; }
+  function quantityDef(quantity) { return Units.definition(state.unitSystem, quantity); }
+  function toDisplay(quantity, canonical) { return Units.toDisplay(state.unitSystem, quantity, canonical); }
+  function toCanonical(quantity, displayed) { return Units.toCanonical(state.unitSystem, quantity, displayed); }
+  function unitLabel(quantity) { return quantityDef(quantity).unit; }
 
   function formatNumber(value, sig = 5) {
     if (!Number.isFinite(value)) return value === Infinity ? '∞' : '—';
@@ -117,32 +102,8 @@
     }
     if (!Number.isFinite(canonical)) return { value: canonical === Infinity ? '∞' : '—', unit: unitLabel(quantity) };
 
-    // Readable adaptive units for the most common space-physics outputs.
-    if (state.unitSystem === 'space' && quantity === 'length') {
-      const a = Math.abs(canonical);
-      if (a >= 1000) return { value: formatNumber(canonical / 1000), unit: 'km' };
-      if (a >= 0.01) return { value: formatNumber(canonical), unit: 'm' };
-      return { value: formatNumber(canonical * 100), unit: 'cm' };
-    }
-    if (quantity === 'frequency') {
-      const a = Math.abs(canonical);
-      if (a >= 1e9) return { value: formatNumber(canonical / 1e9), unit: 'GHz' };
-      if (a >= 1e6) return { value: formatNumber(canonical / 1e6), unit: 'MHz' };
-      if (a >= 1e3) return { value: formatNumber(canonical / 1e3), unit: 'kHz' };
-      return { value: formatNumber(canonical), unit: 'Hz' };
-    }
-    if (quantity === 'time') {
-      if (canonical === 0) return { value: '0', unit: 's' };
-      const a = Math.abs(canonical);
-      if (a < 1e-6) return { value: formatNumber(canonical * 1e9), unit: 'ns' };
-      if (a < 1e-3) return { value: formatNumber(canonical * 1e6), unit: 'μs' };
-      if (a < 1) return { value: formatNumber(canonical * 1e3), unit: 'ms' };
-      if (a >= 86400) return { value: formatNumber(canonical / 86400), unit: 'days' };
-      if (a >= 3600) return { value: formatNumber(canonical / 3600), unit: 'h' };
-      return { value: formatNumber(canonical), unit: 's' };
-    }
-    const [unit, factor] = quantityDef(quantity);
-    return { value: formatNumber(canonical * factor), unit };
+    const display = Units.outputDefinition(state.unitSystem, quantity, canonical);
+    return { value: formatNumber(canonical * display.factor), unit: display.unit };
   }
 
   function currentValues(formula) {
@@ -151,7 +112,7 @@
   }
 
   function searchResults() {
-    return Search.findMatches(Registry.formulas, Insights.insights, state.search, state.category);
+    return Search.findMatches(Registry.formulas, Insights.insights, state.search, state.category, Symbols);
   }
 
   function setSuggestionActive(index) {
@@ -198,12 +159,12 @@
     suggestions.replaceChildren();
     if (!query) {
       state.searchMatches = [];
-      $('searchStatus').textContent = 'Type to search formula names, parameters, and common abbreviations.';
+      $('searchStatus').textContent = 'Type to search formula names, canonical symbols, parameters, and common aliases.';
       closeSearchSuggestions();
       return;
     }
 
-    state.searchMatches = Search.findMatches(Registry.formulas, Insights.insights, query, 'All formulas');
+    state.searchMatches = Search.findMatches(Registry.formulas, Insights.insights, query, 'All formulas', Symbols);
     const visibleMatches = state.searchMatches.slice(0, 8);
     $('searchStatus').textContent = `${state.searchMatches.length} matching calculator${state.searchMatches.length === 1 ? '' : 's'}.`;
     if (!visibleMatches.length) {
@@ -315,6 +276,103 @@
     $('relatedFormulaList').querySelectorAll('button').forEach(button => button.addEventListener('click', () => selectFormula(button.dataset.relatedId, true, true)));
   }
 
+  function readableSemanticToken(value) {
+    return String(value || '').replace(/-/g, ' ');
+  }
+
+  function symbolUnitSummary(symbol) {
+    const parts = [symbol.dimensionless ? 'Dimensionless (1)' : `Canonical SI: ${symbol.canonicalSiUnit}`];
+    if (symbol.productionUnit !== symbol.canonicalSiUnit) parts.push(`calculation boundary: ${symbol.productionUnit}`);
+    const alternateUnits = symbol.acceptedDisplayUnits.filter(unit => unit !== symbol.canonicalSiUnit && unit !== symbol.productionUnit);
+    if (alternateUnits.length) parts.push(`displays: ${alternateUnits.join(', ')}`);
+    return parts.join(' · ');
+  }
+
+  function symbolConventionNotes(symbol) {
+    const notes = [];
+    if (symbol.relationUnicode) notes.push(symbol.relationUnicode);
+    if (symbol.species) {
+      let species = `Species: ${readableSemanticToken(symbol.species.subject)}`;
+      if (symbol.species.reference) species += `; reference: ${readableSemanticToken(symbol.species.reference)}`;
+      notes.push(species);
+    }
+    for (const item of symbol.indexMeaning) notes.push(`Index ${item.rendered}: ${item.meaning}`);
+    notes.push(...symbol.conventionNotes);
+    if (symbol.scope !== 'global') notes.push(`Scope: ${readableSemanticToken(symbol.scope)}`);
+    if (symbol.reviewStatus !== 'CONFIRMED_IMPLEMENTATION') notes.push(Symbols.reviewStatuses[symbol.reviewStatus]);
+    return notes;
+  }
+
+  function formulaRoleSummary(symbol, use) {
+    const roles = [];
+    if (use.roles.includes('input')) roles.push('Input');
+    if (use.roles.includes('numeric-output')) roles.push('Numeric output');
+    if (use.roles.includes('equation') && !use.roles.some(role => role === 'input' || role === 'numeric-output')) {
+      roles.push({ constant:'Constant', derived:'Derived quantity', index:'Index', 'formula-local':'Formula-local equation term' }[symbol.scope] || 'Equation quantity');
+    }
+    const localLabels = use.localLabels.filter(label => label && Search.normalizeText(label) !== Search.normalizeText(symbol.canonicalName));
+    return { roles, localLabels };
+  }
+
+  function formulaSymbolRow(resolved) {
+    const { symbol, use } = resolved;
+    const role = formulaRoleSummary(symbol, use);
+    const roleNote = role.localLabels.length ? `<span class="symbol-local-note">Local role: ${escapeXml(role.localLabels.join(', '))}</span>` : '';
+    const conventionNotes = symbolConventionNotes(symbol);
+    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-role">${escapeXml(role.roles.join(' · '))}</span>${roleNote}</td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span>${conventionNotes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('')}</td></tr>`;
+  }
+
+  function renderSymbolsAndDefinitions(formula) {
+    const resolved = Symbols.formulaSymbols(formula);
+    const body = document.querySelector('[data-symbol-definitions-body]');
+    if (!body) throw new Error('Symbols & Definitions container is missing');
+    body.innerHTML = resolved.map(formulaSymbolRow).join('');
+    const status = document.querySelector('[data-symbol-definitions-status]');
+    status.textContent = `${resolved.length} canonical definition${resolved.length === 1 ? '' : 's'}, deduplicated by semantic ID.`;
+  }
+
+  function notationSymbolCard(symbol) {
+    const notes = symbolConventionNotes(symbol);
+    return `<article class="notation-symbol-card" data-semantic-id="${escapeXml(symbol.id)}"><div class="notation-symbol-heading"><span class="notation-glyph">${escapeXml(symbol.unicode)}</span><strong>${escapeXml(symbol.canonicalName)}</strong></div><p>${escapeXml(symbol.definition)}</p><p class="notation-symbol-meta">${escapeXml(symbolUnitSummary(symbol))}</p>${notes.length ? `<p class="notation-symbol-note">${escapeXml(notes.join(' · '))}</p>` : ''}</article>`;
+  }
+
+  function renderNotationSections() {
+    const container = document.querySelector('[data-notation-sections]');
+    if (!container) throw new Error('Notation sections container is missing');
+    container.innerHTML = Symbols.notationSections.map(section => `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(section.title)}</h2><p>${escapeXml(section.summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`).join('');
+  }
+
+  function renderUnitSystemGuide() {
+    const container = document.querySelector('[data-unit-system-guide]');
+    if (!container) throw new Error('Unit-system guide container is missing');
+    container.innerHTML = Units.systemIds.map(systemId => {
+      const system = Units.systems[systemId];
+      const selected = systemId === state.unitSystem ? ' data-current-unit-system="true"' : '';
+      return `<article class="unit-system-card"${selected}><h3>${escapeXml(system.label)}</h3><p>${escapeXml(system.shortDescription)}</p><ul>${system.limitations.map(limitation => `<li>${escapeXml(limitation)}</li>`).join('')}</ul></article>`;
+    }).join('');
+  }
+
+  function glossaryRow(symbol) {
+    const notes = symbolConventionNotes(symbol);
+    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
+  }
+
+  function renderSymbolGlossary() {
+    const input = document.querySelector('[data-symbol-glossary-search]');
+    const body = document.querySelector('[data-symbol-glossary-body]');
+    const status = document.querySelector('[data-symbol-glossary-status]');
+    if (!input || !body || !status) throw new Error('Symbol glossary controls are missing');
+    const matches = Search.findSymbolMatches(Symbols, input.value);
+    body.innerHTML = matches.map(glossaryRow).join('');
+    status.textContent = `${matches.length} of ${Object.keys(Symbols.symbols).length} canonical symbols shown.`;
+  }
+
+  function renderNotation() {
+    renderNotationSections();
+    renderUnitSystemGuide();
+    renderSymbolGlossary();
+  }
+
   function renderFormula() {
     const formula = activeFormula();
     state.formulaId = formula.id;
@@ -342,9 +400,13 @@
       const step = input.integer ? 1 : (input.step || 'any');
       const min = Number.isFinite(input.min) ? ` min="${toDisplay(input.quantity, input.min)}"` : '';
       const max = Number.isFinite(input.max) ? ` max="${toDisplay(input.quantity, input.max)}"` : '';
-      return `<div class="input-group"><label class="input-label" for="input-${input.key}"><span>${input.label}</span><span class="input-symbol">${input.symbol}</span></label><div class="number-wrap"><input class="number-input" id="input-${input.key}" data-key="${input.key}" data-quantity="${input.quantity}" type="number" inputmode="decimal" step="${step}"${min}${max} value="${Number.isFinite(displayValue) ? Number(displayValue.toPrecision(10)) : ''}"><span class="input-unit">${unitLabel(input.quantity)}</span></div></div>`;
+      const label = inputLabel(input);
+      const semantic = semanticSymbol(input.semanticId);
+      const unit = input.quantity === 'dimensionless' && semantic.relationUnicode ? semantic.relationUnicode : unitLabel(input.quantity);
+      return `<div class="input-group"><label class="input-label" for="input-${input.key}"><span>${escapeXml(label)}</span><span class="input-symbol">${escapeXml(semantic.unicode)}</span></label><div class="number-wrap"><input class="number-input" id="input-${input.key}" data-key="${input.key}" data-quantity="${input.quantity}" type="number" inputmode="decimal" step="${step}"${min}${max} value="${Number.isFinite(displayValue) ? Number(displayValue.toPrecision(10)) : ''}"><span class="input-unit">${escapeXml(unit)}</span></div></div>`;
     }).join('');
     $('inputGrid').querySelectorAll('input').forEach(inputEl => inputEl.addEventListener('input', onInputChange));
+    renderSymbolsAndDefinitions(formula);
     calculate();
     renderFormulaList();
   }
@@ -358,19 +420,45 @@
     calculate();
   }
 
+  function renderWarnings(warnings, diagnostics = []) {
+    const container = document.querySelector('[data-calculation-warnings]');
+    const list = document.querySelector('[data-calculation-warning-list]');
+    if (!container || !list) throw new Error('Calculation warning container is missing');
+    const warningHtml = warnings.map(warning => {
+      const severity = Guardrails.severities[warning.severity];
+      const observed = warning.conditionEvaluated && Number.isFinite(warning.conditionEvaluated.actual)
+        ? `<span class="warning-observed">Observed: ${escapeXml(formatNumber(warning.conditionEvaluated.actual, 6))}</span>`
+        : '';
+      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong><span>${escapeXml(warning.id)}</span></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p></details></article>`;
+    }).join('');
+    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong><span>${escapeXml(diagnostic.id)}</span></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
+    list.innerHTML = warningHtml + diagnosticHtml;
+    container.hidden = warnings.length === 0 && diagnostics.length === 0;
+  }
+
   function calculate() {
     const formula = activeFormula();
+    const values = currentValues(formula);
+    const preflightWarnings = Guardrails.evaluate(formula, values, []);
     try {
-      const results = formula.calculate(currentValues(formula));
+      const results = formula.calculate(values);
       state.lastResults = results;
+      state.lastWarnings = Guardrails.evaluate(formula, values, results);
+      state.lastDomainDiagnostics = Guardrails.diagnostics(formula, values, results);
       $('calculationError').hidden = true;
       $('resultList').innerHTML = results.map(result => {
-        const formatted = formatQuantity(result.quantity, result.value);
+        const formatted = result.displayUnit
+          ? { value: formatNumber(result.value), unit: result.displayUnit }
+          : formatQuantity(result.quantity, result.value);
         return `<div class="result-row"><dt>${result.label}</dt><dd>${result.symbol ? `<span class="result-symbol">${result.symbol}</span>` : ''}<span>${formatted.value}</span>${formatted.unit ? `<span class="result-unit">${formatted.unit}</span>` : ''}</dd></div>`;
       }).join('');
+      renderWarnings(state.lastWarnings, state.lastDomainDiagnostics);
     } catch (error) {
       state.lastResults = [];
+      state.lastWarnings = preflightWarnings;
+      state.lastDomainDiagnostics = [];
       $('resultList').innerHTML = '';
+      renderWarnings(preflightWarnings);
       $('calculationError').textContent = error.message || 'The supplied values are outside the calculator domain.';
       $('calculationError').hidden = false;
     }
@@ -430,6 +518,27 @@
     })];
     copyText(lines.join('\n'), 'Values copied');
   }
+  function downloadCalculationRecord() {
+    const formula = activeFormula();
+    const exportedAt = new Date();
+    const displayInputs = Object.fromEntries([...$('inputGrid').querySelectorAll('[data-key]')].map(input => [input.dataset.key, {
+      enteredValue: input.value,
+      value: Number(input.value),
+    }]));
+    try {
+      const record = Exporter.createRecord({
+        formula,
+        canonicalInputs: currentValues(formula),
+        unitSystemId: state.unitSystem,
+        displayInputs,
+        exportedAt,
+      });
+      downloadTextFile(Exporter.filename(formula.id, exportedAt), Exporter.serializeRecord(record), 'application/json;charset=utf-8');
+      showToast('Reproducible record downloaded');
+    } catch (error) {
+      showToast(error.message || 'Calculation record unavailable');
+    }
+  }
   function copyLatex() { copyText(activeFormula().latex, 'LaTeX copied'); }
   function copyCitation() { copyText(Meta.citation, 'Citation copied'); }
   function copyBibtex() { copyText(Meta.bibtex, 'BibTeX copied'); }
@@ -448,6 +557,11 @@
     { id:'plotZ', key:'Z', quantity:'dimensionless', integer:true },
     { id:'plotMu', key:'mu', quantity:'dimensionless' },
   ]);
+  const legacyPlotStateMetadataSemanticIds = Object.freeze({
+    // Compatibility-only export name retained for Batch 2C. Its scientific
+    // identity is the canonical ion-to-proton-mass-ratio semantic entry.
+    ion_mass_number: PlotRegistry.stateSemanticIds.mu,
+  });
 
   function escapeXml(value) {
     return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[character]));
@@ -481,7 +595,7 @@
 
 
   function canonicalUnitLabel(quantity) {
-    return ({ density:'m⁻³', magneticField:'T', temperature:'eV', speed:'m s⁻¹', length:'m', frequency:'Hz', pressure:'Pa', dimensionless:'' })[quantity] || unitLabel(quantity);
+    return Units.canonicalQuantities[quantity] ? Units.canonicalQuantities[quantity].unit : unitLabel(quantity);
   }
 
   function plotStateSummary(values = state.plotValues) {
@@ -489,7 +603,8 @@
       ['nᵢ','density',values.ni], ['B','magneticField',values.B], ['Tₑ','temperature',values.Te],
       ['Tᵢ','temperature',values.Ti], ['V','speed',values.V],
     ].map(([symbol,quantity,value]) => `${symbol} = ${formatNumber(toDisplay(quantity,value))} ${unitLabel(quantity)}`);
-    entries.push(`Z = ${formatNumber(values.Z)}`, `μ = ${formatNumber(values.mu)}`);
+    const massRatio = semanticSymbol(PlotRegistry.stateSemanticIds.mu);
+    entries.push(`Z = ${formatNumber(values.Z)}`, `${massRatio.unicode} = ${formatNumber(values.mu)}`);
     return entries.join('; ');
   }
 
@@ -501,7 +616,7 @@
       ion_temperature_eV:values.Ti,
       bulk_speed_m_s:values.V,
       ion_charge_state:values.Z,
-      ion_mass_number:values.mu,
+      [Object.keys(legacyPlotStateMetadataSemanticIds)[0]]:values.mu,
     };
   }
 
@@ -510,6 +625,14 @@
   }
 
   function renderPlotStateInputs() {
+    const massRatio = semanticSymbol(PlotRegistry.stateSemanticIds.mu);
+    const massRatioLabel = document.querySelector('[data-plot-mass-ratio-label]');
+    const massRatioSymbol = document.querySelector('[data-plot-mass-ratio-symbol]');
+    const massRatioRelation = document.querySelector('[data-plot-mass-ratio-relation]');
+    if (!massRatioLabel || !massRatioSymbol || !massRatioRelation) throw new Error('Plot mass-ratio presentation is missing');
+    massRatioLabel.textContent = massRatio.canonicalName;
+    massRatioSymbol.textContent = massRatio.unicode;
+    massRatioRelation.textContent = massRatio.relationUnicode;
     for (const definition of plotInputDefinitions) {
       const input = $(definition.id);
       const value = definition.quantity === 'dimensionless' ? state.plotValues[definition.key] : toDisplay(definition.quantity,state.plotValues[definition.key]);
@@ -633,7 +756,7 @@
 
   function hierarchyCsv(metrics, quantity) {
     const unit = unitLabel(quantity);
-    const factor = quantityDef(quantity)[1];
+    const factor = quantityDef(quantity).factor;
     const meta = plotStateMetadata();
     const headers = ['name','symbol','display_value','display_unit','canonical_si_value','canonical_si_unit',...Object.keys(meta)];
     const canonicalUnit = canonicalUnitLabel(quantity);
@@ -880,11 +1003,12 @@
     if (!validViews.has(view)) view = 'calculator';
     state.view = view;
     if (view !== 'calculator') closeSearchSuggestions();
-    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `${view}View`));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.viewSection === view || v.id === `${view}View`));
     document.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
     if (view === 'plots') renderPlotsPage();
     if (view === 'examples') renderExamples();
     if (view === 'validation') renderValidation();
+    if (view === 'notation') renderNotation();
     if (updateUrl) updateViewUrl(view);
     if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -915,25 +1039,26 @@
   function renderValidation() {
     const tests = Validation.run();
     const passed = tests.filter(t => t.pass).length;
-    const referenceCount = tests.filter(test => test.kind === 'reference').length;
-    const identityCount = tests.filter(test => test.kind === 'identity').length;
-    const domainCount = tests.filter(test => test.kind === 'domain').length;
-    $('validationSummary').innerHTML = `<strong>${passed === tests.length ? 'All validation groups passed' : `${passed} of ${tests.length} validation records passed`}</strong><span>${referenceCount} reference benchmarks · ${identityCount} analytical identities · ${domainCount} domain safeguard · ${Meta.formulaSmokeCount}/${Meta.formulaSmokeCount} calculator defaults execute</span>`;
+    const groupDefinitions = Object.values(Validation.validationClasses);
+    const classCounts = Object.fromEntries(groupDefinitions.map(definition => [definition.id, tests.filter(test => test.validationClass === definition.id).length]));
+    const countSummary = groupDefinitions.map(definition => `${definition.id} ${classCounts[definition.id]}`).join(' · ');
+    $('validationSummary').innerHTML = `<strong>${passed}/${tests.length} classified validation records passed</strong><span>${countSummary}</span>`;
 
-    const groupDefinitions = [
-      ['reference', 'Numerically verified against reference values', 'Published coefficients, constants, and empirical fits checked at stated points.'],
-      ['identity', 'Analytical consistency checks', 'Definitions, limiting cases, exact identities, and scaling relations.'],
-      ['domain', 'Domain safeguards', 'Checks that representative valid-domain calculations remain finite and meaningful.'],
-    ];
-    $('validationGroups').innerHTML = groupDefinitions.map(([kind, title, description], index) => {
-      const group = tests.filter(test => test.kind === kind);
+    const firstNonEmptyClass = groupDefinitions.find(definition => classCounts[definition.id] > 0)?.id;
+    $('validationGroups').innerHTML = groupDefinitions.map(definition => {
+      const group = tests.filter(test => test.validationClass === definition.id);
       const groupPassed = group.filter(test => test.pass).length;
-      const rows = group.map(test => `<tr><td>${test.name}<br><span class="small-text">${test.source}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`).join('');
-      return `<details class="validation-group"${index === 0 ? ' open' : ''}><summary><span><span class="validation-group-title">${title}</span><br><span class="validation-group-summary">${description}</span></span><span class="validation-group-summary">${groupPassed}/${group.length} passed</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Test</th><th>Computed</th><th>Reference</th><th>Relative error</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+      const rows = group.length
+        ? group.map(test => {
+          const basis = Validation.evidenceBases[test.evidenceBasis];
+          return `<tr><td>${test.name}<br><span class="small-text">Evidence basis: ${basis.label}. ${test.source}<br>Tolerance: ${test.toleranceRationale}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`;
+        }).join('')
+        : '<tr><td colspan="5"><span class="small-text">No current in-browser validation record is assigned to this class.</span></td></tr>';
+      return `<details class="validation-group"${definition.id === firstNonEmptyClass ? ' open' : ''}><summary><span><span class="validation-group-title">${definition.id} — ${definition.label}</span><br><span class="validation-group-summary">${definition.description}</span></span><span class="validation-group-summary">${group.length ? `${groupPassed}/${group.length} passed` : '0 records'}</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Check and evidence basis</th><th>Computed</th><th>Expected</th><th>Relative difference</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
     }).join('');
 
-    const smoke = tests.find(test => test.kind === 'smoke');
-    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation integrity</h2><p>These checks confirm execution and structural consistency. They do not independently verify every numerical result.</p><div class="integrity-grid"><div class="integrity-item"><strong>${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error</span></div><div class="integrity-item"><strong>${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values, with hierarchy and scaling checks</span></div><div class="integrity-item"><strong>${Meta.htmlIdCount}</strong><span>unique interface identifiers, plus asset, reference, and interpretation-integrity checks</span></div></div>`;
+    const smoke = tests.find(test => test.evidenceBasis === 'EXECUTION_SMOKE');
+    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation and provenance controls</h2><p>F_REGRESSION checks guard implementation behaviour. P_PROVENANCE checks detect artifact changes. Neither class is independent evidence that a formula is scientifically correct.</p><div class="integrity-grid"><div class="integrity-item"><strong>F_REGRESSION · ${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error; this is an execution-only smoke result</span></div><div class="integrity-item"><strong>F_REGRESSION · ${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values; separate D_PROPERTY scaling checks run in the development test suite</span></div><div class="integrity-item"><strong>P_PROVENANCE · SHA-256</strong><span>the physics-core hash is pinned in development tests as a change detector, not as scientific correctness evidence</span></div></div>`;
   }
 
   function applyTheme() {
@@ -955,6 +1080,7 @@
     renderPlotControls();
     renderPlotStateInputs();
     bindPlotEvents();
+    document.querySelector('[data-symbol-glossary-search]').addEventListener('input', renderSymbolGlossary);
     setView(state.view, { updateUrl: false, scroll: false });
 
     $('formulaSearch').addEventListener('input', event => {
@@ -969,12 +1095,13 @@
     $('formulaSearch').addEventListener('focus', renderSearchSuggestions);
     $('formulaSearch').addEventListener('keydown', onSearchKeydown);
     $('categorySelect').addEventListener('change', e => { state.category = e.target.value; renderCategories(); renderFormulaList(); });
-    $('unitSystem').addEventListener('change', e => { state.unitSystem = e.target.value; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); });
+    $('unitSystem').addEventListener('change', e => { state.unitSystem = Units.hasSystem(e.target.value) ? e.target.value : 'space'; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); if (state.view === 'notation') renderNotation(); });
     $('themeToggle').addEventListener('click', () => { state.theme = state.theme === 'light' ? 'dark' : 'light'; storage.set('alfvenica-theme', state.theme); applyTheme(); if (state.view === 'plots') renderPlots(); });
     $('resetInputs').addEventListener('click', resetInputs);
     $('applyPreset').addEventListener('click', applyPreset);
     $('copyResults').addEventListener('click', copyResults);
     $('copyLatex').addEventListener('click', copyLatex);
+    document.querySelector('[data-download-calculation-record]').addEventListener('click', downloadCalculationRecord);
     $('copyCitation').addEventListener('click', copyCitation);
     $('copyBibtex').addEventListener('click', copyBibtex);
     $('brandButton').addEventListener('click', () => setView('calculator'));

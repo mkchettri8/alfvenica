@@ -7,7 +7,7 @@ let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'styles.css'), 'utf8');
 html = html.replace('  <link rel="stylesheet" href="styles.css">', `  <style>\n${css}\n  </style>`);
 
-for (const file of ['release-metadata.js', 'plasma-physics.js', 'formula-registry.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js']) {
+for (const file of ['release-metadata.js', 'plasma-physics.js', 'unit-registry.js', 'symbol-registry.js', 'formula-registry.js', 'domain-guardrails.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'reproducible-export.js', 'search.js', 'app.js']) {
   const code = fs.readFileSync(path.join(root, file), 'utf8').replace(/<\/script/gi, '<\\/script');
   html = html.replace(`  <script src="${file}" defer></script>`, `  <script>\n${code}\n  </script>`);
 }

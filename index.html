@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and numerical validation.">
+  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and classified validation evidence.">
   <meta name="author" content="Mani K Chettri">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#f6f8f9">
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://alfvenica.org/">
   <meta property="og:title" content="Alfvenica — Space Plasma Toolkit">
-  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and numerical validation.">
+  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alfvenica.org/">
   <title>Alfvenica — Space Plasma Toolkit</title>
@@ -30,12 +30,12 @@
     "applicationCategory": "ScientificApplication",
     "applicationSubCategory": "Space and astrophysical plasma physics",
     "operatingSystem": "Any modern web browser",
-    "softwareVersion": "1.0.1",
+    "softwareVersion": "1.1.0",
     "datePublished": "2026-08-05",
-    "dateModified": "2026-08-10",
+    "dateModified": "2026-08-22",
     "isAccessibleForFree": true,
     "license": "https://opensource.org/licenses/MIT",
-    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and numerical validation.",
+    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.",
     "keywords": ["space plasma physics", "plasma calculator", "kinetic Alfvén waves", "heliophysics", "research software"],
     "author": {
       "@type": "Person",
@@ -51,10 +51,14 @@
   <link rel="stylesheet" href="styles.css">
   <script src="release-metadata.js" defer></script>
   <script src="plasma-physics.js" defer></script>
+  <script src="unit-registry.js" defer></script>
+  <script src="symbol-registry.js" defer></script>
   <script src="formula-registry.js" defer></script>
+  <script src="domain-guardrails.js" defer></script>
   <script src="plot-registry.js" defer></script>
   <script src="formula-insights.js" defer></script>
   <script src="validation.js" defer></script>
+  <script src="reproducible-export.js" defer></script>
   <script src="search.js" defer></script>
   <script src="app.js" defer></script>
 </head>
@@ -74,14 +78,15 @@
         <button class="nav-button" type="button" data-view="plots">Plots</button>
         <button class="nav-button" type="button" data-view="examples">Examples</button>
         <button class="nav-button" type="button" data-view="validation">Validation</button>
+        <button class="nav-button" type="button" data-view="notation">Notation</button>
         <button class="nav-button" type="button" data-view="about">About</button>
       </nav>
       <div class="header-controls">
         <label class="control-label" for="unitSystem">Units</label>
         <select id="unitSystem" class="compact-select" aria-label="Unit system">
           <option value="space">Space</option>
-          <option value="si">SI</option>
-          <option value="cgs">CGS</option>
+          <option value="si">SI display</option>
+          <option value="cgs">CGS-oriented (mixed)</option>
         </select>
         <button id="themeToggle" class="text-button" type="button">Dark mode</button>
       </div>
@@ -99,10 +104,10 @@
         <div class="global-search">
           <label for="formulaSearch" class="field-label">Search all calculators</label>
           <div class="search-combobox">
-            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, Alfvén, KAW" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" aria-describedby="searchStatus">
+            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, μ, Debye length" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" aria-describedby="searchStatus">
             <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Matching calculators" hidden></div>
           </div>
-          <p id="searchStatus" class="search-status" aria-live="polite">Type to search formula names, parameters, and common abbreviations.</p>
+          <p id="searchStatus" class="search-status" aria-live="polite">Type to search formula names, canonical symbols, parameters, and common aliases.</p>
         </div>
       </div>
 
@@ -157,11 +162,33 @@
                   <div class="result-actions">
                     <button id="copyResults" class="text-button" type="button">Copy values</button>
                     <button id="copyLatex" class="text-button" type="button">Copy LaTeX</button>
+                    <button class="text-button" type="button" data-download-calculation-record>Download record</button>
                   </div>
                 </div>
                 <dl id="resultList" class="result-list"></dl>
+                <p class="reproducible-record-note">JSON record includes canonical inputs and outputs, formula provenance, display units, and active applicability warnings.</p>
               </section>
             </div>
+
+            <section class="calculation-warnings" data-calculation-warnings aria-label="Calculation applicability warnings" aria-live="polite" hidden>
+              <div data-calculation-warning-list></div>
+            </section>
+
+            <section class="symbol-definitions" data-symbol-definitions aria-label="Symbols and definitions">
+              <div class="symbol-definitions-heading">
+                <div>
+                  <h3>Symbols &amp; Definitions</h3>
+                  <p>Canonical meanings are resolved from the shared semantic-symbol registry for this calculator.</p>
+                </div>
+                <p class="symbol-definitions-status" data-symbol-definitions-status aria-live="polite"></p>
+              </div>
+              <div class="symbol-table-wrap">
+                <table class="symbol-table">
+                  <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>Role here</th><th>Unit and convention</th></tr></thead>
+                  <tbody data-symbol-definitions-body></tbody>
+                </table>
+              </div>
+            </section>
 
             <section class="scientific-notes" aria-labelledby="notesHeading">
               <h3 id="notesHeading">Scientific context</h3>
@@ -226,7 +253,7 @@
             <div class="input-group"><label class="input-label" for="plotTi"><span>Ion temperature</span><span class="input-symbol">Tᵢ</span></label><div class="number-wrap"><input id="plotTi" class="number-input" type="number" min="0" step="any"><span id="plotTiUnit" class="input-unit"></span></div></div>
             <div class="input-group"><label class="input-label" for="plotV"><span>Bulk-flow speed</span><span class="input-symbol">V</span></label><div class="number-wrap"><input id="plotV" class="number-input" type="number" min="0" step="any"><span id="plotVUnit" class="input-unit"></span></div></div>
             <div class="input-group"><label class="input-label" for="plotZ"><span>Ion charge state</span><span class="input-symbol">Z</span></label><div class="number-wrap"><input id="plotZ" class="number-input" type="number" min="1" step="1"><span class="input-unit">integer</span></div></div>
-            <div class="input-group"><label class="input-label" for="plotMu"><span>Ion mass number</span><span class="input-symbol">μ</span></label><div class="number-wrap"><input id="plotMu" class="number-input" type="number" min="0" step="any"><span class="input-unit">mᵢ/mₚ</span></div></div>
+            <div class="input-group"><label class="input-label" for="plotMu"><span data-plot-mass-ratio-label></span><span class="input-symbol" data-plot-mass-ratio-symbol></span></label><div class="number-wrap"><input id="plotMu" class="number-input" type="number" min="0" step="any"><span class="input-unit" data-plot-mass-ratio-relation></span></div></div>
           </div>
           <div id="plotStateError" class="calculation-error" role="alert" hidden></div>
         </section>
@@ -316,23 +343,61 @@
     <section id="validationView" class="view" aria-labelledby="validationHeading">
       <div class="page-column">
         <header class="page-header">
-          <p class="eyebrow">Numerical quality control</p>
-          <h1 id="validationHeading">Validation report</h1>
-          <p>Reference benchmarks, analytical identities, domain safeguards, and execution checks are reported separately so that “tested” has a precise meaning.</p>
+          <p class="eyebrow">Semantic evidence taxonomy</p>
+          <h1 id="validationHeading">Classified validation evidence</h1>
+          <p>Every in-browser record has one explicit semantic class. Independent benchmarks, identities, unit checks, scientific properties, domain guardrails, regressions, and provenance controls are distinguished rather than treated as equivalent evidence.</p>
         </header>
         <div class="release-status" role="group" aria-label="Release provenance">
-          <span><strong>Version</strong> 1.0.1</span>
-          <span><strong>Last validated</strong> 10 August 2026</span>
-          <span><strong>Physics-core baseline</strong> <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a></span>
+          <span><strong>Version</strong> 1.1.0 release candidate</span>
+          <span><strong>Release status</strong> tag, GitHub release, and archival DOI pending</span>
+          <span><strong>Physics-core provenance</strong> v1.0.0 baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>; v1.1.0 candidate core includes the approved SD-10 correction</span>
         </div>
         <div id="validationSummary" class="validation-summary"></div>
         <div id="validationGroups" class="validation-groups"></div>
         <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
         <div class="method-note">
           <h2>Interpretation</h2>
-          <p>A smoke test confirms that a calculator executes on its valid default inputs; it is not an independent numerical benchmark. Passing all checks confirms implementation consistency for the tested definitions, but it does not turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers. Each calculator states its own scope.</p>
+          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; E_DOMAIN exercises a defensible implemented applicability boundary; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability beyond the specifically exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
+      </div>
+    </section>
+
+    <section class="view" data-view-section="notation" aria-label="Notation and conventions">
+      <div class="page-column notation-page">
+        <header class="page-header">
+          <p class="eyebrow">Canonical semantic notation</p>
+          <h1>Notation &amp; Conventions</h1>
+          <p>Project-wide notation, units, species meanings, and convention notes are generated from the same canonical registry used by every calculator.</p>
+        </header>
+        <div class="notation-sections" data-notation-sections></div>
+        <section class="unit-system-guide" aria-label="Display unit systems">
+          <div class="unit-system-guide-heading">
+            <p class="eyebrow">Display boundary</p>
+            <h2>Unit-system selectors</h2>
+            <p>All selectors convert presentation around the same canonical calculator values. They do not select a different physics implementation.</p>
+          </div>
+          <div class="unit-system-grid" data-unit-system-guide></div>
+        </section>
+        <section class="symbol-glossary" aria-label="Searchable symbol glossary">
+          <div class="glossary-heading">
+            <div>
+              <p class="eyebrow">Complete registry</p>
+              <h2>Searchable symbol glossary</h2>
+              <p>Search rendered symbols, plain forms, canonical names, semantic IDs, and concise aliases.</p>
+            </div>
+            <label class="glossary-search-label">Search symbols
+              <input class="search-input" data-symbol-glossary-search type="search" placeholder="e.g. μ, mu, beta, Debye length" autocomplete="off">
+            </label>
+          </div>
+          <p class="search-status" data-symbol-glossary-status aria-live="polite"></p>
+          <div class="symbol-table-wrap glossary-table-wrap">
+            <table class="symbol-table glossary-table">
+              <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>Canonical/display units</th><th>Species and convention</th></tr></thead>
+              <tbody data-symbol-glossary-body></tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </section>
 
@@ -354,11 +419,11 @@
           </section>
           <section>
             <h2>Design, units, and privacy</h2>
-            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI, and CGS choices are interface conversions only. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
+            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
           </section>
           <section>
-            <h2>Scientific basis and validation</h2>
-            <p>Constants follow CODATA 2022. Foundational coefficients are checked against the 2023 NRL Plasma Formulary, while model-specific entries retain primary references and validity conditions. Reference benchmarks, analytical identities, domain checks, smoke tests, and interface checks are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
+            <h2>Scientific basis and validation evidence</h2>
+            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. The current in-browser evidence includes six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor; identities and regression or implementation checks remain separately classified. Development-only scaling checks and the P_PROVENANCE core hash are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
           </section>
           <section>
             <h2>Scope and limitations</h2>
@@ -366,24 +431,24 @@
           </section>
           <section>
             <h2>AI-assisted development</h2>
-            <p>ChatGPT, Claude, Gemini, DeepSeek, and Kimi assisted parts of coding, documentation, testing, and critical review. Their outputs were not accepted as scientific authority: formulas, assumptions, units, and numerical behaviour were checked against primary sources, analytical limits, and automated tests. Final responsibility for the scientific content and implementation remains with the author.</p>
+            <p>ChatGPT, Claude, Gemini, DeepSeek, and Kimi assisted parts of coding, documentation, testing, and critical review. Their outputs were not accepted as scientific authority: formulas, assumptions, units, and numerical behaviour were reviewed using the applicable sources, analytical limits, and classified automated evidence available for each item. Not every calculator has an independent external benchmark. Final responsibility for the scientific content and implementation remains with the author.</p>
           </section>
           <section>
             <h2>Collaboration and feedback</h2>
             <p>Alfvenica is under continuing development. Scientific corrections, independent benchmarks, documentation improvements, code contributions, feedback, and genuine research collaboration are welcome. <a href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Report a scientific issue</a> or read the <a href="https://github.com/mkchettri8/alfvenica/blob/main/CONTRIBUTING.md">contribution guide</a>.</p>
           </section>
           <aside class="about-identity" aria-label="Project identity">
-            <p class="about-author-note">Alfvenica is independently developed and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a> (<a href="https://orcid.org/0009-0000-1368-9263">ORCID</a>). No dedicated external funding supported this release.</p>
+            <p class="about-author-note">Alfvenica is independently developed and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a> (<a href="https://orcid.org/0009-0000-1368-9263">ORCID</a>). No dedicated external funding supported this release candidate, and no institutional endorsement is claimed.</p>
           </aside>
         </div>
         <section class="citation-box">
           <h2>Suggested citation</h2>
-          <p id="citationText">Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em> (Version 1.0.1) [Computer software]. <a href="https://alfvenica.org/">https://alfvenica.org/</a></p>
+          <p id="citationText">Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em> (Version 1.1.0) [Computer software]. <a href="https://alfvenica.org/">https://alfvenica.org/</a></p>
           <div class="citation-actions">
             <button id="copyCitation" class="secondary-button" type="button">Copy citation</button>
             <button id="copyBibtex" class="secondary-button" type="button">Copy BibTeX</button>
           </div>
-          <p class="small-text">Version 1.0.1 · validated 10 August 2026 · physics core unchanged from baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. A DOI will be added only after the release is formally archived.</p>
+          <p class="small-text">Version 1.1.0 release candidate · tag, GitHub release, and archival DOI pending · v1.0.0 physics-core baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. The candidate core transparently records the approved Scientific Resolution Pass 1 SD-10 correction; its hash and baseline identify code provenance, not scientific correctness. A DOI will be added only after the release is formally archived.</p>
         </section>
       </div>
     </section>

@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "mutations": [
+    {
+      "id": "mut-ref-electron-gyro-extra-two-pi",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "electronGyroAngular",
+      "scientificQuantity": "electron gyrofrequency",
+      "description": "Erroneously divide the angular gyrofrequency by 2 pi inside the angular-frequency function.",
+      "transformation": {
+        "original": "function electronGyroAngular(BTesla) { return E * positive('B', BTesla) / ME; }",
+        "replacement": "function electronGyroAngular(BTesla) { return E * positive('B', BTesla) / (ME * TWO_PI); }",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "A_REFERENCE:ref-nrl2023-electron-gyrofrequency-1g"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The accepted independent electron gyrofrequency anchor directly constrains the angular-to-cyclic-frequency convention."
+    },
+    {
+      "id": "mut-ref-electron-plasma-linear-density",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "electronPlasmaAngular",
+      "scientificQuantity": "electron plasma frequency",
+      "description": "Replace the square-root density dependence with an erroneous linear density dependence.",
+      "transformation": {
+        "original": "return Math.sqrt(positive('n_e', nePerM3) * E * E / (EPS0 * ME));",
+        "replacement": "return positive('n_e', nePerM3) * Math.sqrt(E * E / (EPS0 * ME));",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "A_REFERENCE:ref-nrl2023-electron-plasma-frequency-1cc"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The frozen independent coefficient fixes the value at 1 cm^-3 and cannot inherit this mutated density dependence."
+    },
+    {
+      "id": "mut-ref-proton-plasma-electron-mass",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "ionPlasmaAngular",
+      "scientificQuantity": "proton plasma frequency",
+      "description": "Use electron mass instead of ion mass in the ion plasma-frequency denominator.",
+      "transformation": {
+        "original": "return Math.sqrt(positive('n_i', niPerM3) * z * z * E * E / (EPS0 * ionMass(mu)));",
+        "replacement": "return Math.sqrt(positive('n_i', niPerM3) * z * z * E * E / (EPS0 * ME));",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "A_REFERENCE:ref-nrl2023-proton-plasma-frequency-1cc"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The independent proton anchor fixes the species-mass dependence for Z = 1 and mu = 1."
+    },
+    {
+      "id": "mut-ref-electron-debye-density-numerator",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "electronDebyeLength",
+      "scientificQuantity": "electron Debye length",
+      "description": "Move density from the denominator to the numerator, reversing the shielding-length density dependence.",
+      "transformation": {
+        "original": "return Math.sqrt(EPS0 * evToJoules(temperatureEv) / (positive('n_e', nePerM3) * E * E));",
+        "replacement": "return Math.sqrt(EPS0 * evToJoules(temperatureEv) * positive('n_e', nePerM3) / (E * E));",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "A_REFERENCE:ref-nrl2023-electron-debye-length-1ev-1cc"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The independent Debye-length anchor constrains the value at the frozen 1 eV, 1 cm^-3 state."
+    },
+    {
+      "id": "mut-ref-electron-inertial-multiply-omega",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "electronInertialLength",
+      "scientificQuantity": "electron inertial length",
+      "description": "Multiply by electron plasma angular frequency instead of dividing by it.",
+      "transformation": {
+        "original": "function electronInertialLength(nePerM3) { return C / electronPlasmaAngular(nePerM3); }",
+        "replacement": "function electronInertialLength(nePerM3) { return C * electronPlasmaAngular(nePerM3); }",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "A_REFERENCE:ref-nrl2023-electron-inertial-length-1cc"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The independent inertial-length anchor directly constrains d_e = c/omega_pe."
+    },
+    {
+      "id": "mut-ref-proton-inertial-multiply-omega",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "ionInertialLength",
+      "scientificQuantity": "proton inertial length",
+      "description": "Multiply by ion plasma angular frequency instead of dividing by it.",
+      "transformation": {
+        "original": "function ionInertialLength(niPerM3, Z = 1, mu = 1) { return C / ionPlasmaAngular(niPerM3, Z, mu); }",
+        "replacement": "function ionInertialLength(niPerM3, Z = 1, mu = 1) { return C * ionPlasmaAngular(niPerM3, Z, mu); }",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "A_REFERENCE:ref-nrl2023-proton-inertial-length-1cc"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The independent proton inertial-length anchor directly constrains d_i = c/omega_pi."
+    },
+    {
+      "id": "mut-ref-ev-to-kelvin-reciprocal",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "evToKelvin",
+      "scientificQuantity": "electronvolt-to-kelvin conversion",
+      "description": "Use the reciprocal conversion direction, k_B/e, in the eV-to-kelvin function.",
+      "transformation": {
+        "original": "function evToKelvin(temperatureEv) { return positive('temperature', temperatureEv) * EV / KB; }",
+        "replacement": "function evToKelvin(temperatureEv) { return positive('temperature', temperatureEv) * KB / EV; }",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "C_UNIT:ref-si-ev-to-kelvin-1ev"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The independently anchored SI conversion is exact at the defining-constant level and directly constrains this direction."
+    },
+    {
+      "id": "mut-identity-taylor-wavenumber-missing-two-pi",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "taylorWavenumber",
+      "scientificQuantity": "Taylor frequency-wavenumber mapping",
+      "description": "Remove the 2 pi factor from k = 2 pi f/V while leaving the inverse mapping unchanged.",
+      "transformation": {
+        "original": "return TWO_PI * positive('frequency', frequencyHz) / positive('flow speed', flowSpeedMps);",
+        "replacement": "return positive('frequency', frequencyHz) / positive('flow speed', flowSpeedMps);",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "B_IDENTITY:validation:Taylor mapping round trip"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The paired Taylor mapping round trip is a genuine inverse-property check for a defect isolated to the wavenumber direction."
+    },
+    {
+      "id": "mut-gap-magnetic-pressure-missing-half",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "magneticPressure",
+      "scientificQuantity": "magnetic pressure and plasma beta",
+      "description": "Change B^2/(2 mu_0) to B^2/mu_0, producing a factor-two pressure error and halving beta.",
+      "transformation": {
+        "original": "return b * b / (2 * MU0);",
+        "replacement": "return b * b / MU0;",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "DIAGNOSTIC_GAP",
+      "rationale": "Current beta checks are implementation identities or scaling tests; neither independently fixes the normalization factor."
+    },
+    {
+      "id": "mut-gap-ion-sound-remove-charge-state",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "ionSoundSpeed",
+      "scientificQuantity": "ion sound speed and ion-sound gyroradius",
+      "description": "Remove the ion charge-state Z dependence from the ion sound speed.",
+      "transformation": {
+        "original": "return Math.sqrt(positive('gamma', gamma) * chargeState(Z) * evToJoules(temperatureEv) / ionMass(mu));",
+        "replacement": "return Math.sqrt(positive('gamma', gamma) * evToJoules(temperatureEv) / ionMass(mu));",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "DIAGNOSTIC_GAP",
+      "rationale": "No accepted independent anchor or present property test varies Z for this quantity."
+    },
+    {
+      "id": "mut-quarantine-kaw-swap-dispersive-ratio",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "reducedAlfvenDispersion",
+      "scientificQuantity": "reduced kinetic/inertial Alfv\u00e9n dispersion",
+      "description": "Swap the pressure numerator and inertia denominator in the reduced dispersive factor.",
+      "transformation": {
+        "original": "const factor = Math.sqrt(numerator / denominator);",
+        "replacement": "const factor = Math.sqrt(denominator / numerator);",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "The current MHD-limit identity evaluates at k_perp = 0, where both forms coincide; the model remains scientifically quarantined."
+    },
+    {
+      "id": "mut-quarantine-resistivity-factor-051",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "spitzerResistivity",
+      "scientificQuantity": "resistive transport",
+      "description": "Multiply the implemented resistivity by 0.51.",
+      "transformation": {
+        "original": "return ME * positive('collision frequency', collisionFrequencyHz) /",
+        "replacement": "return 0.51 * ME * positive('collision frequency', collisionFrequencyHz) /",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "Parallel/perpendicular and collision-frequency conventions remain under source-level review, with no accepted independent resistivity anchor."
+    },
+    {
+      "id": "mut-quarantine-coulomb-electron-only-screening",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "coulombLogElectronIon",
+      "scientificQuantity": "electron-ion Coulomb logarithm",
+      "description": "Replace combined electron-ion Debye screening with electron-only Debye screening.",
+      "transformation": {
+        "original": "const lambdaD = totalDebyeLength(ne, TeEv, ni, TiEv, z);",
+        "replacement": "const lambdaD = electronDebyeLength(TeEv, ne);",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "The current check establishes only a finite positive nominal result and does not independently select a screening convention."
+    },
+    {
+      "id": "mut-quarantine-lower-hybrid-remove-correction",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "lowerHybridAngular",
+      "scientificQuantity": "lower-hybrid angular frequency",
+      "description": "Remove the finite electron-plasma-frequency correction from the lower-hybrid expression.",
+      "transformation": {
+        "original": "return Math.sqrt(omegaCi * omegaCe / (1 + (omegaCe / omegaPe) ** 2));",
+        "replacement": "return Math.sqrt(omegaCi * omegaCe);",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "No accepted independent lower-hybrid benchmark presently constrains this approximation."
+    },
+    {
+      "id": "mut-quarantine-fluid-mirror-threshold-six",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "fluidMirrorCriterion",
+      "scientificQuantity": "simplified fluid mirror threshold",
+      "description": "Change the dimensionless mirror threshold from 1 to 6 in the threshold, decision, and margin.",
+      "transformation": {
+        "original": "return Object.freeze({ criterion, threshold: 1, exceeded: criterion > 1, margin: criterion - 1 });",
+        "replacement": "return Object.freeze({ criterion, threshold: 6, exceeded: criterion > 6, margin: criterion - 6 });",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "The threshold has no accepted independent benchmark in the present evidence layer."
+    },
+    {
+      "id": "mut-quarantine-fluid-firehose-threshold-one",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "fluidFirehoseCriterion",
+      "scientificQuantity": "CGL fluid firehose threshold",
+      "description": "Change the dimensionless firehose threshold from 2 to 1 in the threshold, decision, and margin.",
+      "transformation": {
+        "original": "return Object.freeze({ criterion, threshold: 2, exceeded: criterion > 2, margin: criterion - 2 });",
+        "replacement": "return Object.freeze({ criterion, threshold: 1, exceeded: criterion > 1, margin: criterion - 1 });",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "The threshold has no accepted independent benchmark in the present evidence layer."
+    },
+    {
+      "id": "mut-quarantine-hellinger-proton-coefficient-065",
+      "targetFile": "formula-registry.js",
+      "targetFunction": "hellinger-proton-cyclotron calculator",
+      "scientificQuantity": "Hellinger proton-cyclotron fit coefficient",
+      "description": "Change the calculator's proton-cyclotron coefficient from 0.43 to 0.65 while leaving its displayed metadata untouched.",
+      "transformation": {
+        "original": "P.hellingerThreshold(x.beta,0.43,0.42,-0.0004)",
+        "replacement": "P.hellingerThreshold(x.beta,0.65,0.42,-0.0004)",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [],
+      "classification": "QUARANTINED_DIAGNOSTIC",
+      "rationale": "Existing Hellinger validation is an internal arithmetic restatement and does not inspect the registry calculator coefficient; primary-source review remains pending."
+    },
+    {
+      "id": "mut-identity-kaw-reintroduce-pade-denominator",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "reducedKawParallelElectricRatio",
+      "scientificQuantity": "reduced low-FLR KAW parallel/perpendicular electric-field ratio",
+      "description": "Reintroduce the removed 1/(1+k_perpendicular^2 rho_s^2) Padé denominator.",
+      "transformation": {
+        "original": "return Math.abs(finite('k_parallel', kParallelPerM) * finite('k_perp', kPerpendicularPerM)) *\n      positive('rho_s', rhoS) ** 2;",
+        "replacement": "const kr = finite('k_perp', kPerpendicularPerM) * positive('rho_s', rhoS);\n    return Math.abs(finite('k_parallel', kParallelPerM) * finite('k_perp', kPerpendicularPerM)) *\n      positive('rho_s', rhoS) ** 2 / (1 + kr * kr);",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "B_IDENTITY:validation:Reduced KAW low-FLR parallel-field relation"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The approved SD-10 source equation is R=|k_parallel k_perpendicular| rho_s^2; the independent fixed-value analytical identity must kill reintroduction of the unsupported Padé denominator."
+    }
+  ]
+}
