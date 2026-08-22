@@ -66,6 +66,7 @@
   D('ion-charge-state','Ion charge state','Z','Z','Z','Positive integer giving the selected ion charge in units of the elementary charge.','dimensionless',{species:{subject:'selected-ion'},aliases:['charge state']});
   D('ion-to-proton-mass-ratio','Ion-to-proton mass ratio','μ','mu','\\mu','Ratio of the selected ion mass to the proton mass.','dimensionless',{
     relation:'mu = m_i / m_p',
+    relationUnicode:'μ = mᵢ/mₚ',
     species:{subject:'selected-ion',reference:'proton'},
     aliases:['ion mass ratio','m_i/m_p'],
     conventionNotes:['The production relation is m_i = mu m_p.','This quantity is not atomic or ion mass number A.'],
@@ -304,6 +305,7 @@
       scope: options.scope || 'global',
       reviewStatus: options.reviewStatus || 'CONFIRMED_IMPLEMENTATION',
       relation: options.relation || null,
+      relationUnicode: options.relationUnicode || options.relation || null,
       productionConstantKey: options.productionConstantKey || null,
       relatedSymbolIds: Object.freeze([...(options.relatedSymbolIds || [])]),
     });
@@ -313,11 +315,89 @@
   function get(id) { return frozenSymbols[id] || null; }
   function has(id) { return Boolean(frozenSymbols[id]); }
 
+  const notationSections = Object.freeze([
+    {
+      id:'calculation-boundary',
+      title:'Calculation boundary and display units',
+      summary:'Production equations use one canonical SI calculation path. Interface unit choices convert values at the display boundary only. Temperature is the documented boundary exception: production inputs store energy-equivalent k_B T in eV while the canonical thermodynamic unit remains kelvin.',
+      symbolIds:['electron-temperature','ion-temperature','generic-species-temperature','boltzmann-constant'],
+    },
+    {
+      id:'species-notation',
+      title:'Electron, ion, and generic-species notation',
+      summary:'Subscripts e, i, and s distinguish electrons, the selected ion population, and a selected generic plasma species. Unless a formula states otherwise, the ion notation represents one selected ion population rather than a general multi-ion composition.',
+      symbolIds:['electron-number-density','ion-number-density','generic-species-number-density','generic-species-index','ion-charge-state'],
+    },
+    {
+      id:'ion-mass-ratio',
+      title:'Selected-ion mass convention',
+      summary:'The selected-ion mass convention is defined by the canonical entries below. It is dimensionless where the ratio is used, and it is distinct from atomic or ion mass number A.',
+      symbolIds:['ion-to-proton-mass-ratio','ion-mass','proton-mass'],
+    },
+    {
+      id:'temperature',
+      title:'Temperature and thermal energy',
+      summary:'Temperature inputs expressed in eV represent the energy-equivalent k_B T. Thermal-speed and gyroradius rows retain their own convention notes because several square-root conventions coexist in plasma physics.',
+      symbolIds:['electron-temperature','ion-temperature','parallel-species-temperature','perpendicular-species-temperature','electron-thermal-speed','ion-thermal-speed'],
+    },
+    {
+      id:'frequency',
+      title:'Cyclic and angular frequency',
+      summary:'Symbols beginning with f denote cyclic frequency in hertz. Symbols using omega or capital Omega denote angular frequency in radians per second; the corresponding calculator equations and definitions retain the relevant species and model interpretation.',
+      symbolIds:['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-plasma-frequency','electron-plasma-angular-frequency','ion-cyclotron-frequency','ion-cyclotron-angular-frequency'],
+    },
+    {
+      id:'parallel-perpendicular',
+      title:'Parallel and perpendicular components',
+      summary:'Parallel and perpendicular marks are interpreted relative to the magnetic field unless a formula explicitly states another reference direction. Component, scalar, and magnitude meanings remain attached to their canonical entries.',
+      symbolIds:['parallel-wavenumber','perpendicular-wavenumber','parallel-species-temperature','perpendicular-species-temperature','perpendicular-electric-field-magnitude'],
+    },
+    {
+      id:'plasma-beta',
+      title:'Species and total plasma beta',
+      summary:'Beta notation distinguishes generic-species, electron, selected-ion, and modeled electron-ion total quantities. Parallel and perpendicular variants are formula-specific and remain conservatively labelled where their wider convention is under review.',
+      symbolIds:['generic-species-plasma-beta','electron-plasma-beta','ion-plasma-beta','total-electron-ion-plasma-beta','parallel-species-plasma-beta','perpendicular-species-plasma-beta'],
+    },
+    {
+      id:'pressure-and-energy',
+      title:'Pressure and energy conventions',
+      summary:'Pressure and energy entries distinguish scalar thermal pressure, magnetic pressure, the project space-physics dynamic-pressure convention, and kinetic-energy density. Their canonical rows record the factor-of-two distinction where it matters.',
+      symbolIds:['total-electron-ion-thermal-pressure','magnetic-pressure','magnetic-energy-density','space-physics-dynamic-pressure','bulk-kinetic-energy-density'],
+    },
+    {
+      id:'scalar-vector',
+      title:'Scalars, magnitudes, directions, and signed quantities',
+      summary:'Entries explicitly named magnitude or scalar do not supply a vector direction. Signed fluctuation inputs preserve sign but do not by themselves constitute a vector analysis; directional interpretation remains formula-specific.',
+      symbolIds:['magnetic-field-magnitude','electric-field-magnitude','poynting-flux-magnitude','signed-magnetic-field-fluctuation','signed-velocity-fluctuation'],
+    },
+    {
+      id:'indices-and-local-notation',
+      title:'Indices, subscripts, and formula-local notation',
+      summary:'Index meanings are recorded on the affected canonical entries. Some glyphs are intentionally formula-local because the same rendered character has different meanings in different equations. Review-pending or quarantined entries are descriptive only and do not assert scientific validity.',
+      symbolIds:['generic-species-index','generic-length-scale','fluid-firehose-margin','fluid-mirror-criterion','kaw-dispersive-factor'],
+    },
+  ].map(section => {
+    const symbolIds = Object.freeze([...section.symbolIds]);
+    for (const id of symbolIds) if (!has(id)) throw new Error(section.id + ': unknown notation symbol ID ' + id);
+    return Object.freeze({ ...section, symbolIds });
+  }));
+
+  function formulaSymbols(formula) {
+    if (!formula || !Array.isArray(formula.symbolUses)) throw new TypeError('Formula semantic-use metadata is required');
+    return Object.freeze(formula.symbolUses.map(use => {
+      const symbol = get(use.semanticId);
+      if (!symbol) throw new Error(formula.id + ': unknown semantic symbol ID ' + use.semanticId);
+      return Object.freeze({ semanticId:use.semanticId, symbol, use });
+    }));
+  }
+
   return Object.freeze({
     symbols: frozenSymbols,
     quantityTypes,
     reviewStatuses,
+    notationSections,
     get,
     has,
+    formulaSymbols,
   });
 }));

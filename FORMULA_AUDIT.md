@@ -24,16 +24,31 @@ The audit applies four rules:
   simplified and its finite-Larmor-radius limitation stated.
 - **Dispersive/KAW reductions:** Hasegawa & Chen (1976), Lysak & Lotko (1996), Hollweg (1999), and Stasiewicz et al. (2000).
 
-## Core conventions
+## Canonical notation system
 
-- `n_i` and `n_e` are number densities, not mass densities.
-- Ion mass is `mu m_p`; `mu=1` represents protons.
-- `Z` is a positive integer ion charge state.
-- Temperatures entered in eV represent the particle energy `k_B T`.
-- The default thermal speed is `sqrt(k_B T/m)`, not `sqrt(2 k_B T/m)`. Formula cards identify this where it affects a scale.
-- Scalar beta uses `p/(B^2/2mu_0)`.
-- Dynamic pressure is `rho V^2`; kinetic-energy density is `rho V^2/2`.
-- Environment presets are illustrative only.
+`symbol-registry.js` is the single machine-readable source for symbol identity,
+public name, rendered and plain forms, concise physical definition, quantity
+type, canonical SI and accepted display units, species/index interpretation,
+aliases, relation metadata, convention notes, scope, and scientific-review
+status. Formula and plot registries reference stable semantic IDs; they do not
+carry private copies of canonical symbol definitions.
+
+Every calculator's generated **Symbols & Definitions** table is built from its
+input, numeric-output, and explicit equation symbol IDs, with formula-local
+roles deduplicated by semantic ID. The in-app **Notation & Conventions** view
+uses the same registry for the calculation/display boundary, species notation,
+the selected-ion mass convention, energy-equivalent temperature, cyclic versus
+angular frequency, parallel/perpendicular components, beta variants,
+scalar/magnitude versus directional notation, indices, and formula-local terms.
+The complete registry is searchable by canonical name, rendered symbol, plain
+form, semantic ID, and curated aliases.
+
+The canonical μ entry supplies the public ion-to-proton mass-ratio terminology
+and relation; the old `ion_mass_number` plot-export key is retained only as a
+legacy compatibility field pending explicit export schema versioning. Registry
+review labels remain conservative: review-pending or quarantined descriptions
+do not promote formula validity or resolve the scientific decisions listed
+below. This notation layer does not alter production numerical calculations.
 
 ## Important limitations
 

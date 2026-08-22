@@ -47,7 +47,7 @@
     Te: () => I('Te', 'Electron temperature', 'Tₑ', 'temperature', 12, { min: 0 }),
     Ti: () => I('Ti', 'Ion temperature', 'Tᵢ', 'temperature', 10, { min: 0 }),
     Z: () => I('Z', 'Ion charge state', 'Z', 'dimensionless', 1, { min: 1, step: 1, integer: true }),
-    mu: () => I('mu', 'Ion mass number', 'μ', 'dimensionless', 1, { min: 0 }),
+    mu: () => I('mu', 'Selected-ion mass ratio', 'μ', 'dimensionless', 1, { min: 0, canonicalLabel: true }),
     V: () => I('V', 'Bulk-flow speed', 'V', 'speed', v(400), { min: 0 }),
     theta: () => I('theta', 'Propagation angle', 'θ', 'angle', Math.PI / 2, { min: 0, max: Math.PI }),
     lnL: () => I('lnLambda', 'Coulomb logarithm', 'ln Λ', 'dimensionless', 20, { min: 1 }),
@@ -558,6 +558,32 @@
     const inputIds = new Set(Object.values(metadata.inputs));
     const outputIds = new Set(metadata.outputs.filter(Boolean));
     const equationOnlySymbolIds = metadata.equationSymbolIds.filter(id => !inputIds.has(id) && !outputIds.has(id));
+    const symbolUseMap = new Map();
+    const addSymbolUse = (semanticId, role, details = {}) => {
+      if (!semanticId) return;
+      if (!symbolUseMap.has(semanticId)) symbolUseMap.set(semanticId, {
+        semanticId,
+        roles:[],
+        inputKeys:[],
+        outputIndexes:[],
+        localLabels:[],
+      });
+      const use = symbolUseMap.get(semanticId);
+      if (!use.roles.includes(role)) use.roles.push(role);
+      if (details.inputKey && !use.inputKeys.includes(details.inputKey)) use.inputKeys.push(details.inputKey);
+      if (Number.isInteger(details.outputIndex) && !use.outputIndexes.includes(details.outputIndex)) use.outputIndexes.push(details.outputIndex);
+      if (details.localLabel && !use.localLabels.includes(details.localLabel)) use.localLabels.push(details.localLabel);
+    };
+    inputs.forEach(input => addSymbolUse(input.semanticId, 'input', { inputKey:input.key, localLabel:input.label }));
+    metadata.outputs.forEach((semanticId, outputIndex) => addSymbolUse(semanticId, 'numeric-output', { outputIndex }));
+    metadata.equationSymbolIds.forEach(semanticId => addSymbolUse(semanticId, 'equation'));
+    const symbolUses = Object.freeze([...symbolUseMap.values()].map(use => Object.freeze({
+      semanticId:use.semanticId,
+      roles:Object.freeze([...use.roles]),
+      inputKeys:Object.freeze([...use.inputKeys]),
+      outputIndexes:Object.freeze([...use.outputIndexes]),
+      localLabels:Object.freeze([...use.localLabels]),
+    })));
     return Object.freeze({
       ...formula,
       inputs: Object.freeze(inputs),
@@ -568,6 +594,8 @@
       },
       equationSymbolIds: metadata.equationSymbolIds,
       equationOnlySymbolIds: Object.freeze(equationOnlySymbolIds),
+      outputSymbolIds: metadata.outputs,
+      symbolUses,
       symbolReviewStatus: metadata.symbolReviewStatus,
     });
   });

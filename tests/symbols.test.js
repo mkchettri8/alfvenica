@@ -52,8 +52,23 @@ for (const entry of entries) {
   if (!entry.dimensionless) assert.notEqual(entry.canonicalSiUnit, '1', prefix + 'dimensional quantity lacks a unit');
   if (entry.productionConstantKey) assert.ok(Object.hasOwn(P.constants, entry.productionConstantKey), prefix + 'unknown production constant reference');
   entry.relatedSymbolIds.forEach(id => assert.ok(Symbols.has(id), prefix + 'unknown related ID ' + id));
+  if (entry.relation) nonempty(entry.relationUnicode, prefix + 'rendered relation missing');
 }
 assert.equal(Symbols.get('not-a-real-symbol'), null, 'Unknown semantic ID must not resolve');
+
+assert.ok(Array.isArray(Symbols.notationSections) && Symbols.notationSections.length >= 10, 'Canonical notation sections are incomplete');
+assert.equal(new Set(Symbols.notationSections.map(section => section.id)).size, Symbols.notationSections.length, 'Duplicate notation section ID');
+const notationSectionIds = new Set(Symbols.notationSections.map(section => section.id));
+for (const required of ['calculation-boundary','species-notation','ion-mass-ratio','temperature','frequency','parallel-perpendicular','plasma-beta','pressure-and-energy','scalar-vector','indices-and-local-notation']) {
+  assert.ok(notationSectionIds.has(required), 'Missing canonical notation section ' + required);
+}
+for (const section of Symbols.notationSections) {
+  nonempty(section.title, section.id + ': notation title missing');
+  nonempty(section.summary, section.id + ': notation summary missing');
+  assert.ok(section.symbolIds.length > 0, section.id + ': notation symbol inventory missing');
+  assert.equal(new Set(section.symbolIds).size, section.symbolIds.length, section.id + ': duplicate notation semantic ID');
+  section.symbolIds.forEach(id => assert.ok(Symbols.has(id), section.id + ': unknown notation semantic ID ' + id));
+}
 
 let inputUses = 0;
 let numericOutputUses = 0;
@@ -81,6 +96,7 @@ for (const formula of Formulas.formulas) {
 
   const defaults = Object.fromEntries(formula.inputs.map(input => [input.key, input.default]));
   const outputs = formula.calculate(defaults);
+  assert.equal(formula.outputSymbolIds.length, outputs.length, prefix + 'output semantic inventory is stale');
   for (const output of outputs) {
     if (output.quantity === 'text') {
       textOutputs += 1;
@@ -97,6 +113,25 @@ for (const formula of Formulas.formulas) {
   const outputIds = new Set(outputs.map(output => output.semanticId).filter(Boolean));
   const expectedEquationOnly = formula.equationSymbolIds.filter(id => !inputIds.has(id) && !outputIds.has(id));
   assert.deepEqual(formula.equationOnlySymbolIds, expectedEquationOnly, prefix + 'equation-only inventory stale');
+  assert.ok(Array.isArray(formula.symbolUses) && formula.symbolUses.length, prefix + 'formula-local symbol roles missing');
+  assert.equal(new Set(formula.symbolUses.map(use => use.semanticId)).size, formula.symbolUses.length, prefix + 'symbol roles are not deduplicated');
+  const expectedUseIds = [...new Set([
+    ...formula.inputs.map(input => input.semanticId),
+    ...formula.outputSymbolIds.filter(Boolean),
+    ...formula.equationSymbolIds,
+  ])];
+  assert.deepEqual(formula.symbolUses.map(use => use.semanticId), expectedUseIds, prefix + 'symbol-use union is stale');
+  for (const use of formula.symbolUses) {
+    assert.ok(Symbols.has(use.semanticId), prefix + 'unknown UI semantic ID ' + use.semanticId);
+    assert.ok(use.roles.length > 0, prefix + use.semanticId + ': formula role missing');
+    assert.ok(use.roles.every(role => ['input','numeric-output','equation'].includes(role)), prefix + use.semanticId + ': unknown formula role');
+  }
+  const resolved = Symbols.formulaSymbols(formula);
+  assert.equal(resolved.length, formula.symbolUses.length, prefix + 'generated definition coverage mismatch');
+  for (const item of resolved) {
+    assert.equal(item.symbol, Symbols.get(item.semanticId), prefix + item.semanticId + ': UI definition bypasses canonical lookup');
+    assert.equal(item.use, formula.symbolUses.find(use => use.semanticId === item.semanticId), prefix + item.semanticId + ': formula role metadata mismatch');
+  }
 }
 assert.equal(Formulas.formulas.length, 70, 'Not all calculators were migrated');
 assert.equal(inputUses, 240, 'Calculator input-use inventory changed');
@@ -104,6 +139,7 @@ assert.equal(numericOutputUses, 165, 'Calculator output-use inventory changed');
 assert.equal(inputUses + numericOutputUses, 405, 'Not all 405 calculator symbol uses were migrated');
 assert.equal(textOutputs, 10, 'Categorical-output inventory changed');
 assert.equal(pendingFormulaIds.length, 27, 'Review-pending formula inventory changed');
+assert.throws(() => Symbols.formulaSymbols({ id:'unknown-ui-formula', symbolUses:[{ semanticId:'not-a-real-symbol' }] }), /unknown semantic symbol ID/, 'Unknown UI semantic IDs must fail closed');
 
 for (const [key, semanticId] of Object.entries(Plots.stateSemanticIds)) {
   assert.ok(Object.hasOwn(Plots.defaultState, key), 'Unknown plot state key ' + key);
@@ -144,12 +180,18 @@ const mu = Symbols.get('ion-to-proton-mass-ratio');
 assert.equal(mu.canonicalName, 'Ion-to-proton mass ratio', 'mu canonical public name is incorrect');
 assert.equal(mu.definition, 'Ratio of the selected ion mass to the proton mass.', 'mu definition is incorrect');
 assert.equal(mu.relation, 'mu = m_i / m_p', 'mu relation is incorrect');
+assert.equal(mu.relationUnicode, 'μ = mᵢ/mₚ', 'mu rendered relation is incorrect');
 assert.equal(mu.dimensionless, true, 'mu must be dimensionless');
 assert.doesNotMatch(mu.canonicalName + ' ' + mu.definition, /mass number/i, 'mu is called a mass number');
 assert.ok(mu.conventionNotes.some(note => /not atomic or ion mass number A/i.test(note)), 'mu does not distinguish mass number A');
 const muInputs = Formulas.formulas.flatMap(formula => formula.inputs.filter(input => input.key === 'mu').map(input => [formula.id,input]));
 assert.equal(muInputs.length, 26, 'Calculator mu-use inventory changed');
 for (const [formulaId, input] of muInputs) assert.equal(input.semanticId, 'ion-to-proton-mass-ratio', formulaId + ': wrong mu identity');
+
+for (const file of ['app.js','index.html','README.md','FORMULA_AUDIT.md','plot-registry.js','formula-registry.js']) {
+  const source = fs.readFileSync(path.join(root, file), 'utf8');
+  for (const entry of entries) assert.equal(source.includes(entry.definition), false, `${file}: independently duplicates canonical definition ${entry.id}`);
+}
 
 assert.equal(baseline.schemaVersion, 1, 'Unexpected numerical-baseline schema');
 assert.equal(baseline.evidenceClass, 'F_REGRESSION', 'Numerical baseline must remain regression evidence');

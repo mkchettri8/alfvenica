@@ -2,6 +2,8 @@
 
 **Alfvenica** is a unit-explicit browser toolkit for space and astrophysical plasma physics. It combines a searchable calculator, formula-level physical interpretation, reproducible plotting, worked plasma states, assumptions and references, and an in-browser report that classifies the evidence supplied by each validation check.
 
+Every calculator also exposes a generated **Symbols & Definitions** table, and the application includes a searchable **Notation & Conventions** view. Both are resolved from `symbol-registry.js`; documentation and UI code do not maintain independent symbol definitions.
+
 - **Live site:** [alfvenica.org](https://alfvenica.org/)
 - **Current version:** 1.0.1
 - **Creator and maintainer:** [Mani K Chettri](https://mkchettri.in/) ([ORCID](https://orcid.org/0009-0000-1368-9263))
@@ -26,11 +28,12 @@ Reduced models and empirical contours are labelled explicitly. Alfvenica is a tr
 - `index.html` — semantic page structure and public metadata
 - `styles.css` — restrained light interface with optional dark mode
 - `plasma-physics.js` — canonical SI physics functions
-- `formula-registry.js` — formulas, inputs, outputs, assumptions, keywords, and references
+- `symbol-registry.js` — canonical semantic symbol IDs, names, representations, definitions, units, species/index meanings, aliases, and convention-review status
+- `formula-registry.js` — formulas, semantic symbol uses and local roles, inputs, outputs, assumptions, keywords, and references
 - `plot-registry.js` — plot metrics, hierarchies, sweep variables, and defaults
 - `formula-insights.js` — physical significance, interpretation, uses, and related calculators
 - `validation.js` — semantically classified validation records with evidence basis, source provenance, and tolerance rationale
-- `search.js` — dependency-free accent-insensitive search and ranking
+- `search.js` — dependency-free accent- and notation-aware search across calculators and canonical symbols
 - `release-metadata.js` — citation, version, validation, and physics-core provenance
 - `app.js` — search interaction, conversion, presets, rendering, plotting, export, and navigation
 - `tests/` — physics, plots, and static-site integrity checks
@@ -68,6 +71,8 @@ local assets. The physics-core hash is a `P_PROVENANCE` change detector, not
 evidence of scientific correctness. See [`FORMULA_AUDIT.md`](FORMULA_AUDIT.md)
 and the public
 [test workflow](https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml).
+
+The public name and relation for μ are registry-owned as the ion-to-proton mass ratio. The existing plot-export field `ion_mass_number` remains a legacy compatibility key in this development batch; it is associated internally with the canonical semantic ID and is not the public scientific term.
 
 ## Deployment
 

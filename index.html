@@ -75,6 +75,7 @@
         <button class="nav-button" type="button" data-view="plots">Plots</button>
         <button class="nav-button" type="button" data-view="examples">Examples</button>
         <button class="nav-button" type="button" data-view="validation">Validation</button>
+        <button class="nav-button" type="button" data-view="notation">Notation</button>
         <button class="nav-button" type="button" data-view="about">About</button>
       </nav>
       <div class="header-controls">
@@ -100,10 +101,10 @@
         <div class="global-search">
           <label for="formulaSearch" class="field-label">Search all calculators</label>
           <div class="search-combobox">
-            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, Alfvén, KAW" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" aria-describedby="searchStatus">
+            <input id="formulaSearch" class="search-input" type="search" placeholder="e.g. plasma beta, μ, Debye length" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" aria-describedby="searchStatus">
             <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Matching calculators" hidden></div>
           </div>
-          <p id="searchStatus" class="search-status" aria-live="polite">Type to search formula names, parameters, and common abbreviations.</p>
+          <p id="searchStatus" class="search-status" aria-live="polite">Type to search formula names, canonical symbols, parameters, and common aliases.</p>
         </div>
       </div>
 
@@ -163,6 +164,22 @@
                 <dl id="resultList" class="result-list"></dl>
               </section>
             </div>
+
+            <section class="symbol-definitions" data-symbol-definitions aria-label="Symbols and definitions">
+              <div class="symbol-definitions-heading">
+                <div>
+                  <h3>Symbols &amp; Definitions</h3>
+                  <p>Canonical meanings are resolved from the shared semantic-symbol registry for this calculator.</p>
+                </div>
+                <p class="symbol-definitions-status" data-symbol-definitions-status aria-live="polite"></p>
+              </div>
+              <div class="symbol-table-wrap">
+                <table class="symbol-table">
+                  <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>Role here</th><th>Unit and convention</th></tr></thead>
+                  <tbody data-symbol-definitions-body></tbody>
+                </table>
+              </div>
+            </section>
 
             <section class="scientific-notes" aria-labelledby="notesHeading">
               <h3 id="notesHeading">Scientific context</h3>
@@ -227,7 +244,7 @@
             <div class="input-group"><label class="input-label" for="plotTi"><span>Ion temperature</span><span class="input-symbol">Tᵢ</span></label><div class="number-wrap"><input id="plotTi" class="number-input" type="number" min="0" step="any"><span id="plotTiUnit" class="input-unit"></span></div></div>
             <div class="input-group"><label class="input-label" for="plotV"><span>Bulk-flow speed</span><span class="input-symbol">V</span></label><div class="number-wrap"><input id="plotV" class="number-input" type="number" min="0" step="any"><span id="plotVUnit" class="input-unit"></span></div></div>
             <div class="input-group"><label class="input-label" for="plotZ"><span>Ion charge state</span><span class="input-symbol">Z</span></label><div class="number-wrap"><input id="plotZ" class="number-input" type="number" min="1" step="1"><span class="input-unit">integer</span></div></div>
-            <div class="input-group"><label class="input-label" for="plotMu"><span>Ion mass number</span><span class="input-symbol">μ</span></label><div class="number-wrap"><input id="plotMu" class="number-input" type="number" min="0" step="any"><span class="input-unit">mᵢ/mₚ</span></div></div>
+            <div class="input-group"><label class="input-label" for="plotMu"><span data-plot-mass-ratio-label></span><span class="input-symbol" data-plot-mass-ratio-symbol></span></label><div class="number-wrap"><input id="plotMu" class="number-input" type="number" min="0" step="any"><span class="input-unit" data-plot-mass-ratio-relation></span></div></div>
           </div>
           <div id="plotStateError" class="calculation-error" role="alert" hidden></div>
         </section>
@@ -334,6 +351,36 @@
           <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
+      </div>
+    </section>
+
+    <section class="view" data-view-section="notation" aria-label="Notation and conventions">
+      <div class="page-column notation-page">
+        <header class="page-header">
+          <p class="eyebrow">Canonical semantic notation</p>
+          <h1>Notation &amp; Conventions</h1>
+          <p>Project-wide notation, units, species meanings, and convention notes are generated from the same canonical registry used by every calculator.</p>
+        </header>
+        <div class="notation-sections" data-notation-sections></div>
+        <section class="symbol-glossary" aria-label="Searchable symbol glossary">
+          <div class="glossary-heading">
+            <div>
+              <p class="eyebrow">Complete registry</p>
+              <h2>Searchable symbol glossary</h2>
+              <p>Search rendered symbols, plain forms, canonical names, semantic IDs, and concise aliases.</p>
+            </div>
+            <label class="glossary-search-label">Search symbols
+              <input class="search-input" data-symbol-glossary-search type="search" placeholder="e.g. μ, mu, beta, Debye length" autocomplete="off">
+            </label>
+          </div>
+          <p class="search-status" data-symbol-glossary-status aria-live="polite"></p>
+          <div class="symbol-table-wrap glossary-table-wrap">
+            <table class="symbol-table glossary-table">
+              <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>Canonical/display units</th><th>Species and convention</th></tr></thead>
+              <tbody data-symbol-glossary-body></tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </section>
 
