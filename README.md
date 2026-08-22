@@ -62,9 +62,9 @@ npm run build:standalone
 ```
 
 The validation taxonomy uses `A_REFERENCE`, `B_IDENTITY`, `C_UNIT`,
-`D_PROPERTY`, `E_DOMAIN`, `F_REGRESSION`, and `P_PROVENANCE`. The current 40
-in-browser records comprise 6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, 2
-`E_DOMAIN`, and 22 `F_REGRESSION` records. The independent anchors are generated without importing
+`D_PROPERTY`, `E_DOMAIN`, `F_REGRESSION`, and `P_PROVENANCE`. The current 43
+in-browser records comprise 6 `A_REFERENCE`, 10 `B_IDENTITY`, 1 `C_UNIT`, 5
+`E_DOMAIN`, and 21 `F_REGRESSION` records. The independent anchors are generated without importing
 the production physics implementation and are frozen with source, constants,
 full-precision expected values, source comparisons, CODATA uncertainties,
 method, and separate zero-ULP software comparison criteria in
@@ -83,15 +83,29 @@ display, and CGS-oriented display modes. The latter is explicitly a mixed
 convenience mode, not a complete Gaussian/esu/emu implementation: electrical
 resistivity and conductivity remain in SI, temperatures remain energy-equivalent
 eV, and angular frequencies remain in rad/s. Exact SI-prefix conversions and the
-independent eV/K anchor are exercised separately from round trips, while all 165
-frozen default numerical outputs remain exact regression controls.
+independent eV/K anchor are exercised separately from round trips. Scientific
+Resolution Pass 1 deliberately changes one SD-10 default output; the other
+164/165 frozen numerical outputs remain identical to the preceding artifact.
 
 Runtime domain records currently warn without changing results when a computed
 Coulomb logarithm is non-positive or when the classical Alfvén speed reaches or
 exceeds `c`. The KAW ordering ratio is exposed without assigning a numerical
-meaning to `<<`; its warning threshold and all automated Hellinger fit-domain
-checks remain review-pending until the necessary primary-source decisions are
-complete.
+meaning to `<<`. Hellinger et al. (2006) source metadata now supports a
+proton-cyclotron beta-domain warning, a parallel-firehose upper-beta warning,
+and a distinct mathematical invalidity warning at
+`beta_parallel_p <= 0.59`; the mirror and oblique-firehose fit domains remain
+review-pending.
+
+Scientific Resolution Pass 1 also clarifies that collision `nu` values are
+characteristic Coulomb rates in `s^-1`, scopes `eta_coll=m_e nu_ei/(n_e e^2)`
+as classical electron-ion collisional resistive transport rather than an
+unqualified complete Spitzer coefficient, and names both Coulomb-logarithm
+calculators as adopted impact-parameter estimates. The reduced dispersive-
+Alfven equation is unchanged and retains the qualitative low-frequency
+ordering. SD-10 is the sole numerical correction: the reduced low-FLR KAW
+polarization estimate is now `|E_parallel/E_perp|=|k_parallel k_perp|rho_s^2`;
+it is not claimed as a full kinetic or all-scale relation. SD-07, SD-08, and
+SD-09 remain open in [`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md).
 
 ## Reproducible calculation records
 

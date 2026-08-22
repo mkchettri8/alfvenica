@@ -133,6 +133,8 @@
       formula: {
         id: formula.id,
         equationLatex: formula.latex,
+        scientificReviewStatus: formula.scientificReviewStatus,
+        decisionIds: [...formula.decisionIds],
       },
       constants: { ...P.constants },
       canonicalInputs: inputs,
@@ -196,7 +198,10 @@
     const symbol = Symbols.get(result.semanticId);
     if (!symbol) throw new Error(`Numeric output ${index} has unknown semantic symbol ID ${result.semanticId}`);
     const canonical = canonicalUnit(result.quantity);
-    const displayDefinition = Units.outputDefinition(unitSystemId, result.quantity, result.value);
+    const internalUnit = result.unitSemantics === 'rate' ? symbol.productionUnit : canonical.unit;
+    const displayDefinition = result.displayUnit
+      ? { factor: 1, unit: result.displayUnit }
+      : Units.outputDefinition(unitSystemId, result.quantity, result.value);
     const internalNumber = jsonNumber(result.value);
     const displayNumber = jsonNumber(result.value * displayDefinition.factor);
     return {
@@ -208,7 +213,7 @@
       physicalName: symbol.canonicalName,
       localLabel: result.label,
       quantity: result.quantity,
-      internal: { ...internalNumber, unit: canonical.unit, meaning: canonical.meaning },
+      internal: { ...internalNumber, unit: internalUnit, meaning: result.unitSemantics === 'rate' ? 'characteristic rate' : canonical.meaning },
       display: { ...displayNumber, unit: displayDefinition.unit },
       canonicalSiUnit: symbol.canonicalSiUnit,
     };
@@ -268,10 +273,12 @@
         },
         physicsCore: {
           baseline: Meta.physicsCoreBaseline,
+          baselineStatus: Meta.physicsCoreBaselineStatus,
+          changeSet: Meta.physicsCoreChangeSet,
           sha256: Meta.physicsCoreSha256,
           baselineUrl: Meta.physicsBaselineUrl,
           evidenceClass: 'P_PROVENANCE',
-          note: 'The core hash identifies code provenance; it is not evidence of scientific correctness.',
+          note: 'The core hash identifies the loaded code. The release baseline records ancestry; the change set transparently identifies the approved SD-10 correction. Neither is evidence of scientific correctness.',
         },
       },
       calculation: {
@@ -288,6 +295,9 @@
           modelScopeNote: formula.note || null,
           references: formula.references.map(reference => ({ ...reference })),
           semanticMetadataReviewStatus: formula.symbolReviewStatus,
+          scientificReviewStatus: formula.scientificReviewStatus,
+          decisionIds: [...formula.decisionIds],
+          sourceDomain: formula.sourceDomain ? JSON.parse(JSON.stringify(formula.sourceDomain)) : null,
           equationSymbolIds: [...formula.equationSymbolIds],
         },
         inputs: formula.inputs.map(input => inputRecord(input, internalInputs[input.key], unitSystemId, displayInputs[input.key])),

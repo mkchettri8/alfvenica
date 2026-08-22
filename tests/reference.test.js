@@ -230,10 +230,17 @@ for (const record of independentlyClassified) assert.doesNotMatch(record.name, q
 const quarantinedValidationRecords = validationRecords.filter(record => quarantinedPattern.test(record.name));
 assert.ok(quarantinedValidationRecords.length >= 6, 'Expected quarantined validation records are missing');
 for (const record of quarantinedValidationRecords) {
-  if (record.name === 'Coulomb-log non-positive applicability guardrail') {
-    assert.equal(record.validationClass, 'E_DOMAIN', `${record.name}: logically unambiguous boundary must be E_DOMAIN`);
-    assert.equal(record.evidenceBasis, 'LOGICAL_DOMAIN_BOUNDARY', `${record.name}: domain evidence basis mismatch`);
-  } else assert.equal(record.validationClass, 'F_REGRESSION', `${record.name}: quarantined record must remain F_REGRESSION`);
+  const resolvedEvidence = {
+    'Coulomb-log non-positive applicability guardrail': ['E_DOMAIN','LOGICAL_DOMAIN_BOUNDARY'],
+    'Reduced KAW low-FLR parallel-field relation': ['B_IDENTITY','ANALYTICAL_RELATION'],
+    'Hellinger proton-cyclotron source beta-domain guardrail': ['E_DOMAIN','SOURCE_BACKED_DOMAIN'],
+    'Hellinger parallel-firehose source beta-domain guardrail': ['E_DOMAIN','SOURCE_BACKED_DOMAIN'],
+    'Hellinger parallel-firehose mathematical-domain guardrail': ['E_DOMAIN','LOGICAL_DOMAIN_BOUNDARY'],
+  }[record.name];
+  if (resolvedEvidence) {
+    assert.equal(record.validationClass, resolvedEvidence[0], `${record.name}: resolved evidence class mismatch`);
+    assert.equal(record.evidenceBasis, resolvedEvidence[1], `${record.name}: resolved evidence basis mismatch`);
+  } else assert.equal(record.validationClass, 'F_REGRESSION', `${record.name}: unresolved record must remain F_REGRESSION`);
   assert.equal(record.benchmarkId, null, `${record.name}: quarantined record must not claim a benchmark ID`);
 }
 

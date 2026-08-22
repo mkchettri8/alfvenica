@@ -43,6 +43,8 @@ assert.match(appSource, /const Exporter = window\.AlfvenicaReproducibleExport/, 
 assert.match(appSource, /Exporter\.createRecord\(\{[\s\S]*canonicalInputs: currentValues\(formula\)[\s\S]*unitSystemId: state\.unitSystem/, 'Calculator export does not capture canonical state and selected unit mode');
 assert.match(appSource, /Exporter\.filename\(formula\.id, exportedAt\)/, 'Calculator export filename is not formula/timestamp specific');
 assert.match(appSource, /Guardrails\.evaluate\(formula, values, results\)/, 'Structured calculator guardrails are not evaluated');
+assert.match(appSource, /const preflightWarnings = Guardrails\.evaluate\(formula, values, \[\]\)/, 'Mathematical-domain warnings are not evaluated before a formula can reject an input');
+assert.match(appSource, /renderWarnings\(preflightWarnings\)/, 'Preflight mathematical-domain warning is discarded after formula rejection');
 assert.match(appSource, /Search\.findSymbolMatches\(Symbols, input\.value\)/, 'Canonical glossary search is not wired to the notation view');
 assert.match(appSource, /ion_mass_number:\s*PlotRegistry\.stateSemanticIds\.mu/, 'Legacy plot-export key is not associated with the canonical mass-ratio semantic ID');
 assert.match(appSource, /\[Object\.keys\(legacyPlotStateMetadataSemanticIds\)\[0\]\]:values\.mu/, 'Legacy ion_mass_number key is no longer emitted by plot metadata');
@@ -78,7 +80,7 @@ assert.match(html, /data-plot-mass-ratio-label/, 'Plot mass-ratio name is not re
 assert.match(html, /data-plot-mass-ratio-relation/, 'Plot mass-ratio relation is not registry-driven');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
 assert.match(html, /six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor/, 'Independent in-browser evidence inventory is not disclosed');
-assert.match(html, /hash and baseline identify code provenance; they do not prove scientific correctness/, 'Hash limitation is not disclosed');
+assert.match(html, /hash and baseline identify code provenance, not scientific correctness/, 'Hash limitation is not disclosed');
 assert.match(html, /<strong>Release date<\/strong> 10 August 2026/, 'v1.0.1 release date is not labelled accurately');
 assert.match(html, /Version 1\.0\.1 · released 10 August 2026 ·/, 'Footer does not identify 10 August 2026 as the release date');
 assert.doesNotMatch(html, /<strong>Last validated<\/strong>/, 'Ambiguous last-validated release label remains');
@@ -91,7 +93,7 @@ assert.ok(plainText(html).includes(Meta.citation), 'Website citation differs fro
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 assert.ok(plainText(readme).includes(Meta.citation), 'README citation differs from release metadata');
 assert.doesNotMatch(readme, /is a validated, unit-explicit/i, 'README retains an unqualified validated claim');
-assert.match(readme, /6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, 2\s+`E_DOMAIN`, and 22 `F_REGRESSION`/, 'README evidence inventory is inaccurate');
+assert.match(readme, /6 `A_REFERENCE`, 10 `B_IDENTITY`, 1 `C_UNIT`, 5\s+`E_DOMAIN`, and 21 `F_REGRESSION`/, 'README evidence inventory is inaccurate');
 assert.equal(packageMetadata.scripts['test:reference'], 'node tests/reference.test.js', 'Reference test script missing');
 assert.equal(packageMetadata.scripts['generate:reference'], 'node tests/reference/generate-reference-benchmarks.js', 'Reference generator script missing');
 assert.equal(packageMetadata.scripts['test:export'], 'node tests/export.test.js', 'Export/provenance test script missing');
@@ -112,7 +114,14 @@ for (let index = 1; index <= 10; index += 1) assert.match(decisionLog, new RegEx
 for (const field of ['Calculator/formula ID', 'Production functions', 'Current implementation', 'Current reference metadata', 'Why quarantined', 'Decision required', 'Would a scientific change alter results?', 'Affected surfaces', 'Source needed', 'Priority', 'Recommended action']) {
   assert.ok(decisionLog.includes(field), `Scientific decision log omits ${field}`);
 }
-assert.match(decisionLog, /No entry in this log changes a formula, coefficient, warning threshold,/, 'Decision dossier does not preserve scientific quarantine');
+assert.match(decisionLog, /This pass changes\s+only the SD-10 production formula/, 'Decision dossier does not isolate the approved scientific change');
+for (const id of ['SD-07','SD-08','SD-09']) {
+  const start = decisionLog.indexOf(`## ${id}`);
+  const end = decisionLog.indexOf('\n## ', start + 1);
+  const section = decisionLog.slice(start, end === -1 ? undefined : end);
+  assert.match(section, /\*\*Status:\*\* `OPEN`/, `${id}: open status changed`);
+  assert.match(section, /\*\*Priority:\*\* `IMPORTANT_BUT_DEFERRABLE`/, `${id}: priority changed`);
+}
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
 assert.match(citationCff, new RegExp(`date-released: ${Meta.releaseDate}`), 'CITATION.cff date mismatch');

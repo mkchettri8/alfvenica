@@ -103,21 +103,42 @@ assert.equal(kawDiagnostics[0].quantity,'ω/Ω_ci','KAW ordering ratio identity 
 assert.ok(Number.isFinite(kawDiagnostics[0].value),'KAW ordering ratio is not finite');
 assert.equal(kawDiagnostics[0].warningId,null,'KAW diagnostic was assigned an unsupported warning');
 assert.match(kawDiagnostics[0].interpretation,/no numerical pass\/fail threshold/i,'KAW diagnostic invents a cutoff');
-assert.deepEqual(Guardrails.reviewPendingFor('kaw-dispersion').map(item=>item.id),['kaw-low-frequency-ordering-review-pending'],'KAW review queue metadata missing');
+assert.equal(kawDiagnostics[0].reviewStatus,'RESOLVED_QUALITATIVE_ORDERING','KAW qualitative ordering resolution is not represented');
+assert.deepEqual(Guardrails.reviewPendingFor('kaw-dispersion'),[],'Resolved KAW scope remains falsely queued for review');
 
-for (const id of ['hellinger-proton-cyclotron','hellinger-mirror','hellinger-parallel-firehose','hellinger-oblique-firehose']) {
+for (const id of ['hellinger-proton-cyclotron','hellinger-parallel-firehose']) {
   const item = formula(id);
   const values = defaults(item);
-  assert.deepEqual(Guardrails.evaluate(item,values,item.calculate(values)),[],`${id}: unverified Hellinger domain was falsely enforced`);
+  assert.deepEqual(Guardrails.evaluate(item,values,item.calculate(values)),[],`${id}: valid source-domain default triggered a warning`);
+  assert.deepEqual(Guardrails.reviewPendingFor(id),[],`${id}: source-verified domain remains falsely queued for review`);
+}
+for (const id of ['hellinger-mirror','hellinger-oblique-firehose']) {
+  const item = formula(id);
+  const values = defaults(item);
+  assert.deepEqual(Guardrails.evaluate(item,values,item.calculate(values)),[],`${id}: unresolved domain was falsely enforced`);
   assert.deepEqual(Guardrails.reviewPendingFor(id).map(record=>record.id),['hellinger-fit-domain-review-pending'],`${id}: review-pending domain metadata missing`);
 }
+
+const protonCyclotron = formula('hellinger-proton-cyclotron');
+const pcOut = run(protonCyclotron,{beta:31,A:1});
+assert.deepEqual(pcOut.warnings.map(warning=>warning.id),['hellinger-proton-cyclotron-beta-domain'],'Proton-cyclotron beta-domain warning missing');
+assert.equal(pcOut.warnings[0].severity,'CAUTION');
+assert.equal(pcOut.warnings[0].evidenceClass,'E_DOMAIN');
+
+const parallelFirehose = formula('hellinger-parallel-firehose');
+const pfHigh = run(parallelFirehose,{beta:31,A:0.6});
+assert.deepEqual(pfHigh.warnings.map(warning=>warning.id),['hellinger-parallel-firehose-beta-domain'],'Parallel-firehose upper beta-domain warning missing');
+assert.deepEqual(Guardrails.evaluate(parallelFirehose,{beta:0.59,A:0.6},[]).map(warning=>warning.id),['hellinger-parallel-firehose-mathematical-domain'],'Parallel-firehose mathematical-domain warning missing');
+assert.throws(()=>parallelFirehose.calculate({beta:0.59,A:0.6}),/beta_parallel must exceed beta0/,'Parallel-firehose invalid branch unexpectedly evaluates');
 
 const validationSource = fs.readFileSync(path.join(root,'validation.js'),'utf8');
 assert.match(validationSource,/Coulomb-log non-positive applicability guardrail[\s\S]*'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY'/,'Coulomb guard is not represented as genuine E_DOMAIN evidence');
 assert.match(validationSource,/Nonrelativistic Alfvén speed causal-limit guardrail[\s\S]*'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY'/,'Alfven guard is not represented as genuine E_DOMAIN evidence');
-assert.doesNotMatch(validationSource,/KAW[^\n]*'E_DOMAIN'|Hellinger[^\n]*'E_DOMAIN'/i,'Review-pending science was promoted to E_DOMAIN');
+assert.match(validationSource,/Hellinger proton-cyclotron source beta-domain guardrail[\s\S]*'E_DOMAIN', 'SOURCE_BACKED_DOMAIN'/,'Source-backed proton-cyclotron domain is not E_DOMAIN evidence');
+assert.match(validationSource,/Hellinger parallel-firehose mathematical-domain guardrail[\s\S]*'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY'/,'Parallel-firehose mathematical boundary is not E_DOMAIN evidence');
+assert.doesNotMatch(validationSource,/Hellinger (mirror|oblique-firehose)[^\n]*'E_DOMAIN'/i,'Unresolved Hellinger branch was promoted to E_DOMAIN');
 const appSource = fs.readFileSync(path.join(root,'app.js'),'utf8');
 for (const definition of Object.values(Guardrails.definitions)) assert.equal(appSource.includes(definition.message),false,`${definition.id}: warning message was duplicated in app.js`);
 assert.match(appSource,/Guardrails\.evaluate\(formula, values, results\)/,'Calculator UI does not use structured guardrail evaluation');
 
-console.log('Alfvenica domain checks passed: 2 active E_DOMAIN warning definitions, deterministic non-mutating records, one threshold-free KAW ordering diagnostic, and KAW/Hellinger review-pending metadata.');
+console.log('Alfvenica domain checks passed: 5 active E_DOMAIN warning definitions, deterministic non-mutating records, one threshold-free resolved KAW ordering diagnostic, two source-verified Hellinger fit domains, and two Hellinger branches still review-pending.');

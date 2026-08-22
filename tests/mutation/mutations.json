@@ -271,6 +271,23 @@
       "expectedEvidence": [],
       "classification": "QUARANTINED_DIAGNOSTIC",
       "rationale": "Existing Hellinger validation is an internal arithmetic restatement and does not inspect the registry calculator coefficient; primary-source review remains pending."
+    },
+    {
+      "id": "mut-identity-kaw-reintroduce-pade-denominator",
+      "targetFile": "plasma-physics.js",
+      "targetFunction": "reducedKawParallelElectricRatio",
+      "scientificQuantity": "reduced low-FLR KAW parallel/perpendicular electric-field ratio",
+      "description": "Reintroduce the removed 1/(1+k_perpendicular^2 rho_s^2) Padé denominator.",
+      "transformation": {
+        "original": "return Math.abs(finite('k_parallel', kParallelPerM) * finite('k_perp', kPerpendicularPerM)) *\n      positive('rho_s', rhoS) ** 2;",
+        "replacement": "const kr = finite('k_perp', kPerpendicularPerM) * positive('rho_s', rhoS);\n    return Math.abs(finite('k_parallel', kParallelPerM) * finite('k_perp', kPerpendicularPerM)) *\n      positive('rho_s', rhoS) ** 2 / (1 + kr * kr);",
+        "expectedMatches": 1
+      },
+      "expectedEvidence": [
+        "B_IDENTITY:validation:Reduced KAW low-FLR parallel-field relation"
+      ],
+      "classification": "REQUIRED_KILL",
+      "rationale": "The approved SD-10 source equation is R=|k_parallel k_perpendicular| rho_s^2; the independent fixed-value analytical identity must kill reintroduction of the unsupported Padé denominator."
     }
   ]
 }

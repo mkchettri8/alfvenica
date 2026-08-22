@@ -4,10 +4,10 @@
 
 This is the finite human-review queue for convention-sensitive production
 science that remains quarantined during paper hardening. It records the code as
-implemented; it does not endorse, correct, or replace any equation. All entries
-are `OPEN`. A decision may change production science only after the requested
-source evidence is archived, the affected metadata is reconciled, and new
-independent validation is added where possible.
+implemented and retains the historical questions that led to each decision.
+Entries carry explicit resolved or open status. A decision may change production
+science only after the requested source evidence is reviewed, the affected
+metadata is reconciled, and new independent validation is added where possible.
 
 Allowed priority values are `CRITICAL_FOR_PAPER`, `IMPORTANT_BUT_DEFERRABLE`,
 and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
@@ -16,7 +16,8 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 
 ## SD-01 — Spitzer resistive transport terminology and coefficient
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SCOPE`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `spitzer-transport`
 - **Production functions:** `electronIonCollisionFrequency`,
   `spitzerResistivity`, with conductivity and magnetic diffusivity formed in the
@@ -48,9 +49,24 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `VERIFY_SOURCE`
 
+### Resolution record
+
+- **Chosen action:** `CLARIFY_TERMINOLOGY` and `DOCUMENT_SCOPE`.
+- **Final terminology/equation:** “Classical electron–ion collisional resistive
+  transport,” with `eta_coll = m_e nu_ei/(n_e e^2)`, `sigma=1/eta_coll`, and
+  `eta_m=eta_coll/mu_0`.
+- **Source basis:** The human-reviewed decision accepts the implemented
+  characteristic collision-rate convention for this scoped relation while
+  distinguishing source-specific Spitzer/Braginskii transport coefficients.
+- **Numerical consequence:** None. No `0.51` or generalized-`Z` coefficient was
+  inserted.
+- **Validation/domain consequence:** Terminology and formula/export provenance
+  tests added; no new domain boundary.
+
 ## SD-02 — Electron/ion collision-frequency coefficient conventions
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SEMANTICS`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula IDs:** `electron-ion-collision-frequency`,
   `ion-ion-collision-frequency`; downstream `electron-mean-free-path`,
   `ion-mean-free-path`, `electron-hall-parameter`, `ion-hall-parameter`, and
@@ -84,9 +100,24 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `VERIFY_SOURCE`
 
+### Resolution record
+
+- **Chosen action:** `CLARIFY_TERMINOLOGY`.
+- **Final terminology/equation:** The existing coefficients are retained as
+  characteristic electron–ion and identical-ion Coulomb collision rates under
+  the adopted NRL-style collision-time convention. `nu` has unit `s^-1`; it is
+  not labelled a cyclic oscillation frequency.
+- **Source basis:** Human review of the existing NRL-style convention and the
+  dimensional semantics of a rate.
+- **Numerical consequence:** None; no factor of `2 pi` was introduced or
+  removed. SD-09 Hall-parameter science remains open.
+- **Validation/domain consequence:** Rate-unit, unchanged-value, and no-`2 pi`
+  tests added; the global frequency/display architecture is otherwise unchanged.
+
 ## SD-03 — Coulomb-logarithm convention
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SCOPE`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula IDs:** `coulomb-log-ei`, `coulomb-log-ii`
 - **Production functions:** `coulombLogElectronIon`, `coulombLogIonIon`, plus
   `totalDebyeLength`, `ionMass`, and thermal-energy helpers
@@ -119,9 +150,23 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `VERIFY_SOURCE`
 
+### Resolution record
+
+- **Chosen action:** `DOCUMENT_SCOPE`.
+- **Final terminology/equation:** Adopted impact-parameter Coulomb-logarithm
+  estimates, `ln Lambda=ln(lambda_D/b_min)` with
+  `b_min=max(b_90,b_quantum)`, retaining the documented species screening,
+  reduced-mass, and relative-speed choices above.
+- **Source basis:** Human-reviewed convention decision; it is explicitly not
+  claimed identical to every regime-specific fitted NRL expression.
+- **Numerical consequence:** None.
+- **Validation/domain consequence:** The existing `ln Lambda <= 0` `E_DOMAIN`
+  guard is preserved unchanged; scope and export metadata tests were added.
+
 ## SD-04 — Reduced kinetic/inertial-Alfven dispersion and applicability
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SCOPE`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `kaw-dispersion`
 - **Production functions:** `reducedAlfvenDispersion`, with `alfvenSpeed`,
   `ionSoundGyroradius`, `electronInertialLength`, and `ionGyroAngular` used by
@@ -150,9 +195,24 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `VERIFY_SOURCE`
 
+### Resolution record
+
+- **Chosen action:** `DOCUMENT_SCOPE`.
+- **Final terminology/equation:** Reduced low-frequency two-fluid dispersive-
+  Alfven approximation with the existing electron-pressure `rho_s` numerator
+  and electron-inertia `d_e` denominator retained exactly.
+- **Source basis:** Lysak & Lotko (1996), Hollweg (1999), and Stasiewicz et al.
+  (2000, review) establish the project’s reduced-model lineage; the combined
+  equation is not presented as the full kinetic Lysak–Lotko dispersion relation.
+- **Numerical consequence:** None.
+- **Validation/domain consequence:** `omega/Omega_ci` remains a neutral
+  diagnostic. The qualitative `omega << Omega_ci` ordering has no invented
+  numeric cutoff and is no longer falsely queued as an unresolved convention.
+
 ## SD-05 — Hellinger proton-cyclotron fit coefficients and domain
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SOURCE_VERIFIED`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `hellinger-proton-cyclotron`
 - **Production functions:** generic `hellingerThreshold` called as
   `hellingerThreshold(beta,0.43,0.42,-0.0004)`
@@ -180,9 +240,26 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `VERIFY_SOURCE`
 
+### Resolution record
+
+- **Chosen action:** `VERIFY_SOURCE` completed.
+- **Final equation:**
+  `A=1+0.43/(beta_parallel_p+0.0004)^0.42`, equivalently the generic fit
+  tuple `a=0.43`, `b=0.42`, `beta0=-0.0004`.
+- **Source basis:** Hellinger et al. (2006), *Geophysical Research Letters* 33,
+  L09101, DOI: [10.1029/2006GL025925](https://doi.org/10.1029/2006GL025925):
+  `gamma_max=10^-3 Omega_p`, `0.01<=beta_parallel_p<=30`, anisotropy interval
+  `0.1–10`, Maxwellian electrons with `beta_e=1`, bi-Maxwellian protons, and
+  `omega_pe/Omega_ce=100`.
+- **Numerical consequence:** None; coefficients and fit results are unchanged.
+- **Validation/domain consequence:** Source-backed informational `E_DOMAIN`
+  warning `hellinger-proton-cyclotron-beta-domain` is emitted outside
+  `0.01–30`; results are never clamped or changed.
+
 ## SD-06 — Hellinger parallel-firehose fit coefficients and domain
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SOURCE_VERIFIED`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `hellinger-parallel-firehose`
 - **Production functions:** generic `hellingerThreshold` called as
   `hellingerThreshold(beta,-0.47,0.53,0.59)`
@@ -206,6 +283,23 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
   text for the parallel-firehose contour
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `VERIFY_SOURCE`
+
+### Resolution record
+
+- **Chosen action:** `VERIFY_SOURCE` completed.
+- **Final equation:**
+  `A=1-0.47/(beta_parallel_p-0.59)^0.53`, with exact tuple `a=-0.47`,
+  `b=0.53`, `beta0=0.59`.
+- **Source basis:** Hellinger et al. (2006), *Geophysical Research Letters* 33,
+  L09101, DOI: [10.1029/2006GL025925](https://doi.org/10.1029/2006GL025925),
+  with the same contour and plasma assumptions recorded for SD-05.
+- **Numerical consequence:** None for the real-valued branch. The old UI input
+  minimum `0.591` is replaced by a structured mathematical boundary at exactly
+  `beta_parallel_p<=0.59`; valid fit outputs remain unchanged.
+- **Validation/domain consequence:** `hellinger-parallel-firehose-beta-domain`
+  gives source-backed applicability information above `30`, while
+  `hellinger-parallel-firehose-mathematical-domain` is an `INVALID` logical
+  boundary at or below `0.59`. The latter is not called a physical threshold.
 
 ## SD-07 — Lower-hybrid approximation
 
@@ -297,7 +391,8 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 
 ## SD-10 — rho_s-only finite-beta KAW parallel-field model
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SOURCE_CORRECTED`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `kaw-parallel-electric-field`
 - **Production functions:** `reducedKawParallelElectricRatio`,
   `ionSoundGyroradius`
@@ -326,12 +421,34 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `CRITICAL_FOR_PAPER`
 - **Recommended action:** `CHANGE_ONLY_IF_SOURCE_CONFIRMS`
 
+### Resolution record
+
+- **Chosen action:** `CHANGE_ONLY_IF_SOURCE_CONFIRMS`, confirmed and applied.
+- **Final equation/terminology:** “Reduced KAW parallel electric-field ratio,”
+  `|E_parallel/E_perp|=|k_parallel k_perp| rho_s^2`, a reduced warm/kinetic
+  low-FLR expression. It is not a general all-`k_perp` or full kinetic
+  polarization relation.
+- **Source basis:** The project’s reduced KAW/auroral-Alfven lineage is Lysak &
+  Lotko (1996) and Hollweg (1999), with Stasiewicz et al. (2000) explicitly
+  labelled as a review. No unverified equation number is asserted.
+- **Numerical consequence:** This is the pass’s sole approved formula change.
+  At the frozen default, output index 2 changes from
+  `0.003338240281574197` to `0.005011048765900302`; the other 164 frozen
+  numerical outputs are unchanged.
+- **Validation/domain consequence:** A fixed-value independent analytical
+  `B_IDENTITY` evaluates `R=|k_parallel k_perp|rho_s^2`. New required mutation
+  `mut-identity-kaw-reintroduce-pade-denominator` proves the removed Padé
+  denominator cannot silently return. No beta or `k_perp` cutoff was invented.
+
 ## Priority summary
 
-- `CRITICAL_FOR_PAPER`: SD-01 through SD-06, and SD-10
-- `IMPORTANT_BUT_DEFERRABLE`: SD-07 through SD-09
-- `DOCUMENTATION_ONLY`: none currently; every open item can affect numerical
-  interpretation, even where a terminology-only resolution remains possible
+- **Resolved in Scientific Resolution Pass 1:** SD-01 through SD-06 and SD-10.
+  SD-01 through SD-04 are terminology/model-scope resolutions; SD-05 and SD-06
+  are source-verified fit/domain resolutions; SD-10 is the one approved
+  numerical formula correction.
+- `IMPORTANT_BUT_DEFERRABLE` and still `OPEN`: SD-07 through SD-09.
+- `DOCUMENTATION_ONLY`: no open item currently.
 
-No entry in this log changes a formula, coefficient, warning threshold,
-validation class, or numerical result.
+Historical questions above are retained as the audit trail. This pass changes
+only the SD-10 production formula and its one frozen default output; it adds
+source-backed Hellinger warnings without altering their valid fit results.

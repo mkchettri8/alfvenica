@@ -3,6 +3,35 @@
   "evidenceClass": "F_REGRESSION",
   "baselineCommit": "eab588abb672f6fdf7e169a36e6a630a2b02ecfb",
   "description": "Default calculator outputs frozen solely to detect implementation changes during semantic-symbol metadata migration. This is not independent scientific evidence.",
+  "baselineLineage": {
+    "priorArtifactSha256": "348950dedaff6b66b907edeb775f2a2ae89632837c73e32e8ee01cd1b2fc1dee",
+    "resolutionPass": "SCIENTIFIC_RESOLUTION_PASS_1",
+    "sourceCommit": null,
+    "sourceCommitStatus": "UNCOMMITTED_WORKTREE",
+    "approvedNumericalChanges": [
+      {
+        "decisionId": "SD-10",
+        "formulaId": "kaw-parallel-electric-field",
+        "outputIndex": 2,
+        "semanticId": "kaw-parallel-to-perpendicular-electric-field-ratio",
+        "oldValue": 0.003338240281574197,
+        "newValue": 0.005011048765900302,
+        "absoluteChange": 0.0016728084843261053,
+        "relativeChange": 0.5011048765900301,
+        "equation": "abs(k_parallel * k_perpendicular) * rho_s^2"
+      }
+    ],
+    "terminologyOnlyOutputChanges": [
+      "electron-hall-parameter:0",
+      "ion-hall-parameter:0",
+      "electron-ion-collision-frequency:0",
+      "ion-ion-collision-frequency:0",
+      "electron-mean-free-path:1",
+      "ion-mean-free-path:1",
+      "spitzer-transport:0",
+      "spitzer-transport:1"
+    ]
+  },
   "calculators": [
     {
       "formulaId": "electron-gyrofrequency",
@@ -875,7 +904,7 @@
       "numericOutputs": [
         {
           "outputIndex": 0,
-          "label": "Electron-ion collision frequency",
+          "label": "Characteristic electron-ion collision rate",
           "symbol": "νei",
           "quantity": "frequency",
           "value": 0.000006991511873534959
@@ -902,7 +931,7 @@
       "numericOutputs": [
         {
           "outputIndex": 0,
-          "label": "Ion-ion collision frequency",
+          "label": "Characteristic ion-ion collision rate",
           "symbol": "νii",
           "quantity": "frequency",
           "value": 1.516608815730738e-7
@@ -980,7 +1009,7 @@
       "numericOutputs": [
         {
           "outputIndex": 0,
-          "label": "Collision frequency",
+          "label": "Characteristic collision rate",
           "symbol": "νei",
           "quantity": "frequency",
           "value": 0.000006991511873534959
@@ -1006,7 +1035,7 @@
       "numericOutputs": [
         {
           "outputIndex": 0,
-          "label": "Collision frequency",
+          "label": "Characteristic collision rate",
           "symbol": "νii",
           "quantity": "frequency",
           "value": 1.516608815730738e-7
@@ -1038,7 +1067,7 @@
         },
         {
           "outputIndex": 1,
-          "label": "Collision frequency",
+          "label": "Characteristic collision rate",
           "symbol": "νei",
           "quantity": "frequency",
           "value": 0.000006991511873534959
@@ -1071,7 +1100,7 @@
         },
         {
           "outputIndex": 1,
-          "label": "Collision frequency",
+          "label": "Characteristic collision rate",
           "symbol": "νii",
           "quantity": "frequency",
           "value": 1.516608815730738e-7
@@ -1096,15 +1125,15 @@
       "numericOutputs": [
         {
           "outputIndex": 0,
-          "label": "Collision frequency",
+          "label": "Characteristic collision rate",
           "symbol": "νei",
           "quantity": "frequency",
           "value": 0.000006991511873534959
         },
         {
           "outputIndex": 1,
-          "label": "Resistivity",
-          "symbol": "η",
+          "label": "Collisional resistivity",
+          "symbol": "ηcoll",
           "quantity": "resistivity",
           "value": 0.00004962143322796474
         },
@@ -1687,7 +1716,7 @@
           "label": "Parallel/perpendicular ratio",
           "symbol": "|E∥/E⊥|",
           "quantity": "dimensionless",
-          "value": 0.003338240281574197
+          "value": 0.005011048765900302
         }
       ]
     },

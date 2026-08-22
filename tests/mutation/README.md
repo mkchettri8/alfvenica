@@ -52,7 +52,13 @@ mutant-specific expected result.
   inadequate. Survival is reported as a gap, not as success.
 - `QUARANTINED_DIAGNOSTIC` measures convention-sensitive or source-review work
   without authorizing a formula change. Survival is likewise reported, not
-  counted as success.
+counted as success.
+
+Scientific Resolution Pass 1 adds one `REQUIRED_KILL` case,
+`mut-identity-kaw-reintroduce-pade-denominator`. It reintroduces only the
+removed SD-10 `1/(1+k_perp^2 rho_s^2)` denominator and must be killed by the
+fixed-value `B_IDENTITY` for `R=|k_parallel k_perp|rho_s^2`. The preceding 17
+mutation definitions are retained unchanged.
 
 The JSON corpus is static transformation metadata. `observedResult` and
 `detectedBy` are attached to structured result records at runtime so a stale

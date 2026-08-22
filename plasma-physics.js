@@ -347,10 +347,8 @@
     return Object.freeze({ vTe, x, maxwellianFactor: Math.exp(-0.5 * x * x) });
   }
   function reducedKawParallelElectricRatio(kParallelPerM, kPerpendicularPerM, rhoS) {
-    const kpar = Math.abs(finite('k_parallel', kParallelPerM));
-    const kperp = positive('k_perp', Math.abs(kPerpendicularPerM));
-    const kr = kperp * positive('rho_s', rhoS);
-    return (kpar / kperp) * (kr * kr / (1 + kr * kr));
+    return Math.abs(finite('k_parallel', kParallelPerM) * finite('k_perp', kPerpendicularPerM)) *
+      positive('rho_s', rhoS) ** 2;
   }
 
   // Instability threshold helpers

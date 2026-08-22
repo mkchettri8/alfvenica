@@ -401,7 +401,9 @@ button{color:inherit}
     sourceCommitStatus: 'UNAVAILABLE_NOT_EMBEDDED',
     buildKind: 'browser-source-or-generated-standalone',
     physicsCoreBaseline: '9ad37ae',
-    physicsCoreSha256: '3b55dd4e641aa6fb2de32de2b656a990055cf93ef8809f494c90f9d7f00d2f92',
+    physicsCoreBaselineStatus: 'APPROVED_UNCOMMITTED_CHANGE_FROM_RELEASE_BASELINE',
+    physicsCoreChangeSet: 'SCIENTIFIC_RESOLUTION_PASS_1_SD_10',
+    physicsCoreSha256: 'e6b039b9f18428a761fe4fd2b5616f1530ec26e875436ae616988aa52fac4756',
     formulaSmokeCount: 70,
     plotMetricCount: 28,
     htmlIdCount: 100,
@@ -766,10 +768,8 @@ button{color:inherit}
     return Object.freeze({ vTe, x, maxwellianFactor: Math.exp(-0.5 * x * x) });
   }
   function reducedKawParallelElectricRatio(kParallelPerM, kPerpendicularPerM, rhoS) {
-    const kpar = Math.abs(finite('k_parallel', kParallelPerM));
-    const kperp = positive('k_perp', Math.abs(kPerpendicularPerM));
-    const kr = kperp * positive('rho_s', rhoS);
-    return (kpar / kperp) * (kr * kr / (1 + kr * kr));
+    return Math.abs(finite('k_parallel', kParallelPerM) * finite('k_perp', kPerpendicularPerM)) *
+      positive('rho_s', rhoS) ** 2;
   }
 
   // Instability threshold helpers
@@ -1212,18 +1212,18 @@ button{color:inherit}
   // Lengths, speeds, waves, and times.
   D('electron-debye-length','Electron Debye length','λ_De','lambda_De','\\lambda_{De}','Electron electrostatic shielding length for the implemented scalar-temperature definition.','length',{species:{subject:'electron'}});
   D('combined-debye-length','Combined Debye length','λ_D','lambda_D','\\lambda_D','Debye screening length formed from the modeled electron and ion shielding contributions.','length');
-  D('ion-debye-length','Ion Debye length','λ_Di','lambda_Di','\\lambda_{Di}','Selected-ion Debye length used by the current ion-ion Coulomb-logarithm implementation.','length',quarantined);
+  D('ion-debye-length','Ion Debye length','λ_Di','lambda_Di','\\lambda_{Di}','Selected-ion Debye length used as the screening scale in the adopted identical-ion impact-parameter Coulomb-logarithm estimate.','length');
   D('electron-gyroradius','Electron thermal gyroradius','ρ_e','rho_e','\\rho_e','Electron gyroradius using the implemented electron thermal-speed convention.','length',{species:{subject:'electron'},conventionNotes:['Uses sqrt(k_B T/m); scalar temperature stands in for the relevant perpendicular temperature.']});
   D('ion-gyroradius','Ion thermal gyroradius','ρ_i','rho_i','\\rho_i','Selected-ion gyroradius using the implemented ion thermal-speed convention.','length',{species:{subject:'selected-ion'},conventionNotes:['Uses sqrt(k_B T/m); scalar temperature stands in for the relevant perpendicular temperature.']});
   D('electron-inertial-length','Electron inertial length','d_e','d_e','d_e','Electron inertial length defined from speed of light and electron plasma angular frequency.','length',{species:{subject:'electron'}});
   D('ion-inertial-length','Ion inertial length','d_i','d_i','d_i','Selected-ion inertial length defined from speed of light and ion plasma angular frequency.','length',{species:{subject:'selected-ion'}});
   D('ion-sound-gyroradius','Ion-sound gyroradius','ρ_s','rho_s','\\rho_s','Ion-sound dispersive length returned by the implemented electron-pressure model.','length',{species:{subject:'selected-ion'},conventionNotes:['The current model omits the ion-temperature contribution.']});
   D('debye-sphere-particle-count','Particles in a Debye sphere','N_D','N_D','N_D','Electron count within a sphere of the implemented electron Debye radius.','dimensionless',{conventionNotes:['Uses the 4 pi/3 sphere-volume convention.']});
-  D('minimum-impact-parameter','Minimum Coulomb impact parameter','b_min','b_min','b_{min}','Short-distance cutoff selected by the current Coulomb-logarithm implementation.','length',{scope:'derived',...quarantined});
+  D('minimum-impact-parameter','Minimum Coulomb impact parameter','b_min','b_min','b_{min}','Short-distance cutoff selected as the larger of the implemented classical 90-degree and quantum-diffraction impact parameters.','length',{scope:'derived'});
   D('wigner-seitz-radius','Wigner-Seitz radius','a','a','a','Mean interparticle spacing used by the current plasma-coupling parameter.','length',{scope:'derived',...pending});
   D('generic-mean-free-path','Mean free path','λ_mfp','lambda_mfp','\\lambda_{mfp}','Supplied collisional mean free path.','length');
-  D('electron-mean-free-path','Electron mean free path','λ_ei','lambda_ei','\\lambda_{ei}','Distance given by the implemented electron thermal speed divided by electron-ion collision frequency.','length',{species:{subject:'electron'},...quarantined});
-  D('ion-mean-free-path','Ion mean free path','λ_ii','lambda_ii','\\lambda_{ii}','Distance given by the implemented selected-ion thermal speed divided by ion-ion collision frequency.','length',{species:{subject:'selected-ion'},...quarantined});
+  D('electron-mean-free-path','Electron mean free path','λ_ei','lambda_ei','\\lambda_{ei}','Distance given by the implemented electron thermal speed divided by the adopted characteristic electron-ion collision rate.','length',{species:{subject:'electron'}});
+  D('ion-mean-free-path','Ion mean free path','λ_ii','lambda_ii','\\lambda_{ii}','Distance given by the implemented selected-ion thermal speed divided by the adopted characteristic ion-ion collision rate.','length',{species:{subject:'selected-ion'}});
   D('current-sheet-crossing-thickness','Current-sheet crossing thickness','L','L_crossing','L_{crossing}','One-dimensional thickness estimated from normal relative speed and crossing duration.','length',{scope:'formula-local'});
   D('sweet-parker-sheet-half-thickness','Sweet-Parker sheet half-thickness','δ','delta','\\delta','Current-sheet half-thickness returned by the implemented Sweet-Parker scaling.','length',{scope:'formula-local',...quarantined});
   D('inverse-wavenumber-scale','Inverse-wavenumber scale','1/k','1/k','1/k','Length equal to the reciprocal of the Taylor-mapped wavenumber.','length');
@@ -1243,7 +1243,7 @@ button{color:inherit}
   D('reconnection-inflow-speed','Reconnection inflow speed','v_in','v_in','v_{in}','Inflow speed returned by the implemented Sweet-Parker estimate.','speed',quarantined);
   D('electromagnetic-e-over-b-speed','Electromagnetic E/B speed','v_EB','v_EB','v_{EB}','Speed magnitude formed from perpendicular electric and magnetic fluctuation magnitudes.','speed',{conventionNotes:['Interpretation depends on frame and polarization.']});
   D('observed-e-over-b-speed','Observed E/B speed','v_EB','v_EB_observed','v_{EB}','Observed electromagnetic E/B speed used by the KAW diagnostic.','speed',quarantined);
-  D('kaw-parallel-phase-speed','KAW parallel phase speed','v_ph,∥','v_ph_parallel','v_{ph,\\parallel}','Parallel phase speed returned by or supplied to the reduced KAW diagnostics.','speed',quarantined);
+  D('kaw-parallel-phase-speed','Reduced dispersive-Alfvén parallel phase speed','v_ph,∥','v_ph_parallel','v_{ph,\\parallel}','Parallel phase speed returned by the reduced low-frequency two-fluid dispersive-Alfvén approximation or supplied to related diagnostics.','speed');
   D('magnetic-fluctuation-velocity-equivalent','Magnetic fluctuation in velocity units','δb','delta_b','\\delta b','Signed magnetic fluctuation divided by the square root of vacuum permeability times the implemented mass density.','speed',quarantined);
   D('signed-velocity-fluctuation','Signed velocity fluctuation','δv','delta_v','\\delta v','Signed scalar velocity fluctuation used by the reduced Alfvénicity diagnostics.','speed',quarantined);
   D('elsasser-plus-amplitude','Elsasser plus amplitude','z+','z_plus','z^+','Scalar plus Elsasser amplitude returned by the current Alfvénicity implementation.','speed',quarantined);
@@ -1271,9 +1271,9 @@ button{color:inherit}
   D('total-electron-ion-plasma-beta','Total electron-ion plasma beta','β','beta_total','\\beta','Ratio of modeled total electron-ion scalar thermal pressure to magnetic pressure.','dimensionless');
   D('parallel-species-plasma-beta','Parallel species plasma beta','β∥','beta_parallel','\\beta_\\parallel','Plasma beta formed from the selected species parallel temperature component.','dimensionless',{species:{subject:'generic-species'},...pending});
   D('perpendicular-species-plasma-beta','Perpendicular species plasma beta','β⊥','beta_perpendicular','\\beta_\\perp','Plasma beta formed from the selected species perpendicular temperature component.','dimensionless',{species:{subject:'generic-species'},...pending});
-  D('parallel-proton-plasma-beta','Parallel proton plasma beta','β∥p','beta_parallel_p','\\beta_{\\parallel p}','Parallel proton beta supplied to a Hellinger fit.','dimensionless',{species:{subject:'proton'},...quarantined});
+  D('parallel-proton-plasma-beta','Parallel proton plasma beta','β∥p','beta_parallel_p','\\beta_{\\parallel p}','Parallel proton beta supplied to a coefficient-specific Hellinger fit.','dimensionless',{species:{subject:'proton'}});
   D('generic-temperature-anisotropy','Temperature anisotropy','T⊥/T∥','T_perpendicular/T_parallel','T_\\perp/T_\\parallel','Ratio of perpendicular to parallel temperature for the selected species.','dimensionless',{species:{subject:'generic-species'},...pending});
-  D('proton-temperature-anisotropy','Proton temperature anisotropy','T⊥p/T∥p','T_perpendicular_p/T_parallel_p','T_{\\perp p}/T_{\\parallel p}','Ratio of perpendicular to parallel proton temperature.','dimensionless',{species:{subject:'proton'},...quarantined});
+  D('proton-temperature-anisotropy','Proton temperature anisotropy','T⊥p/T∥p','T_perpendicular_p/T_parallel_p','T_{\\perp p}/T_{\\parallel p}','Ratio of perpendicular to parallel proton temperature.','dimensionless',{species:{subject:'proton'}});
   D('alfven-mach-number','Alfvén Mach number','M_A','M_A','M_A','Bulk-flow speed divided by the implemented Alfvén speed.','dimensionless');
   D('sonic-mach-number','Sonic Mach number','M_s','M_s','M_s','Bulk-flow speed divided by the implemented MHD sound speed.','dimensionless');
   D('fast-magnetosonic-mach-number','Fast magnetosonic Mach number','M_f','M_f','M_f','Bulk-flow speed divided by the implemented fast magnetosonic speed.','dimensionless');
@@ -1302,16 +1302,16 @@ button{color:inherit}
   D('fluid-mirror-criterion','Fluid mirror criterion value','C','mirror_criterion','C','Value of the current simplified fluid-mirror criterion.','dimensionless',{scope:'formula-local',...pending});
   D('fluid-mirror-margin','Fluid mirror threshold margin','margin','mirror_margin','\\mathrm{margin}','Implemented simplified mirror criterion value minus its current threshold.','dimensionless',{scope:'formula-local',...pending});
 
-  // Collision and transport identities remain scientifically quarantined.
-  D('electron-ion-coulomb-logarithm','Electron-ion Coulomb logarithm','ln Λ_ei','ln Lambda_ei','\\ln\\Lambda_{ei}','Coulomb logarithm supplied to or returned by the current electron-ion convention.','dimensionless',{species:{subject:'electron-ion'},...quarantined});
-  D('ion-ion-coulomb-logarithm','Ion-ion Coulomb logarithm','ln Λ_ii','ln Lambda_ii','\\ln\\Lambda_{ii}','Coulomb logarithm supplied to or returned by the current ion-ion convention.','dimensionless',{species:{subject:'selected-ion'},...quarantined});
-  D('electron-ion-collision-frequency','Electron-ion collision frequency','ν_ei','nu_ei','\\nu_{ei}','Collision-rate quantity returned by the current electron-ion implementation.','frequency',{species:{subject:'electron-ion'},conventionNotes:['Its rate versus cyclic-frequency presentation remains under review.'],...quarantined});
-  D('ion-ion-collision-frequency','Ion-ion collision frequency','ν_ii','nu_ii','\\nu_{ii}','Collision-rate quantity returned by the current ion-ion implementation.','frequency',{species:{subject:'selected-ion'},conventionNotes:['Its rate versus cyclic-frequency presentation remains under review.'],...quarantined});
-  D('electron-ion-collision-time','Electron-ion collision time','τ_ei','tau_ei','\\tau_{ei}','Reciprocal of the implemented electron-ion collision frequency.','time',{species:{subject:'electron-ion'},...quarantined});
-  D('ion-ion-collision-time','Ion-ion collision time','τ_ii','tau_ii','\\tau_{ii}','Reciprocal of the implemented ion-ion collision frequency.','time',{species:{subject:'selected-ion'},...quarantined});
-  D('electrical-resistivity','Electrical resistivity','η','eta_resistivity','\\eta','Electrical resistivity returned or consumed by the current transport implementation.','resistivity',{conventionNotes:['Spitzer/Lorentz terminology and coefficient interpretation remain quarantined.'],...quarantined});
-  D('electrical-conductivity','Electrical conductivity','σ','sigma_conductivity','\\sigma','Reciprocal of the implemented electrical resistivity.','conductivity',quarantined);
-  D('magnetic-diffusivity','Magnetic diffusivity','η_m','eta_m','\\eta_m','Implemented electrical resistivity divided by vacuum permeability.','diffusivity',quarantined);
+  // Collision and transport identities resolved by SD-01 through SD-03.
+  D('electron-ion-coulomb-logarithm','Electron-ion impact-parameter Coulomb logarithm','ln Λ_ei','ln Lambda_ei','\\ln\\Lambda_{ei}','Adopted impact-parameter estimate ln(lambda_D/b_min), with combined electron-ion Debye screening and b_min=max(b_90,b_quantum).','dimensionless',{species:{subject:'electron-ion'},conventionNotes:['This explicit estimate is not claimed identical to every regime-specific fitted NRL expression.']});
+  D('ion-ion-coulomb-logarithm','Ion-ion impact-parameter Coulomb logarithm','ln Λ_ii','ln Lambda_ii','\\ln\\Lambda_{ii}','Adopted identical-ion impact-parameter estimate ln(lambda_Di/b_min), with b_min=max(b_90,b_quantum).','dimensionless',{species:{subject:'selected-ion'},conventionNotes:['This explicit estimate is not claimed identical to every regime-specific fitted NRL expression.']});
+  D('electron-ion-collision-frequency','Electron-ion characteristic Coulomb collision rate','ν_ei','nu_ei','\\nu_{ei}','Characteristic electron-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','frequency',{species:{subject:'electron-ion'},canonicalSiUnit:'s^-1',productionUnit:'s^-1',acceptedDisplayUnits:['s^-1'],conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
+  D('ion-ion-collision-frequency','Ion-ion characteristic Coulomb collision rate','ν_ii','nu_ii','\\nu_{ii}','Characteristic identical-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','frequency',{species:{subject:'selected-ion'},canonicalSiUnit:'s^-1',productionUnit:'s^-1',acceptedDisplayUnits:['s^-1'],conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
+  D('electron-ion-collision-time','Electron-ion collision time','τ_ei','tau_ei','\\tau_{ei}','Reciprocal of the adopted characteristic electron-ion collision rate.','time',{species:{subject:'electron-ion'}});
+  D('ion-ion-collision-time','Ion-ion collision time','τ_ii','tau_ii','\\tau_{ii}','Reciprocal of the adopted characteristic ion-ion collision rate.','time',{species:{subject:'selected-ion'}});
+  D('electrical-resistivity','Electron-ion collisional resistivity','η_coll','eta_coll','\\eta_{coll}','Scalar resistive-transport quantity eta_coll=m_e nu_ei/(n_e e^2) evaluated from Alfvenica’s characteristic electron-ion collision rate.','resistivity',{conventionNotes:['This is not claimed to be a complete source-specific Spitzer or Braginskii transport coefficient.']});
+  D('electrical-conductivity','Electrical conductivity','σ','sigma_conductivity','\\sigma','Reciprocal of the implemented electron-ion collisional resistivity.','conductivity');
+  D('magnetic-diffusivity','Magnetic diffusivity','η_m','eta_m','\\eta_m','Implemented electron-ion collisional resistivity divided by vacuum permeability.','diffusivity');
 
   // Spacecraft and fluctuation quantities.
   D('taylor-convected-wavenumber','Taylor-mapped convected wavenumber','k','k_Taylor','k','Wavenumber obtained from the current frozen-flow frequency mapping.','wavenumber');
@@ -1322,22 +1322,22 @@ button{color:inherit}
   D('current-density-estimate','Current-density estimate','J','J','J','One-dimensional current-density magnitude estimated from field jump and sheet thickness.','currentDensity');
   D('reconnection-electric-field','Reconnection electric field','E_rec','E_rec','E_{rec}','Electric-field magnitude returned by the implemented Sweet-Parker estimate.','electricField',quarantined);
 
-  // Reduced kinetic-Alfvén diagnostics remain quarantined.
+  // Reduced kinetic-Alfvén diagnostics; formula-specific review state is retained where unresolved.
   D('kaw-regime-ratio','KAW kinetic-to-inertial regime ratio','R','R_KAW','R','Electron beta divided by the implemented electron-to-ion mass ratio.','dimensionless',quarantined);
   D('perpendicular-wavenumber-ion-gyroradius-product','Perpendicular wavenumber-ion gyroradius product','k⊥ρ_i','k_perpendicular rho_i','k_\\perp\\rho_i','Dimensionless product locating perpendicular scale relative to selected-ion gyroradius.','dimensionless',quarantined);
   D('perpendicular-wavenumber-ion-sound-gyroradius-product','Perpendicular wavenumber-ion-sound gyroradius product','k⊥ρ_s','k_perpendicular rho_s','k_\\perp\\rho_s','Dimensionless product locating perpendicular scale relative to ion-sound gyroradius.','dimensionless',quarantined);
   D('perpendicular-wavenumber-ion-inertial-length-product','Perpendicular wavenumber-ion inertial length product','k⊥d_i','k_perpendicular d_i','k_\\perp d_i','Dimensionless product locating perpendicular scale relative to selected-ion inertial length.','dimensionless',quarantined);
   D('perpendicular-wavenumber-electron-inertial-length-product','Perpendicular wavenumber-electron inertial length product','k⊥d_e','k_perpendicular d_e','k_\\perp d_e','Dimensionless product locating perpendicular scale relative to electron inertial length.','dimensionless',quarantined);
-  D('kaw-angular-frequency','Reduced KAW angular frequency','ω','omega_KAW','\\omega','Angular frequency returned by the current reduced kinetic/inertial Alfvén model.','angularFrequency',quarantined);
-  D('kaw-frequency','Reduced KAW cyclic frequency','f','f_KAW','f','Cyclic frequency corresponding to the current reduced KAW angular frequency.','frequency',quarantined);
-  D('kaw-dispersive-factor','Reduced KAW dispersive factor','D','D_KAW','D','Dimensionless multiplicative phase-speed factor returned by the current reduced KAW model.','dimensionless',{scope:'formula-local',...quarantined});
+  D('kaw-angular-frequency','Reduced dispersive-Alfvén angular frequency','ω','omega_KAW','\\omega','Angular frequency returned by the reduced low-frequency two-fluid dispersive-Alfvén approximation.','angularFrequency');
+  D('kaw-frequency','Reduced dispersive-Alfvén cyclic frequency','f','f_KAW','f','Cyclic frequency corresponding to the reduced dispersive-Alfvén angular frequency.','frequency');
+  D('kaw-dispersive-factor','Reduced dispersive-Alfvén factor','D','D_KAW','D','Dimensionless phase-speed factor containing the retained electron-pressure and electron-inertia terms.','dimensionless',{scope:'formula-local'});
   D('kaw-resonant-speed-ratio','KAW resonant-speed ratio','x_e','x_e','x_e','Magnitude of supplied parallel phase speed divided by the implemented electron thermal speed.','dimensionless',quarantined);
   D('kaw-maxwellian-factor','KAW Maxwellian factor','exp(−x_e²/2)','exp(-x_e^2/2)','\\exp(-x_e^2/2)','Normalized Maxwellian factor returned by the current Landau-accessibility diagnostic.','dimensionless',quarantined);
   D('maxwellian-distribution-function','Maxwellian distribution function','f_M','f_M','f_M','Maxwellian function appearing only through its normalized ratio in the current accessibility equation.','dimensionless',{scope:'formula-local',...quarantined});
   D('kaw-e-over-b-ratio','KAW E/B diagnostic ratio','R_EB','R_EB','R_{EB}','Observed E/B speed divided by supplied reduced-model parallel phase speed.','dimensionless',quarantined);
-  D('kaw-parallel-to-perpendicular-electric-field-ratio','KAW parallel/perpendicular electric-field ratio','|E∥/E⊥|','|E_parallel/E_perpendicular|','|E_\\parallel/E_\\perp|','Ratio returned by the current reduced Padé-style KAW parallel-electric scaling.','dimensionless',quarantined);
+  D('kaw-parallel-to-perpendicular-electric-field-ratio','Reduced KAW parallel/perpendicular electric-field ratio','|E∥/E⊥|','|E_parallel/E_perpendicular|','|E_\\parallel/E_\\perp|','Reduced warm/kinetic low-FLR ratio |k_parallel k_perpendicular| rho_s^2 with the ion-sound pressure contribution retained.','dimensionless',{conventionNotes:['Not a full kinetic or all-k_perpendicular polarization relation; ion FLR, electron-inertial polarization, and kinetic damping are omitted.']});
 
-  // Hellinger fit symbols are metadata-only placeholders for quarantined coefficients.
+  // Hellinger source verification applies only to the proton-cyclotron and parallel-firehose branches.
   const hellinger = [
     ['proton-cyclotron','Proton-cyclotron'],
     ['mirror','Mirror'],
@@ -1345,14 +1345,17 @@ button{color:inherit}
     ['oblique-firehose','Oblique-firehose'],
   ];
   for (const [idPart, namePart] of hellinger) {
-    D('hellinger-' + idPart + '-threshold-anisotropy', 'Hellinger ' + namePart + ' threshold anisotropy', 'A_th', 'A_th_' + idPart, 'A_{th}', 'Threshold anisotropy returned by the current Hellinger ' + idPart + ' fit.', 'dimensionless', {scope:'formula-local',...quarantined});
-    D('hellinger-' + idPart + '-margin', 'Hellinger ' + namePart + ' contour margin', 'margin', 'margin_' + idPart, '\\mathrm{margin}', 'Signed distance from the current Hellinger ' + idPart + ' contour in anisotropy coordinates.', 'dimensionless', {scope:'formula-local',...quarantined});
-    D('hellinger-' + idPart + '-fit-amplitude', 'Hellinger ' + namePart + ' fit amplitude', 'a', 'a_' + idPart, 'a', 'Amplitude coefficient role in the current Hellinger ' + idPart + ' fit; the numerical value and provenance remain in scientific quarantine.', 'dimensionless', {scope:'formula-local',...quarantined});
-    D('hellinger-' + idPart + '-fit-exponent', 'Hellinger ' + namePart + ' fit exponent', 'b', 'b_' + idPart, 'b', 'Exponent role in the current Hellinger ' + idPart + ' fit; the numerical value and provenance remain in scientific quarantine.', 'dimensionless', {scope:'formula-local',...quarantined});
+    const sourceVerified = idPart === 'proton-cyclotron' || idPart === 'parallel-firehose';
+    const statusOptions = sourceVerified ? {} : quarantined;
+    const provenanceSuffix = sourceVerified ? ' Source fit verified to Hellinger et al. (2006).' : ' Numerical value and provenance remain in scientific quarantine.';
+    D('hellinger-' + idPart + '-threshold-anisotropy', 'Hellinger ' + namePart + ' threshold anisotropy', 'A_th', 'A_th_' + idPart, 'A_{th}', 'Threshold anisotropy returned by the current Hellinger ' + idPart + ' fit.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
+    D('hellinger-' + idPart + '-margin', 'Hellinger ' + namePart + ' contour margin', 'margin', 'margin_' + idPart, '\\mathrm{margin}', 'Signed distance from the current Hellinger ' + idPart + ' contour in anisotropy coordinates.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
+    D('hellinger-' + idPart + '-fit-amplitude', 'Hellinger ' + namePart + ' fit amplitude', 'a', 'a_' + idPart, 'a', 'Amplitude coefficient role in the current Hellinger ' + idPart + ' fit.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
+    D('hellinger-' + idPart + '-fit-exponent', 'Hellinger ' + namePart + ' fit exponent', 'b', 'b_' + idPart, 'b', 'Exponent role in the current Hellinger ' + idPart + ' fit.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
   }
-  D('hellinger-proton-cyclotron-beta-shift','Hellinger proton-cyclotron beta shift','β₀','beta_0_pc','\\beta_0','Beta-shift role in the current proton-cyclotron fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
+  D('hellinger-proton-cyclotron-beta-shift','Hellinger proton-cyclotron beta shift','β₀','beta_0_pc','\\beta_0','Source-verified beta-shift coefficient beta0=-0.0004 in the proton-cyclotron fit.','dimensionless',{scope:'formula-local'});
   D('hellinger-mirror-beta-shift','Hellinger mirror beta shift','β₀','beta_0_mirror','\\beta_0','Beta-shift role in the current mirror fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
-  D('hellinger-parallel-firehose-beta-offset','Hellinger parallel-firehose beta offset','β₀','beta_0_parallel_firehose','\\beta_0','Beta-offset role in the current parallel-firehose fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
+  D('hellinger-parallel-firehose-beta-offset','Hellinger parallel-firehose beta offset','β₀','beta_0_parallel_firehose','\\beta_0','Source-verified beta-offset coefficient beta0=0.59; it is the real-valued branch boundary, not a physical threshold.','dimensionless',{scope:'formula-local'});
   D('hellinger-oblique-firehose-beta-shift','Hellinger oblique-firehose beta shift','β₀','beta_0_oblique_firehose','\\beta_0','Beta-shift role in the current oblique-firehose fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
 
   const symbols = {};
@@ -1368,7 +1371,7 @@ button{color:inherit}
       latex,
       definition,
       quantityType,
-      canonicalSiUnit: quantity.canonicalSiUnit,
+      canonicalSiUnit: options.canonicalSiUnit || quantity.canonicalSiUnit,
       productionUnit: options.productionUnit || quantity.productionUnit || quantity.canonicalSiUnit,
       dimensionalStatus: quantity.dimensionalStatus,
       dimensionless: quantity.dimensionless,
@@ -1418,8 +1421,8 @@ button{color:inherit}
     {
       id:'frequency',
       title:'Cyclic and angular frequency',
-      summary:'Symbols beginning with f denote cyclic frequency in hertz. Symbols using omega or capital Omega denote angular frequency in radians per second; the corresponding calculator equations and definitions retain the relevant species and model interpretation.',
-      symbolIds:['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-plasma-frequency','electron-plasma-angular-frequency','ion-cyclotron-frequency','ion-cyclotron-angular-frequency'],
+      summary:'Symbols beginning with f denote cyclic frequency in hertz. Symbols using omega or capital Omega denote angular frequency in radians per second. Collision nu quantities are characteristic rates in inverse seconds, not cyclic oscillation frequencies, and receive no 2 pi conversion.',
+      symbolIds:['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-plasma-frequency','electron-plasma-angular-frequency','ion-cyclotron-frequency','ion-cyclotron-angular-frequency','electron-ion-collision-frequency','ion-ion-collision-frequency'],
     },
     {
       id:'parallel-perpendicular',
@@ -1502,7 +1505,7 @@ button{color:inherit}
   const REF = Object.freeze({
     nrl: { label: 'NRL Plasma Formulary (2023)', url: 'https://www.nrl.navy.mil/News-Media/Publications/' },
     codata: { label: 'NIST CODATA 2022 constants', url: 'https://physics.nist.gov/cuu/Constants/' },
-    hellinger: { label: 'Hellinger et al. (2006), GRL 33, L09101', url: 'https://doi.org/10.1029/2006GL025925' },
+    hellinger: { label: 'Hellinger et al. (2006), Geophysical Research Letters 33, L09101, DOI: 10.1029/2006GL025925', url: 'https://doi.org/10.1029/2006GL025925' },
     hasegawaMirror: { label: 'Hasegawa (1969), Physics of Fluids 12, 2642', url: 'https://doi.org/10.1063/1.1692407' },
     pokhotelovMirror: { label: 'Pokhotelov et al. (2004), JGR 109, A09213', url: 'https://doi.org/10.1029/2004JA010568' },
     cgl: { label: 'Chew, Goldberger & Low (1956), Proc. R. Soc. A 236', url: 'https://doi.org/10.1098/rspa.1956.0116' },
@@ -1512,8 +1515,20 @@ button{color:inherit}
     hasegawaChen: { label: 'Hasegawa & Chen (1976), Physics of Fluids 19, 1924', url: 'https://doi.org/10.1063/1.861427' },
     lysakLotko: { label: 'Lysak & Lotko (1996), JGR 101, 5085', url: 'https://doi.org/10.1029/95JA03712' },
     hollweg: { label: 'Hollweg (1999), JGR 104, 14811', url: 'https://doi.org/10.1029/1998JA900132' },
-    stasiewicz: { label: 'Stasiewicz et al. (2000), Space Science Reviews 92, 423', url: 'https://doi.org/10.1023/A:1005207202143' },
+    stasiewicz: { label: 'Stasiewicz et al. (2000), Space Science Reviews 92, 423 (review)', url: 'https://doi.org/10.1023/A:1005207202143' },
   });
+
+  const HELLINGER_SOURCE_DOMAIN = Object.freeze({
+    source: REF.hellinger,
+    contour: Object.freeze({ gammaMaxOverOmegaP: 1e-3 }),
+    betaParallelProtonInterval: Object.freeze([0.01, 30]),
+    anisotropyInterval: Object.freeze([0.1, 10]),
+    electronDistribution: 'Maxwellian',
+    electronBeta: 1,
+    protonDistribution: 'bi-Maxwellian',
+    omegaPeOverOmegaCe: 100,
+  });
+  const RATE_DISPLAY = Object.freeze({ displayUnit: 's⁻¹', unitSemantics: 'rate' });
 
   const I = (key, label, symbol, quantity, defaultValue, options = {}) => ({
     key, label, symbol, quantity, default: defaultValue, ...options,
@@ -1541,6 +1556,9 @@ button{color:inherit}
       references: options.references || [REF.nrl, REF.codata],
       keywords: options.keywords || [],
       note: options.note || '',
+      sourceDomain: options.sourceDomain || null,
+      scientificReviewStatus: options.scientificReviewStatus || 'UNCHANGED_REVIEW_STATUS',
+      decisionIds: options.decisionIds || [],
     });
   }
 
@@ -1590,18 +1608,18 @@ button{color:inherit}
     entry('magnetization-parameter','Dimensionless regimes','Cold magnetization parameter','σ = B²/(μ<sub>0</sub>ρc²)','\\sigma=B^2/(\\mu_0\\rho c^2)','Ratio of magnetic energy scale to ion rest-mass energy density.',[common.B(),common.ni(),common.mu()],x=>[O('Magnetization','σ','dimensionless',P.magnetizationSigma(x.B,x.ni,x.mu)),O('Relativistic Alfvén speed','vA,rel','speed',P.relativisticAlfvenSpeed(x.B,x.ni,x.mu))],{assumptions:['Cold rest-mass density; no thermal enthalpy.']}),
     entry('electron-magnetization-ratio','Dimensionless regimes','Electron gyro-to-plasma ratio','Ω<sub>ce</sub>/ω<sub>pe</sub>','\\Omega_{ce}/\\omega_{pe}','Compares electron magnetization and collective electrostatic response.',[common.B(),common.ne()],x=>{const oc=P.electronGyroAngular(x.B),op=P.electronPlasmaAngular(x.ne);return[O('Frequency ratio','Ωce/ωpe','dimensionless',oc/op),O('Inverse ratio','ωpe/Ωce','dimensionless',op/oc)];}),
     entry('plasma-coupling','Dimensionless regimes','Coulomb coupling parameter','Γ<sub>s</sub> = q<sub>s</sub>²/(4πε<sub>0</sub>akT<sub>s</sub>), &nbsp; a=(3/4πn)<sup>1/3</sup>','\\Gamma_s=q_s^2/(4\\pi\\epsilon_0akT_s)','Weak- versus strong-coupling diagnostic for a single species.',[I('ns','Species density','ns','density',n(5),{min:0}),I('Ts','Species temperature','Ts','temperature',10,{min:0}),I('q','Charge magnitude','|qs|/e','dimensionless',1,{min:0})],x=>{const g=P.plasmaCouplingParameter(x.ns,x.Ts,x.q);return[O('Coupling parameter','Γ','dimensionless',g),T('Regime',g<0.01?'Weakly coupled':g<1?'Moderately coupled':'Strongly coupled')];},{assumptions:['Classical one-component estimate.']}),
-    entry('electron-hall-parameter','Dimensionless regimes','Electron Hall parameter','χ<sub>e</sub> = Ω<sub>ce</sub>/ν<sub>ei</sub>','\\chi_e=\\Omega_{ce}/\\nu_{ei}','Electron magnetization relative to electron-ion collisions.',[common.B(),common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),om=P.electronGyroAngular(x.B);return[O('Electron-ion collision frequency','νei','frequency',nu),O('Electron Hall parameter','χe','dimensionless',om/nu)];}),
-    entry('ion-hall-parameter','Dimensionless regimes','Ion Hall parameter','χ<sub>i</sub> = Ω<sub>ci</sub>/ν<sub>ii</sub>','\\chi_i=\\Omega_{ci}/\\nu_{ii}','Ion magnetization relative to ion-ion collisions.',[common.B(),common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda),om=P.ionGyroAngular(x.B,x.Z,x.mu);return[O('Ion-ion collision frequency','νii','frequency',nu),O('Ion Hall parameter','χi','dimensionless',om/nu)];}),
+    entry('electron-hall-parameter','Dimensionless regimes','Electron Hall parameter','χ<sub>e</sub> = Ω<sub>ce</sub>/ν<sub>ei</sub>','\\chi_e=\\Omega_{ce}/\\nu_{ei}','Electron magnetization relative to the adopted characteristic electron-ion collision rate.',[common.B(),common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),om=P.electronGyroAngular(x.B);return[O('Characteristic electron-ion collision rate','νei','frequency',nu,RATE_DISPLAY),O('Electron Hall parameter','χe','dimensionless',om/nu)];},{assumptions:['νei is a rate in s⁻¹; no cyclic-frequency conversion is applied.','The Hall collision/gyro convention remains under SD-09 source review.'],decisionIds:['SD-02','SD-09']}),
+    entry('ion-hall-parameter','Dimensionless regimes','Ion Hall parameter','χ<sub>i</sub> = Ω<sub>ci</sub>/ν<sub>ii</sub>','\\chi_i=\\Omega_{ci}/\\nu_{ii}','Ion magnetization relative to the adopted characteristic ion-ion collision rate.',[common.B(),common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda),om=P.ionGyroAngular(x.B,x.Z,x.mu);return[O('Characteristic ion-ion collision rate','νii','frequency',nu,RATE_DISPLAY),O('Ion Hall parameter','χi','dimensionless',om/nu)];},{assumptions:['νii is a rate in s⁻¹; no cyclic-frequency conversion is applied.','The Hall collision/gyro convention remains under SD-09 source review.'],decisionIds:['SD-02','SD-09']}),
     entry('knudsen-number','Dimensionless regimes','Knudsen number','Kn = λ<sub>mfp</sub>/L','Kn=\\lambda_{mfp}/L','Compares a collisional mean free path with a macroscopic system scale.',[I('mfp','Mean free path','λmfp','length',L(100000),{min:0}),I('Lsys','System scale','L','length',L(1000000),{min:0})],x=>{const kn=P.knudsenNumber(x.mfp,x.Lsys);return[O('Knudsen number','Kn','dimensionless',kn),T('Interpretation',kn<0.01?'Continuum-like':kn<0.1?'Weakly nonlocal':'Kinetic/nonlocal effects likely')];}),
 
     // Collisions and transport
-    entry('coulomb-log-ei','Collisions and transport','Electron-ion Coulomb logarithm','ln Λ ≈ ln(λ<sub>D</sub>/b<sub>min</sub>)','\\ln\\Lambda\\approx\\ln(\\lambda_D/b_{min})','First-principles weak-coupling estimate using the larger of classical 90° and quantum diffraction cutoffs.',[common.ne(),common.Te(),common.Ti(),common.Z(),common.mu()],x=>[O('Coulomb logarithm','lnΛei','dimensionless',P.coulombLogElectronIon(x.ne,x.Te,x.Ti,x.Z,x.mu))],{assumptions:['Fully ionized, weakly coupled plasma; screening set by combined Debye length.'],note:'For precision transport work, compare with the regime-specific NRL fit.'}),
-    entry('coulomb-log-ii','Collisions and transport','Ion-ion Coulomb logarithm','ln Λ<sub>ii</sub> ≈ ln(λ<sub>Di</sub>/b<sub>min</sub>)','\\ln\\Lambda_{ii}\\approx\\ln(\\lambda_{Di}/b_{min})','Ion-ion weak-coupling estimate for identical ions.',[common.ni(),common.Ti(),common.Z(),common.mu()],x=>[O('Coulomb logarithm','lnΛii','dimensionless',P.coulombLogIonIon(x.ni,x.Ti,x.Z,x.mu))],{assumptions:['Identical ions; weak coupling.']}),
-    entry('electron-ion-collision-frequency','Collisions and transport','Electron-ion collision frequency','ν<sub>ei</sub> = 4√(2π)n<sub>e</sub>Ze⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>e</sub><sup>1/2</sup>(kT<sub>e</sub>)<sup>3/2</sup>]','\\nu_{ei}=\\frac{4\\sqrt{2\\pi}n_eZe^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_e^{1/2}(kT_e)^{3/2}}','Electron-ion momentum-transfer collision frequency.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>[O('Collision frequency','νei','frequency',P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda)),O('Collision time','τei','time',1/P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda))]),
-    entry('ion-ion-collision-frequency','Collisions and transport','Ion-ion collision frequency','ν<sub>ii</sub> = 4√π n<sub>i</sub>Z⁴e⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>i</sub><sup>1/2</sup>(kT<sub>i</sub>)<sup>3/2</sup>]','\\nu_{ii}=\\frac{4\\sqrt{\\pi}n_iZ^4e^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_i^{1/2}(kT_i)^{3/2}}','Identical-ion collision frequency.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>[O('Collision frequency','νii','frequency',P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda)),O('Collision time','τii','time',1/P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda))]),
-    entry('electron-mean-free-path','Collisions and transport','Electron collisional mean free path','λ<sub>ei</sub> = v<sub>Te</sub>/ν<sub>ei</sub>','\\lambda_{ei}=v_{Te}/\\nu_{ei}','Electron mean free path using vTe = √(kTe/me).',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const vt=P.electronThermalSpeed(x.Te),nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda);return[O('Thermal speed','vTe','speed',vt),O('Collision frequency','νei','frequency',nu),O('Mean free path','λei','length',vt/nu)];}),
-    entry('ion-mean-free-path','Collisions and transport','Ion collisional mean free path','λ<sub>ii</sub> = v<sub>Ti</sub>/ν<sub>ii</sub>','\\lambda_{ii}=v_{Ti}/\\nu_{ii}','Ion mean free path using vTi = √(kTi/mi).',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const vt=P.ionThermalSpeed(x.Ti,x.mu),nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda);return[O('Thermal speed','vTi','speed',vt),O('Collision frequency','νii','frequency',nu),O('Mean free path','λii','length',vt/nu)];}),
-    entry('spitzer-transport','Collisions and transport','Spitzer resistive transport','η = m<sub>e</sub>ν<sub>ei</sub>/(n<sub>e</sub>e²), &nbsp; σ=1/η, &nbsp; η<sub>m</sub>=η/μ<sub>0</sub>','\\eta=m_e\\nu_{ei}/(n_ee^2),\\quad \\sigma=1/\\eta,\\quad \\eta_m=\\eta/\\mu_0','Classical resistivity, conductivity, and magnetic diffusivity derived from electron-ion collisions.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),eta=P.spitzerResistivity(x.ne,nu);return[O('Collision frequency','νei','frequency',nu),O('Resistivity','η','resistivity',eta),O('Conductivity','σ','conductivity',1/eta),O('Magnetic diffusivity','ηm','magneticDiffusivity',eta/C.vacuumPermeability)];},{assumptions:['Classical fully ionized plasma; scalar, unmagnetized Spitzer response.']}),
+    entry('coulomb-log-ei','Collisions and transport','Electron-ion impact-parameter Coulomb logarithm estimate','ln Λ = ln(λ<sub>D</sub>/b<sub>min</sub>), &nbsp; b<sub>min</sub>=max(b<sub>90</sub>,b<sub>quantum</sub>)','\\ln\\Lambda=\\ln(\\lambda_D/b_{min}),\\quad b_{min}=\\max(b_{90},b_{quantum})','Adopted impact-parameter Coulomb-logarithm estimate using the larger of the classical 90-degree and quantum-diffraction cutoffs.',[common.ne(),common.Te(),common.Ti(),common.Z(),common.mu()],x=>[O('Coulomb logarithm','lnΛei','dimensionless',P.coulombLogElectronIon(x.ne,x.Te,x.Ti,x.Z,x.mu))],{assumptions:['Fully ionized, weakly coupled plasma; screening is the combined electron-ion Debye length.','The relative thermal speed combines the electron and selected-ion thermal contributions; the reduced mass is used in the electron-ion impact parameters.'],note:'This explicit first-principles impact-parameter estimate is not claimed to equal every regime-specific fitted NRL expression.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-03']}),
+    entry('coulomb-log-ii','Collisions and transport','Ion-ion impact-parameter Coulomb logarithm estimate','ln Λ<sub>ii</sub> = ln(λ<sub>Di</sub>/b<sub>min</sub>), &nbsp; b<sub>min</sub>=max(b<sub>90</sub>,b<sub>quantum</sub>)','\\ln\\Lambda_{ii}=\\ln(\\lambda_{Di}/b_{min}),\\quad b_{min}=\\max(b_{90},b_{quantum})','Adopted impact-parameter Coulomb-logarithm estimate for identical ions.',[common.ni(),common.Ti(),common.Z(),common.mu()],x=>[O('Coulomb logarithm','lnΛii','dimensionless',P.coulombLogIonIon(x.ni,x.Ti,x.Z,x.mu))],{assumptions:['Identical selected ions; weak coupling; screening is the ion Debye length.','The identical-ion relative thermal speed and reduced mass define the 90-degree and quantum impact parameters.'],note:'This explicit first-principles impact-parameter estimate is not claimed to equal every regime-specific fitted NRL expression.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-03']}),
+    entry('electron-ion-collision-frequency','Collisions and transport','Electron-ion characteristic Coulomb collision rate','ν<sub>ei</sub> = 4√(2π)n<sub>e</sub>Ze⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>e</sub><sup>1/2</sup>(kT<sub>e</sub>)<sup>3/2</sup>]','\\nu_{ei}=\\frac{4\\sqrt{2\\pi}n_eZe^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_e^{1/2}(kT_e)^{3/2}}','Characteristic electron-ion Coulomb collision rate in the adopted NRL-style collision-time convention.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>[O('Characteristic collision rate','νei','frequency',P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),RATE_DISPLAY),O('Collision time','τei','time',1/P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda))],{assumptions:['νei is a rate in s⁻¹, not a cyclic oscillation frequency; no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('ion-ion-collision-frequency','Collisions and transport','Ion-ion characteristic Coulomb collision rate','ν<sub>ii</sub> = 4√π n<sub>i</sub>Z⁴e⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>i</sub><sup>1/2</sup>(kT<sub>i</sub>)<sup>3/2</sup>]','\\nu_{ii}=\\frac{4\\sqrt{\\pi}n_iZ^4e^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_i^{1/2}(kT_i)^{3/2}}','Characteristic identical-ion Coulomb collision rate in the adopted NRL-style collision-time convention.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>[O('Characteristic collision rate','νii','frequency',P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda),RATE_DISPLAY),O('Collision time','τii','time',1/P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda))],{assumptions:['νii is a rate in s⁻¹, not a cyclic oscillation frequency; no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('electron-mean-free-path','Collisions and transport','Electron collisional mean free path','λ<sub>ei</sub> = v<sub>Te</sub>/ν<sub>ei</sub>','\\lambda_{ei}=v_{Te}/\\nu_{ei}','Electron mean free path using vTe = √(kTe/me) and the adopted characteristic electron-ion collision rate.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const vt=P.electronThermalSpeed(x.Te),nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda);return[O('Thermal speed','vTe','speed',vt),O('Characteristic collision rate','νei','frequency',nu,RATE_DISPLAY),O('Mean free path','λei','length',vt/nu)];},{scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('ion-mean-free-path','Collisions and transport','Ion collisional mean free path','λ<sub>ii</sub> = v<sub>Ti</sub>/ν<sub>ii</sub>','\\lambda_{ii}=v_{Ti}/\\nu_{ii}','Ion mean free path using vTi = √(kTi/mi) and the adopted characteristic ion-ion collision rate.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const vt=P.ionThermalSpeed(x.Ti,x.mu),nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda);return[O('Thermal speed','vTi','speed',vt),O('Characteristic collision rate','νii','frequency',nu,RATE_DISPLAY),O('Mean free path','λii','length',vt/nu)];},{scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('spitzer-transport','Collisions and transport','Classical electron-ion collisional resistive transport','η<sub>coll</sub> = m<sub>e</sub>ν<sub>ei</sub>/(n<sub>e</sub>e²), &nbsp; σ=1/η<sub>coll</sub>, &nbsp; η<sub>m</sub>=η<sub>coll</sub>/μ<sub>0</sub>','\\eta_{coll}=m_e\\nu_{ei}/(n_ee^2),\\quad \\sigma=1/\\eta_{coll},\\quad \\eta_m=\\eta_{coll}/\\mu_0','Classical electron-ion collisional resistive transport derived from Alfvenica’s defined characteristic electron-ion collision rate.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),eta=P.spitzerResistivity(x.ne,nu);return[O('Characteristic collision rate','νei','frequency',nu,RATE_DISPLAY),O('Collisional resistivity','ηcoll','resistivity',eta),O('Conductivity','σ','conductivity',1/eta),O('Magnetic diffusivity','ηm','magneticDiffusivity',eta/C.vacuumPermeability)];},{assumptions:['Classical fully ionized plasma; scalar, unmagnetized electron-ion collisional relation.','Source-specific Spitzer or Braginskii parallel and perpendicular transport can contain additional coefficients depending on collision-time convention and plasma assumptions.'],keywords:['spitzer','resistivity','collisional transport'],note:'No 0.51 or generalized-Z transport coefficient is inserted.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-01','SD-02']}),
 
     // MHD and reconnection
     entry('shock-compression','MHD and reconnection','Adiabatic shock compression','r = [(γ+1)M²]/[(γ−1)M²+2]','r=\\frac{(\\gamma+1)M^2}{(\\gamma-1)M^2+2}','Hydrodynamic Rankine-Hugoniot density compression ratio.',[I('M','Upstream Mach number','M','dimensionless',3,{min:0}),I('gamma','Adiabatic index','γ','dimensionless',5/3,{min:1})],x=>[O('Compression ratio','r','dimensionless',P.shockCompressionRatio(x.M,x.gamma)),O('Strong-shock limit','r∞','dimensionless',(x.gamma+1)/(x.gamma-1))],{assumptions:['Plane, steady, adiabatic hydrodynamic shock; not a general oblique MHD shock solver.']}),
@@ -1622,17 +1640,17 @@ button{color:inherit}
     // Kinetic Alfvén waves
     entry('kaw-regime','Kinetic Alfvén waves','Kinetic versus inertial Alfvén regime','R = β<sub>e</sub>/(m<sub>e</sub>/m<sub>i</sub>)','R=\\beta_e/(m_e/m_i)','Classifies the electron-pressure versus electron-inertia regime using a deliberately broad transition band.',[common.ne(),common.Te(),common.B(),common.mu()],x=>{const be=P.speciesBeta(x.ne,x.Te,x.B),r=P.kawRegime(be,x.mu);return[O('Electron beta','βe','dimensionless',be),O('Regime ratio','R','dimensionless',r.ratio),T('Classification',r.label)];},{references:[REF.lysakLotko,REF.stasiewicz],assumptions:['Heuristic asymptotic classification: R<0.1 inertial, R>10 kinetic, otherwise transition.']}),
     entry('kaw-normalizations','Kinetic Alfvén waves','Kinetic-scale normalizations','k<sub>⊥</sub>ρ<sub>i</sub>, k<sub>⊥</sub>ρ<sub>s</sub>, k<sub>⊥</sub>d<sub>i</sub>, k<sub>⊥</sub>d<sub>e</sub>','k_\\perp\\rho_i,\\;k_\\perp\\rho_s,\\;k_\\perp d_i,\\;k_\\perp d_e','Computes the common dimensionless scale coordinates used in kinetic-range studies.',[I('kperp','Perpendicular wavenumber','k⊥','wavenumber',wn(0.01),{min:0}),common.ni(),common.ne(),common.B(),common.Te(),common.Ti(),common.Z(),common.mu()],x=>{const ri=P.ionGyroradius(x.Ti,x.B,x.Z,x.mu),rs=P.ionSoundGyroradius(x.Te,x.B,x.Z,x.mu),di=P.ionInertialLength(x.ni,x.Z,x.mu),de=P.electronInertialLength(x.ne);return[O('k⊥ρi','kρi','dimensionless',x.kperp*ri),O('k⊥ρs','kρs','dimensionless',x.kperp*rs),O('k⊥di','kdi','dimensionless',x.kperp*di),O('k⊥de','kde','dimensionless',x.kperp*de)];},{references:[REF.hasegawaChen,REF.lysakLotko,REF.stasiewicz]}),
-    entry('kaw-dispersion','Kinetic Alfvén waves','Reduced kinetic/inertial Alfvén dispersion','ω² = k<sub>∥</sub>²v<sub>A</sub>²(1+k<sub>⊥</sub>²ρ<sub>s</sub>²)/(1+k<sub>⊥</sub>²d<sub>e</sub>²)','\\omega^2=k_\\parallel^2v_A^2\\frac{1+k_\\perp^2\\rho_s^2}{1+k_\\perp^2d_e^2}','Reduced two-fluid Alfvén-wave dispersion retaining electron pressure and electron inertia.',[I('kpar','Parallel wavenumber','k∥','wavenumber',wn(0.0001),{min:0}),I('kperp','Perpendicular wavenumber','k⊥','wavenumber',wn(0.01),{min:0}),common.ni(),common.ne(),common.B(),common.Te(),common.Z(),common.mu()],x=>{const va=P.alfvenSpeed(x.B,x.ni,x.mu),rs=P.ionSoundGyroradius(x.Te,x.B,x.Z,x.mu),de=P.electronInertialLength(x.ne),d=P.reducedAlfvenDispersion(x.kpar,x.kperp,va,rs,de);return[O('Angular frequency','ω','angularFrequency',d.omega),O('Frequency','f','frequency',d.omega/PI2),O('Parallel phase speed','vph,∥','speed',d.phaseParallel),O('Dispersive factor','D','dimensionless',d.factor)];},{references:[REF.lysakLotko,REF.hollweg,REF.stasiewicz],assumptions:['Low-frequency, anisotropic reduced two-fluid model; not a kinetic dispersion solver.','The numerator represents electron-pressure dispersion and the denominator electron-inertial dispersion.']}),
+    entry('kaw-dispersion','Kinetic Alfvén waves','Reduced low-frequency two-fluid dispersive-Alfvén approximation','ω² = k<sub>∥</sub>²v<sub>A</sub>²(1+k<sub>⊥</sub>²ρ<sub>s</sub>²)/(1+k<sub>⊥</sub>²d<sub>e</sub>²)','\\omega^2=k_\\parallel^2v_A^2\\frac{1+k_\\perp^2\\rho_s^2}{1+k_\\perp^2d_e^2}','Reduced low-frequency two-fluid dispersive-Alfvén approximation incorporating an electron-pressure ρs term and electron inertia de.',[I('kpar','Parallel wavenumber','k∥','wavenumber',wn(0.0001),{min:0}),I('kperp','Perpendicular wavenumber','k⊥','wavenumber',wn(0.01),{min:0}),common.ni(),common.ne(),common.B(),common.Te(),common.Z(),common.mu()],x=>{const va=P.alfvenSpeed(x.B,x.ni,x.mu),rs=P.ionSoundGyroradius(x.Te,x.B,x.Z,x.mu),de=P.electronInertialLength(x.ne),d=P.reducedAlfvenDispersion(x.kpar,x.kperp,va,rs,de);return[O('Angular frequency','ω','angularFrequency',d.omega),O('Frequency','f','frequency',d.omega/PI2),O('Parallel phase speed','vph,∥','speed',d.phaseParallel),O('Dispersive factor','D','dimensionless',d.factor)];},{references:[REF.lysakLotko,REF.hollweg,REF.stasiewicz],assumptions:['Low-frequency ordering ω ≪ Ωci is qualitative; no numerical cutoff is imposed.','The numerator represents the electron-pressure ρs contribution and the denominator electron inertia de.','This combined reduced form is an approximation with more specific closures in warm kinetic and inertial limits; it is not the full kinetic Lysak–Lotko dispersion relation.'],note:'ω/Ωci is exposed as a neutral diagnostic, not a pass/fail threshold.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-04']}),
     entry('kaw-landau-accessibility','Kinetic Alfvén waves','Electron Landau-resonance accessibility','x<sub>e</sub> = v<sub>ph,∥</sub>/v<sub>Te</sub>, &nbsp; f<sub>M</sub>(x)/f<sub>M</sub>(0)=e<sup>−x²/2</sup>','x_e=v_{ph,\\parallel}/v_{Te},\\quad f_M(x)/f_M(0)=e^{-x^2/2}','Locates the resonant parallel speed within a Maxwellian electron distribution.',[I('vph','Parallel phase speed','vph,∥','speed',v(500),{signed:true}),common.Te()],x=>{const r=P.landauAccessibility(x.vph,x.Te);return[O('Electron thermal speed','vTe','speed',r.vTe),O('Resonant-speed ratio','xe','dimensionless',r.x),O('Maxwellian factor','exp(−xe²/2)','dimensionless',r.maxwellianFactor),T('Interpretation',r.x<1?'Resonance near the thermal core':r.x<3?'Resonance in the thermal-to-suprathermal range':'Resonance beyond 3 vTe')];},{references:[REF.hasegawaChen,REF.lysakLotko],assumptions:['Accessibility only; does not calculate a damping rate.','The Maxwellian factor uses the stated vTe = √(kTe/me) convention.']}),
     entry('kaw-eb-diagnostic','Kinetic Alfvén waves','KAW E/B diagnostic','R<sub>EB</sub> = (|δE<sub>⊥</sub>|/|δB<sub>⊥</sub>|)/v<sub>ph,∥</sub>','R_{EB}=\\frac{|\\delta E_\\perp|/|\\delta B_\\perp|}{v_{ph,\\parallel}}','Compares an observed E/B speed with a supplied or modelled parallel phase speed.',[I('dE','Perpendicular electric fluctuation','δE⊥','electricField',ef(1),{signed:true}),I('dB','Perpendicular magnetic fluctuation','δB⊥','magneticField',B(1),{signed:true}),I('vph','Reference phase speed','vph,∥','speed',v(500),{min:0})],x=>{const eb=P.phaseSpeedFromEoverB(x.dE,x.dB);return[O('Observed E/B speed','vEB','speed',eb),O('Normalized E/B ratio','REB','dimensionless',eb/x.vph)];},{references:[REF.stasiewicz,REF.hollweg],assumptions:['Frame, calibration, and polarization must be checked before wave-mode interpretation.','For an ideal shear-Alfvén polarization, |δE⊥|/|δB⊥| is interpreted as a parallel phase speed.']}),
-    entry('kaw-parallel-electric-field','Kinetic Alfvén waves','Reduced KAW parallel-electric ratio','|E<sub>∥</sub>/E<sub>⊥</sub>| ≈ (k<sub>∥</sub>/k<sub>⊥</sub>)(k<sub>⊥</sub>²ρ<sub>s</sub>²)/(1+k<sub>⊥</sub>²ρ<sub>s</sub>²)','|E_\\parallel/E_\\perp|\\approx(k_\\parallel/k_\\perp)\\frac{k_\\perp^2\\rho_s^2}{1+k_\\perp^2\\rho_s^2}','Reduced Padé-style estimate of parallel electric-field scaling in the kinetic-Alfvén limit.',[I('kpar','Parallel wavenumber','k∥','wavenumber',wn(0.0001),{min:0}),I('kperp','Perpendicular wavenumber','k⊥','wavenumber',wn(0.01),{min:0}),common.Te(),common.B(),common.Z(),common.mu()],x=>{const rs=P.ionSoundGyroradius(x.Te,x.B,x.Z,x.mu),ratio=P.reducedKawParallelElectricRatio(x.kpar,x.kperp,rs);return[O('Ion-sound gyroradius','ρs','length',rs),O('k⊥ρs','kρs','dimensionless',x.kperp*rs),O('Parallel/perpendicular ratio','|E∥/E⊥|','dimensionless',ratio)];},{references:[REF.hollweg,REF.stasiewicz,REF.lysakLotko],assumptions:['Reduced anisotropic, low-beta kinetic-Alfvén scaling; this is not an eigenfunction from a general kinetic dispersion solver.','The expression recovers the long-wavelength k∥k⊥ρs² scaling and saturates at |k∥/k⊥|; electron inertia, ion FLR structure, and kinetic damping are omitted.'],note:'Use this as an order-of-magnitude scaling only. For quantitative polarization, solve the appropriate hot-plasma or gyrokinetic dispersion relation.'}),
+    entry('kaw-parallel-electric-field','Kinetic Alfvén waves','Reduced KAW parallel electric-field ratio','|E<sub>∥</sub>/E<sub>⊥</sub>| ≈ |k<sub>∥</sub>k<sub>⊥</sub>|ρ<sub>s</sub>²','|E_\\parallel/E_\\perp|\\approx|k_\\parallel k_\\perp|\\rho_s^2','Reduced warm/kinetic low-FLR parallel electric-field relation retaining the ρs electron-pressure contribution.',[I('kpar','Parallel wavenumber','k∥','wavenumber',wn(0.0001),{min:0}),I('kperp','Perpendicular wavenumber','k⊥','wavenumber',wn(0.01),{min:0}),common.Te(),common.B(),common.Z(),common.mu()],x=>{const rs=P.ionSoundGyroradius(x.Te,x.B,x.Z,x.mu),ratio=P.reducedKawParallelElectricRatio(x.kpar,x.kperp,rs);return[O('Ion-sound gyroradius','ρs','length',rs),O('k⊥ρs','kρs','dimensionless',x.kperp*rs),O('Parallel/perpendicular ratio','|E∥/E⊥|','dimensionless',ratio)];},{references:[REF.lysakLotko,REF.hollweg,REF.stasiewicz],assumptions:['Low-frequency Alfvénic ordering and the low-FLR regime are assumed.','The ρs pressure contribution is retained while finite-ion-gyroradius and electron-inertial polarization corrections are omitted.','Kinetic damping is not included; this is not a full kinetic polarization relation or a general all-kperp formula.'],note:'Apply only as a reduced low-FLR polarization estimate; no arbitrary beta or kperp cutoff is imposed.',scientificReviewStatus:'RESOLVED_SOURCE_CORRECTED',decisionIds:['SD-10']}),
 
     // Instability thresholds
     entry('fluid-firehose','Instability thresholds','Classical fluid firehose criterion','β<sub>∥</sub> − β<sub>⊥</sub> > 2','\\beta_\\parallel-\\beta_\\perp>2','CGL fluid firehose threshold for a pressure-anisotropic species.',[I('n','Species density','n','density',n(5),{min:0}),I('Tpar','Parallel temperature','T∥','temperature',20,{min:0}),I('Tperp','Perpendicular temperature','T⊥','temperature',10,{min:0}),common.B()],x=>{const bp=P.speciesBeta(x.n,x.Tpar,x.B),bt=P.speciesBeta(x.n,x.Tperp,x.B),r=P.fluidFirehoseCriterion(bp,bt);return[O('Parallel beta','β∥','dimensionless',bp),O('Perpendicular beta','β⊥','dimensionless',bt),O('Criterion','β∥−β⊥','dimensionless',r.criterion),O('Margin to threshold','margin','dimensionless',r.margin),T('Result',r.exceeded?'Fluid threshold exceeded':'Fluid threshold not exceeded')];},{references:[REF.cgl],assumptions:['Single-fluid CGL criterion; not a kinetic growth-rate calculation.']}),
     entry('fluid-mirror','Instability thresholds','Simplified mirror criterion','β<sub>⊥</sub>(T<sub>⊥</sub>/T<sub>∥</sub>−1) > 1','\\beta_\\perp(T_\\perp/T_\\parallel-1)>1','Long-wavelength single-species mirror threshold.',[I('n','Species density','n','density',n(15),{min:0}),I('Tpar','Parallel temperature','T∥','temperature',100,{min:0}),I('Tperp','Perpendicular temperature','T⊥','temperature',300,{min:0}),common.B()],x=>{const b=P.speciesBeta(x.n,x.Tperp,x.B),a=x.Tperp/x.Tpar,r=P.fluidMirrorCriterion(b,a);return[O('Perpendicular beta','β⊥','dimensionless',b),O('Anisotropy','T⊥/T∥','dimensionless',a),O('Criterion','C','dimensionless',r.criterion),O('Margin to threshold','margin','dimensionless',r.margin),T('Result',r.exceeded?'Simplified threshold exceeded':'Simplified threshold not exceeded')];},{references:[REF.hasegawaMirror,REF.pokhotelovMirror],assumptions:['Single species, long wavelength; multi-species and finite-Larmor-radius corrections omitted.']}),
-    entry('hellinger-proton-cyclotron','Instability thresholds','Hellinger proton-cyclotron contour','A = 1 + 0.43/(β<sub>∥p</sub> + 0.0004)<sup>0.42</sup>','A=1+0.43/(\\beta_{\\parallel p}+0.0004)^{0.42}','Approximate γmax = 10⁻³ Ωp proton-cyclotron contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',1,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',1.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,0.43,0.42,-0.0004);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','A−Ath','dimensionless',x.A-th),T('Relative to contour',x.A>th?'Above contour':'Below contour')];},{references:[REF.hellinger],assumptions:['Fit domain 0.01 ≤ β∥p ≤ 30, bi-Maxwellian protons, βe=1, ωpe/Ωce=100.']}),
+    entry('hellinger-proton-cyclotron','Instability thresholds','Hellinger proton-cyclotron contour','A = 1 + 0.43/(β<sub>∥p</sub> + 0.0004)<sup>0.42</sup>','A=1+0.43/(\\beta_{\\parallel p}+0.0004)^{0.42}','Source-verified γmax = 10⁻³ Ωp proton-cyclotron fit from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',1,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',1.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,0.43,0.42,-0.0004);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','A−Ath','dimensionless',x.A-th),T('Relative to contour',x.A>th?'Above contour':'Below contour')];},{references:[REF.hellinger],assumptions:['γmax = 10⁻³ Ωp contour; 0.01 ≤ β∥p ≤ 30 and 0.1 ≤ T⊥p/T∥p ≤ 10.','Maxwellian electrons with βe=1; bi-Maxwellian protons; ωpe/Ωce=100.'],sourceDomain:HELLINGER_SOURCE_DOMAIN,scientificReviewStatus:'RESOLVED_SOURCE_VERIFIED',decisionIds:['SD-05']}),
     entry('hellinger-mirror','Instability thresholds','Hellinger mirror contour','A = 1 + 0.77/(β<sub>∥p</sub> + 0.016)<sup>0.76</sup>','A=1+0.77/(\\beta_{\\parallel p}+0.016)^{0.76}','Approximate γmax = 10⁻³ Ωp mirror contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',1,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',1.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,0.77,0.76,-0.016);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','A−Ath','dimensionless',x.A-th),T('Relative to contour',x.A>th?'Above contour':'Below contour')];},{references:[REF.hellinger],assumptions:['Fit domain and model assumptions follow Hellinger et al. (2006).']}),
-    entry('hellinger-parallel-firehose','Instability thresholds','Hellinger parallel-firehose contour','A = 1 − 0.47/(β<sub>∥p</sub> − 0.59)<sup>0.53</sup>','A=1-0.47/(\\beta_{\\parallel p}-0.59)^{0.53}','Approximate γmax = 10⁻³ Ωp parallel-firehose contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',2,{min:0.591}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',0.6,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,-0.47,0.53,0.59);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','Ath−A','dimensionless',th-x.A),T('Relative to contour',x.A<th?'Below contour':'Above contour')];},{references:[REF.hellinger],assumptions:['Fit is undefined for β∥p ≤ 0.59; model assumptions follow Hellinger et al. (2006).']}),
+    entry('hellinger-parallel-firehose','Instability thresholds','Hellinger parallel-firehose contour','A = 1 − 0.47/(β<sub>∥p</sub> − 0.59)<sup>0.53</sup>','A=1-0.47/(\\beta_{\\parallel p}-0.59)^{0.53}','Source-verified γmax = 10⁻³ Ωp parallel-firehose fit from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',2,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',0.6,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,-0.47,0.53,0.59);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','Ath−A','dimensionless',th-x.A),T('Relative to contour',x.A<th?'Below contour':'Above contour')];},{references:[REF.hellinger],assumptions:['γmax = 10⁻³ Ωp contour; source survey domain 0.01 ≤ β∥p ≤ 30 and 0.1 ≤ T⊥p/T∥p ≤ 10.','The fitted branch is real-valued only for β∥p > 0.59; the lower part of the generic source survey interval therefore cannot be evaluated by this branch.','Maxwellian electrons with βe=1; bi-Maxwellian protons; ωpe/Ωce=100.'],sourceDomain:Object.freeze({...HELLINGER_SOURCE_DOMAIN,fittedBranchRealValuedRequirement:'beta_parallel_p > 0.59'}),note:'β0=0.59 is the fit’s mathematical branch boundary, not itself a physical instability threshold.',scientificReviewStatus:'RESOLVED_SOURCE_VERIFIED',decisionIds:['SD-06']}),
     entry('hellinger-oblique-firehose','Instability thresholds','Hellinger oblique-firehose contour','A = 1 − 1.4/(β<sub>∥p</sub> + 0.11)','A=1-1.4/(\\beta_{\\parallel p}+0.11)','Approximate γmax = 10⁻³ Ωp oblique-firehose contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',2,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',0.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,-1.4,1.0,-0.11);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','Ath−A','dimensionless',th-x.A),T('Relative to contour',x.A<th?'Below contour':'Above contour')];},{references:[REF.hellinger],assumptions:['Fit domain and model assumptions follow Hellinger et al. (2006).']}),
   ];
 
@@ -1849,44 +1867,37 @@ button{color:inherit}
     'coulomb-log-ei': M(
       { ne:'electron-number-density', Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
       ['electron-ion-coulomb-logarithm'],
-      ['electron-ion-coulomb-logarithm','combined-debye-length','minimum-impact-parameter'],
-      'REVIEW_PENDING'
+      ['electron-ion-coulomb-logarithm','combined-debye-length','minimum-impact-parameter']
     ),
     'coulomb-log-ii': M(
       { ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
       ['ion-ion-coulomb-logarithm'],
-      ['ion-ion-coulomb-logarithm','ion-debye-length','minimum-impact-parameter'],
-      'REVIEW_PENDING'
+      ['ion-ion-coulomb-logarithm','ion-debye-length','minimum-impact-parameter']
     ),
     'electron-ion-collision-frequency': M(
       { ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
       ['electron-ion-collision-frequency','electron-ion-collision-time'],
-      ['electron-ion-collision-frequency','electron-number-density','ion-charge-state','elementary-charge-magnitude','electron-ion-coulomb-logarithm','vacuum-permittivity','electron-mass','boltzmann-constant','electron-temperature'],
-      'REVIEW_PENDING'
+      ['electron-ion-collision-frequency','electron-number-density','ion-charge-state','elementary-charge-magnitude','electron-ion-coulomb-logarithm','vacuum-permittivity','electron-mass','boltzmann-constant','electron-temperature']
     ),
     'ion-ion-collision-frequency': M(
       { ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', lnLambda:'ion-ion-coulomb-logarithm' },
       ['ion-ion-collision-frequency','ion-ion-collision-time'],
-      ['ion-ion-collision-frequency','ion-number-density','ion-charge-state','elementary-charge-magnitude','ion-ion-coulomb-logarithm','vacuum-permittivity','ion-mass','boltzmann-constant','ion-temperature'],
-      'REVIEW_PENDING'
+      ['ion-ion-collision-frequency','ion-number-density','ion-charge-state','elementary-charge-magnitude','ion-ion-coulomb-logarithm','vacuum-permittivity','ion-mass','boltzmann-constant','ion-temperature']
     ),
     'electron-mean-free-path': M(
       { ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
       ['electron-thermal-speed','electron-ion-collision-frequency','electron-mean-free-path'],
-      ['electron-mean-free-path','electron-thermal-speed','electron-ion-collision-frequency'],
-      'REVIEW_PENDING'
+      ['electron-mean-free-path','electron-thermal-speed','electron-ion-collision-frequency']
     ),
     'ion-mean-free-path': M(
       { ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', lnLambda:'ion-ion-coulomb-logarithm' },
       ['ion-thermal-speed','ion-ion-collision-frequency','ion-mean-free-path'],
-      ['ion-mean-free-path','ion-thermal-speed','ion-ion-collision-frequency'],
-      'REVIEW_PENDING'
+      ['ion-mean-free-path','ion-thermal-speed','ion-ion-collision-frequency']
     ),
     'spitzer-transport': M(
       { ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
       ['electron-ion-collision-frequency','electrical-resistivity','electrical-conductivity','magnetic-diffusivity'],
-      ['electrical-resistivity','electron-mass','electron-ion-collision-frequency','electron-number-density','elementary-charge-magnitude','electrical-conductivity','magnetic-diffusivity','vacuum-permeability'],
-      'REVIEW_PENDING'
+      ['electrical-resistivity','electron-mass','electron-ion-collision-frequency','electron-number-density','elementary-charge-magnitude','electrical-conductivity','magnetic-diffusivity','vacuum-permeability']
     ),
     'shock-compression': M(
       { M:'upstream-mach-number', gamma:'adiabatic-index' },
@@ -1967,8 +1978,7 @@ button{color:inherit}
     'kaw-dispersion': M(
       { kpar:'parallel-wavenumber', kperp:'perpendicular-wavenumber', ni:'ion-number-density', ne:'electron-number-density', B:'magnetic-field-magnitude', Te:'electron-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
       ['kaw-angular-frequency','kaw-frequency','kaw-parallel-phase-speed','kaw-dispersive-factor'],
-      ['kaw-angular-frequency','parallel-wavenumber','alfven-speed','perpendicular-wavenumber','ion-sound-gyroradius','electron-inertial-length'],
-      'REVIEW_PENDING'
+      ['kaw-angular-frequency','parallel-wavenumber','alfven-speed','perpendicular-wavenumber','ion-sound-gyroradius','electron-inertial-length']
     ),
     'kaw-landau-accessibility': M(
       { vph:'kaw-parallel-phase-speed', Te:'electron-temperature' },
@@ -1985,8 +1995,7 @@ button{color:inherit}
     'kaw-parallel-electric-field': M(
       { kpar:'parallel-wavenumber', kperp:'perpendicular-wavenumber', Te:'electron-temperature', B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
       ['ion-sound-gyroradius','perpendicular-wavenumber-ion-sound-gyroradius-product','kaw-parallel-to-perpendicular-electric-field-ratio'],
-      ['kaw-parallel-to-perpendicular-electric-field-ratio','parallel-wavenumber','perpendicular-wavenumber','ion-sound-gyroradius'],
-      'REVIEW_PENDING'
+      ['kaw-parallel-to-perpendicular-electric-field-ratio','parallel-wavenumber','perpendicular-wavenumber','ion-sound-gyroradius']
     ),
     'fluid-firehose': M(
       { n:'generic-species-number-density', Tpar:'parallel-species-temperature', Tperp:'perpendicular-species-temperature', B:'magnetic-field-magnitude' },
@@ -2003,8 +2012,7 @@ button{color:inherit}
     'hellinger-proton-cyclotron': M(
       { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
       ['hellinger-proton-cyclotron-threshold-anisotropy','proton-temperature-anisotropy','hellinger-proton-cyclotron-margin',null],
-      ['hellinger-proton-cyclotron-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-proton-cyclotron-fit-amplitude','hellinger-proton-cyclotron-fit-exponent','hellinger-proton-cyclotron-beta-shift'],
-      'REVIEW_PENDING'
+      ['hellinger-proton-cyclotron-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-proton-cyclotron-fit-amplitude','hellinger-proton-cyclotron-fit-exponent','hellinger-proton-cyclotron-beta-shift']
     ),
     'hellinger-mirror': M(
       { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
@@ -2015,8 +2023,7 @@ button{color:inherit}
     'hellinger-parallel-firehose': M(
       { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
       ['hellinger-parallel-firehose-threshold-anisotropy','proton-temperature-anisotropy','hellinger-parallel-firehose-margin',null],
-      ['hellinger-parallel-firehose-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-parallel-firehose-fit-amplitude','hellinger-parallel-firehose-fit-exponent','hellinger-parallel-firehose-beta-offset'],
-      'REVIEW_PENDING'
+      ['hellinger-parallel-firehose-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-parallel-firehose-fit-amplitude','hellinger-parallel-firehose-fit-exponent','hellinger-parallel-firehose-beta-offset']
     ),
     'hellinger-oblique-firehose': M(
       { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
@@ -2143,13 +2150,13 @@ button{color:inherit}
     },
     'kaw-low-frequency-ordering-review-pending': {
       id: 'kaw-low-frequency-ordering-review-pending',
-      severity: 'REVIEW_PENDING',
+      severity: 'CAUTION',
       formulaIds: ['kaw-dispersion'],
       condition: 'ω << Ω_ci',
-      message: 'A source-justified numerical warning threshold for the reduced model low-frequency ordering remains under review.',
-      rationale: 'The accepted repository sources state a low-frequency reduced-model ordering but do not establish a numerical cutoff for the asymptotic symbol <<.',
-      provenance: 'Reduced-model assumption already documented in the formula registry; numerical cutoff requires equation-level source review.',
-      reviewStatus: 'REVIEW_PENDING',
+      message: 'The reduced model assumes the qualitative ordering ω << Ω_ci; no numerical warning cutoff is assigned.',
+      rationale: 'The accepted model scope states a low-frequency ordering, while the asymptotic symbol << does not define a unique numerical cutoff.',
+      provenance: 'Resolved SD-04 model-scope decision; the neutral ω/Ω_ci diagnostic is retained without a pass/fail threshold.',
+      reviewStatus: 'RESOLVED_QUALITATIVE_ORDERING',
       warningType: 'PHYSICAL_MODEL',
       evidenceClass: null,
       active: false,
@@ -2157,7 +2164,7 @@ button{color:inherit}
     'hellinger-fit-domain-review-pending': {
       id: 'hellinger-fit-domain-review-pending',
       severity: 'REVIEW_PENDING',
-      formulaIds: ['hellinger-proton-cyclotron', 'hellinger-mirror', 'hellinger-parallel-firehose', 'hellinger-oblique-firehose'],
+      formulaIds: ['hellinger-mirror', 'hellinger-oblique-firehose'],
       condition: 'coefficient-specific beta domain and contour conditions verified from the primary source',
       message: 'Automated Hellinger fit-domain warnings remain pending primary-source verification.',
       rationale: 'The exact coefficient set, beta range, growth-rate contour, and ancillary model conditions must be verified together before enforcing a domain.',
@@ -2166,6 +2173,45 @@ button{color:inherit}
       warningType: 'PHYSICAL_MODEL',
       evidenceClass: null,
       active: false,
+    },
+    'hellinger-proton-cyclotron-beta-domain': {
+      id: 'hellinger-proton-cyclotron-beta-domain',
+      severity: 'CAUTION',
+      formulaIds: ['hellinger-proton-cyclotron'],
+      condition: 'beta_parallel_p < 0.01 or beta_parallel_p > 30',
+      message: 'The proton-cyclotron fit is being evaluated outside its source-verified parallel-proton-beta interval 0.01–30.',
+      rationale: 'Hellinger et al. (2006) tabulate this fit for the gamma_max = 10^-3 Omega_p contour over 0.01 <= beta_parallel_p <= 30.',
+      provenance: 'Hellinger et al. (2006), Geophysical Research Letters 33, L09101, DOI: 10.1029/2006GL025925.',
+      reviewStatus: 'RESOLVED_SOURCE_VERIFIED',
+      warningType: 'APPLICABILITY',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
+    },
+    'hellinger-parallel-firehose-beta-domain': {
+      id: 'hellinger-parallel-firehose-beta-domain',
+      severity: 'CAUTION',
+      formulaIds: ['hellinger-parallel-firehose'],
+      condition: 'beta_parallel_p > 30',
+      message: 'The parallel-firehose fit is being evaluated above its source-verified parallel-proton-beta survey interval, beta_parallel_p <= 30.',
+      rationale: 'The source survey covers 0.01 <= beta_parallel_p <= 30, but this fitted branch is separately real-valued only for beta_parallel_p > 0.59.',
+      provenance: 'Hellinger et al. (2006), Geophysical Research Letters 33, L09101, DOI: 10.1029/2006GL025925.',
+      reviewStatus: 'RESOLVED_SOURCE_VERIFIED',
+      warningType: 'APPLICABILITY',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
+    },
+    'hellinger-parallel-firehose-mathematical-domain': {
+      id: 'hellinger-parallel-firehose-mathematical-domain',
+      severity: 'INVALID',
+      formulaIds: ['hellinger-parallel-firehose'],
+      condition: 'beta_parallel_p <= 0.59',
+      message: 'The parallel-firehose fitted branch is not real-valued for beta_parallel_p <= 0.59 because its noninteger power has base beta_parallel_p - 0.59.',
+      rationale: 'The implemented exponent 0.53 is noninteger, so a real-valued result requires beta_parallel_p - 0.59 > 0. The value 0.59 is a mathematical branch boundary, not a physical instability threshold.',
+      provenance: 'Mathematical domain of the source-verified fitted expression A = 1 - 0.47/(beta_parallel_p - 0.59)^0.53.',
+      reviewStatus: 'CONFIRMED_LOGICAL_BOUNDARY',
+      warningType: 'NUMERICAL',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
     },
   });
 
@@ -2219,6 +2265,24 @@ button{color:inherit}
       }
     }
 
+    if (formula.id === 'hellinger-proton-cyclotron' && Number.isFinite(values.beta) && (values.beta < 0.01 || values.beta > 30)) {
+      warnings.push(warningRecord(definitions['hellinger-proton-cyclotron-beta-domain'], formula.id, {
+        quantity: 'beta_parallel_p', operator: 'outside-inclusive-interval', interval: [0.01, 30], actual: values.beta, result: true,
+      }));
+    }
+
+    if (formula.id === 'hellinger-parallel-firehose' && Number.isFinite(values.beta)) {
+      if (values.beta <= 0.59) {
+        warnings.push(warningRecord(definitions['hellinger-parallel-firehose-mathematical-domain'], formula.id, {
+          quantity: 'beta_parallel_p', operator: '<=', threshold: 0.59, actual: values.beta, result: true,
+        }));
+      } else if (values.beta > 30) {
+        warnings.push(warningRecord(definitions['hellinger-parallel-firehose-beta-domain'], formula.id, {
+          quantity: 'beta_parallel_p', operator: '>', threshold: 30, actual: values.beta, result: true,
+        }));
+      }
+    }
+
     return Object.freeze(warnings);
   }
 
@@ -2240,13 +2304,13 @@ button{color:inherit}
       denominator: omegaCi,
       denominatorUnit: 'rad s⁻¹',
       interpretation: 'Low-frequency ordering metric only; no numerical pass/fail threshold is assigned to <<.',
-      reviewStatus: 'REVIEW_PENDING_NUMERICAL_THRESHOLD',
+      reviewStatus: 'RESOLVED_QUALITATIVE_ORDERING',
       warningId: null,
     }]);
   }
 
   function reviewPendingFor(formulaId) {
-    return Object.freeze(Object.values(definitions).filter(definition => !definition.active && definition.formulaIds.includes(formulaId)));
+    return Object.freeze(Object.values(definitions).filter(definition => definition.reviewStatus === 'REVIEW_PENDING' && definition.formulaIds.includes(formulaId)));
   }
 
   return Object.freeze({ severities, warningTypes, definitions, evaluate, diagnostics, reviewPendingFor });
@@ -2703,25 +2767,25 @@ button{color:inherit}
     ),
 
     'coulomb-log-ei': I(
-      'The electron-ion Coulomb logarithm represents the logarithmic range of impact parameters that contribute to many small-angle Coulomb encounters. It packages scale separation between long-range shielding and short-range deflection or diffraction.',
+      'This electron-ion impact-parameter Coulomb-logarithm estimate represents the logarithmic range between combined Debye screening and the larger of classical 90-degree deflection and quantum-diffraction cutoffs.',
       'A comfortably positive value supports weak-coupling Fokker-Planck transport. Very small values indicate that the scale separation behind classical Coulomb-collision formulas is poor and a more complete treatment is needed.',
       ['Supply collision-frequency and Spitzer-transport calculations.', 'Check weak-coupling scale separation.', 'Compare classical and quantum short-distance cutoffs.'],
       ['electron-ion-collision-frequency', 'electron-debye-length', 'spitzer-transport']
     ),
     'coulomb-log-ii': I(
-      'The ion-ion Coulomb logarithm gives the effective range of impact parameters contributing to cumulative small-angle scattering between identical ions. It is the slowly varying factor in classical ion collision rates.',
+      'This identical-ion impact-parameter Coulomb-logarithm estimate uses ion Debye screening and the larger of classical 90-degree deflection and quantum-diffraction cutoffs.',
       'Use a species-appropriate density, charge, mass, and temperature. Small or nonpositive estimates signal that the weakly coupled binary-collision approximation is not trustworthy.',
       ['Supply ion-ion collision and mean-free-path estimates.', 'Compare ion collisionality across species.', 'Check classical weak-coupling validity.'],
       ['ion-ion-collision-frequency', 'ion-mean-free-path', 'plasma-coupling']
     ),
     'electron-ion-collision-frequency': I(
-      'The electron-ion collision frequency estimates the rate at which Coulomb encounters transfer electron momentum to ions. It controls classical electrical resistivity and contributes to thermalization and transport.',
+      'The characteristic electron-ion Coulomb collision rate follows Alfvenica’s adopted NRL-style collision-time convention. It has unit s⁻¹ and is not a cyclic oscillation frequency.',
       'The strong Te^−3/2 dependence makes hot tenuous space plasmas weakly collisional. Compare νei with wave, gyro, transit, and expansion frequencies rather than treating collisionality as an absolute label.',
       ['Estimate resistive and momentum-relaxation times.', 'Calculate electron mean free paths and Hall parameters.', 'Assess whether collisionless wave-particle physics is required.'],
       ['electron-mean-free-path', 'electron-hall-parameter', 'spitzer-transport']
     ),
     'ion-ion-collision-frequency': I(
-      'The ion-ion collision frequency estimates pitch-angle and momentum scattering among like ions. It controls how rapidly ion distributions relax toward isotropy and local equilibrium in a classical plasma.',
+      'The characteristic identical-ion Coulomb collision rate follows Alfvenica’s adopted NRL-style collision-time convention. It has unit s⁻¹ and is not a cyclic oscillation frequency.',
       'Compare νii with expansion, transit, gyro, and instability timescales. A small collision rate allows temperature anisotropy, beams, and non-Maxwellian structure to persist.',
       ['Estimate ion isotropization and relaxation times.', 'Calculate ion mean free paths and Hall parameters.', 'Assess persistence of ion anisotropy in the solar wind.'],
       ['ion-mean-free-path', 'ion-hall-parameter', 'hellinger-mirror']
@@ -2739,8 +2803,8 @@ button{color:inherit}
       ['knudsen-number', 'ion-ion-collision-frequency', 'fluid-firehose']
     ),
     'spitzer-transport': I(
-      'Spitzer transport converts electron-ion collisionality into classical electrical resistivity, conductivity, and magnetic diffusivity for a fully ionized plasma. It supplies the resistive scale used in classical MHD reconnection and diffusion estimates.',
-      'Use it only when classical Coulomb collisions dominate. Anomalous scattering, turbulence, partial ionization, strong magnetization, and kinetic electron physics can make the effective transport very different.',
+      'This calculator evaluates classical electron-ion collisional resistive transport through eta_coll=m_e nu_ei/(n_e e²), plus its reciprocal conductivity and SI magnetic diffusivity.',
+      'It is not an unqualified complete scalar Spitzer coefficient. Source-specific Spitzer or Braginskii parallel and perpendicular transport can carry additional coefficients tied to the collision-time convention and plasma assumptions.',
       ['Estimate classical magnetic diffusion.', 'Supply Lundquist and magnetic Reynolds numbers.', 'Build a Sweet-Parker reconnection estimate.'],
       ['lundquist-number', 'magnetic-reynolds-number', 'sweet-parker']
     ),
@@ -2832,8 +2896,8 @@ button{color:inherit}
       ['kaw-dispersion', 'kinetic-break-frequencies', 'ion-gyroradius']
     ),
     'kaw-dispersion': I(
-      'The reduced kinetic/inertial Alfvén dispersion shows how electron pressure raises the parallel phase speed through ρs while electron inertia modifies it through de. It connects large-scale shear-Alfvén behavior to dispersive sub-ion dynamics.',
-      'Use only within the stated anisotropic, low-frequency two-fluid ordering. The result does not include a kinetic damping rate, full ion finite-Larmor-radius response, temperature anisotropy, or arbitrary distribution functions.',
+      'The reduced low-frequency two-fluid dispersive-Alfvén approximation shows how an electron-pressure ρs term and electron inertia de modify the parallel phase speed.',
+      'Use only within the qualitative ordering ω much less than Ωci. This combined reduced form is not the full kinetic Lysak–Lotko dispersion relation and does not include kinetic damping or a general warm kinetic closure.',
       ['Estimate KAW or inertial-Alfvén phase speed.', 'Map model frequencies into the spacecraft frame.', 'Assess electron Landau-resonance accessibility.'],
       ['kaw-regime', 'kaw-landau-accessibility', 'doppler-shift']
     ),
@@ -2850,9 +2914,9 @@ button{color:inherit}
       ['eb-phase-speed', 'kaw-dispersion', 'field-energy-density']
     ),
     'kaw-parallel-electric-field': I(
-      'The reduced parallel-electric ratio illustrates how finite perpendicular structure can generate E∥ in the kinetic-Alfvén limit. Parallel electric fields enable electron acceleration, phase mixing, and collisionless energy transfer.',
-      'The expression is an order-of-magnitude Padé-style scaling. It omits kinetic eigenfunctions, damping, electron inertia in the polarization, ion finite-Larmor-radius structure, and realistic distribution functions; use it for trends, not precision inversion.',
-      ['Estimate how E∥ grows as k⊥ρs approaches unity.', 'Build qualitative KAW energy-transfer arguments.', 'Compare anisotropy k∥/k⊥ across models.'],
+      'The reduced low-FLR relation |E∥/E⊥|=|k∥k⊥|ρs² illustrates the retained electron-pressure contribution to warm/kinetic Alfvén polarization.',
+      'It is not a full kinetic or all-k⊥ polarization relation. Finite-ion-gyroradius corrections, electron-inertial polarization, kinetic damping, and realistic distribution functions are omitted.',
+      ['Estimate the reduced low-FLR E∥/E⊥ scaling.', 'Build qualitative KAW energy-transfer arguments.', 'Compare anisotropy k∥/k⊥ across reduced models.'],
       ['kaw-dispersion', 'kaw-landau-accessibility', 'kaw-normalizations']
     ),
 
@@ -2869,8 +2933,8 @@ button{color:inherit}
       ['hellinger-mirror', 'species-beta', 'ion-gyroradius']
     ),
     'hellinger-proton-cyclotron': I(
-      'This empirical fit represents a constant maximum-growth-rate contour for the proton-cyclotron instability in the model studied by Hellinger et al. It provides a reference boundary in proton anisotropy–beta space.',
-      'Being above the contour means the point lies beyond that fitted linear-theory contour under its assumptions; it does not establish that the instability is present or dominant in an observation.',
+      'This source-verified empirical fit represents the gamma_max=10⁻³ Omega_p proton-cyclotron contour of Hellinger et al. (2006) over 0.01≤beta_parallel_p≤30.',
+      'The source model uses bi-Maxwellian protons, Maxwellian electrons with beta_e=1, and omega_pe/Omega_ce=100. Being above the contour does not establish that the instability is present or dominant in an observation.',
       ['Plot proton temperature anisotropy against β∥p.', 'Compare observed bounds with linear-theory contours.', 'Distinguish cyclotron and mirror-side constraints.'],
       ['hellinger-mirror', 'fluid-mirror', 'ion-gyrofrequency']
     ),
@@ -2881,8 +2945,8 @@ button{color:inherit}
       ['hellinger-proton-cyclotron', 'fluid-mirror', 'species-beta']
     ),
     'hellinger-parallel-firehose': I(
-      'This fit represents a constant-growth-rate parallel-firehose contour for proton temperature anisotropy below unity. It provides a kinetic reference beyond the simple CGL firehose threshold.',
-      'The fit is defined only over its stated beta domain. Falling below the curve means the point is beyond that model contour, not that a measured fluctuation has been identified as a parallel firehose mode.',
+      'This source-verified fit represents the gamma_max=10⁻³ Omega_p parallel-firehose contour of Hellinger et al. (2006). The fitted branch is real-valued only for beta_parallel_p>0.59.',
+      'The source survey extends to beta_parallel_p=30, while the lower survey region cannot be evaluated by this branch because beta0=0.59. That mathematical boundary is not itself a physical instability threshold.',
       ['Compare low-anisotropy solar-wind observations with kinetic theory.', 'Distinguish parallel and oblique firehose constraints.', 'Evaluate the limitations of the fluid firehose criterion.'],
       ['hellinger-oblique-firehose', 'fluid-firehose', 'ion-gyrofrequency']
     ),
@@ -2952,6 +3016,7 @@ button{color:inherit}
     PUBLISHED_TARGET_UNVERIFIED: Object.freeze({ id: 'PUBLISHED_TARGET_UNVERIFIED', label: 'cited fixed target; independent lineage pending' }),
     ANALYTICAL_RELATION: Object.freeze({ id: 'ANALYTICAL_RELATION', label: 'analytical relation or limiting case' }),
     LOGICAL_DOMAIN_BOUNDARY: Object.freeze({ id: 'LOGICAL_DOMAIN_BOUNDARY', label: 'logically unambiguous physical or applicability boundary' }),
+    SOURCE_BACKED_DOMAIN: Object.freeze({ id: 'SOURCE_BACKED_DOMAIN', label: 'source-verified applicability domain' }),
     INTERNAL_DERIVATION: Object.freeze({ id: 'INTERNAL_DERIVATION', label: 'production-path restatement or shared constants' }),
     NOMINAL_EXAMPLE: Object.freeze({ id: 'NOMINAL_EXAMPLE', label: 'nominal positive example' }),
     EXECUTION_SMOKE: Object.freeze({ id: 'EXECUTION_SMOKE', label: 'execution-only smoke result' }),
@@ -3060,15 +3125,15 @@ button{color:inherit}
     out.push(test('Doppler zero-flow identity', P.dopplerShiftedFrequency(3,2e-3,0,0), 3, 1e-13, 'Zero-flow limit of the stated Galilean frequency mapping.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     const aw=P.reducedAlfvenDispersion(1e-6,0,1e5,100,0);
     out.push(test('Reduced Alfvén MHD limit', aw.phaseParallel, 1e5, 1e-13, 'Zero-perpendicular-wavenumber limit of the implemented reduced dispersion relation.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
-    const lowRatio=P.reducedKawParallelElectricRatio(1e-6,1e-3,10);
-    out.push(test('Reduced KAW parallel-field formula', lowRatio, (1e-6/1e-3)*((1e-3*10)**2/(1+(1e-3*10)**2)), 1e-13, 'Expected expression duplicates the implemented reduced expression and coefficients.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    const lowRatio=P.reducedKawParallelElectricRatio(2e-6,3e-4,400);
+    out.push(test('Reduced KAW low-FLR parallel-field relation', lowRatio, 0.000096, 1e-13, 'Independent fixed-value evaluation of R=|k_parallel k_perpendicular| rho_s^2 for k_parallel=2e-6 m^-1, k_perpendicular=3e-4 m^-1, and rho_s=400 m; classified as an analytical equation identity, not an externally published numerical benchmark. Source lineage: Lysak & Lotko (1996), Hollweg (1999), and the Stasiewicz et al. (2000) review.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     const al=P.alfvenicityDiagnostics(50e3,50e3*Math.sqrt(P.constants.vacuumPermeability*ni*P.constants.protonMass),ni,1);
     out.push(test('Aligned Alfvénicity cross helicity', al.normalizedCrossHelicity, 1, 1e-13, 'Perfectly aligned, energy-balanced Elsasser-variable limit.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     out.push(test('Aligned Alfvénicity residual energy', Math.abs(al.normalizedResidualEnergy)<1e-12?1:0, 1, 0, 'Energy-balanced Elsasser-variable limit, reduced to an exact Boolean assertion.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.exact));
     const logei=P.coulombLogElectronIon(ne,Te,Ti,1,1);
     out.push(test('Solar-wind Coulomb logarithm is finite', Number.isFinite(logei)&&logei>0?1:0, 1, 0, 'Nominal positive example only; no applicability boundary, rejection, or warning is exercised.', 'F_REGRESSION', 'NOMINAL_EXAMPLE', rationale.exact));
     const h=P.hellingerThreshold(1,0.43,0.42,-0.0004);
-    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Implementation-regression calculation using the source-verified coefficient tuple from Hellinger et al. (2006), GRL 33, L09101, DOI: 10.1029/2006GL025925; the expected arithmetic remains an inline production-coefficient restatement.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
 
     const coulombFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='coulomb-log-ei');
@@ -3083,6 +3148,20 @@ button{color:inherit}
       const values={B:2*P.constants.speedOfLight*Math.sqrt(P.constants.vacuumPermeability*niGuard*muGuard*P.constants.protonMass),ni:niGuard,mu:muGuard};
       const warnings=Guardrails.evaluate(alfvenFormula,values,alfvenFormula.calculate(values));
       out.push(test('Nonrelativistic Alfvén speed causal-limit guardrail', warnings.some(warning=>warning.id==='nonrelativistic-alfven-at-or-above-c')?1:0, 1, 0, 'Logical physical boundary: an explicitly classical nonrelativistic speed expression is outside its intended regime when its computed value reaches or exceeds the causal limiting speed c.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
+    }
+    const protonCyclotronFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='hellinger-proton-cyclotron');
+    if (protonCyclotronFormula) {
+      const values={beta:31,A:1};
+      const warnings=Guardrails.evaluate(protonCyclotronFormula,values,protonCyclotronFormula.calculate(values));
+      out.push(test('Hellinger proton-cyclotron source beta-domain guardrail', warnings.some(warning=>warning.id==='hellinger-proton-cyclotron-beta-domain')?1:0, 1, 0, 'Source-verified 0.01 <= beta_parallel_p <= 30 fit interval from Hellinger et al. (2006), GRL 33, L09101, DOI: 10.1029/2006GL025925.', 'E_DOMAIN', 'SOURCE_BACKED_DOMAIN', rationale.exact));
+    }
+    const parallelFirehoseFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='hellinger-parallel-firehose');
+    if (parallelFirehoseFormula) {
+      const highValues={beta:31,A:0.6};
+      const highWarnings=Guardrails.evaluate(parallelFirehoseFormula,highValues,parallelFirehoseFormula.calculate(highValues));
+      out.push(test('Hellinger parallel-firehose source beta-domain guardrail', highWarnings.some(warning=>warning.id==='hellinger-parallel-firehose-beta-domain')?1:0, 1, 0, 'Source-verified beta_parallel_p <= 30 survey boundary from Hellinger et al. (2006), with the fitted branch separately restricted to beta_parallel_p > 0.59.', 'E_DOMAIN', 'SOURCE_BACKED_DOMAIN', rationale.exact));
+      const invalidWarnings=Guardrails.evaluate(parallelFirehoseFormula,{beta:0.59,A:0.6},[]);
+      out.push(test('Hellinger parallel-firehose mathematical-domain guardrail', invalidWarnings.some(warning=>warning.id==='hellinger-parallel-firehose-mathematical-domain')?1:0, 1, 0, 'Logical real-valued domain of the noninteger power (beta_parallel_p - 0.59)^0.53; 0.59 is not interpreted as a physical instability threshold.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
     }
 
     if (Registry && Registry.formulas) {
@@ -3239,6 +3318,8 @@ button{color:inherit}
       formula: {
         id: formula.id,
         equationLatex: formula.latex,
+        scientificReviewStatus: formula.scientificReviewStatus,
+        decisionIds: [...formula.decisionIds],
       },
       constants: { ...P.constants },
       canonicalInputs: inputs,
@@ -3302,7 +3383,10 @@ button{color:inherit}
     const symbol = Symbols.get(result.semanticId);
     if (!symbol) throw new Error(`Numeric output ${index} has unknown semantic symbol ID ${result.semanticId}`);
     const canonical = canonicalUnit(result.quantity);
-    const displayDefinition = Units.outputDefinition(unitSystemId, result.quantity, result.value);
+    const internalUnit = result.unitSemantics === 'rate' ? symbol.productionUnit : canonical.unit;
+    const displayDefinition = result.displayUnit
+      ? { factor: 1, unit: result.displayUnit }
+      : Units.outputDefinition(unitSystemId, result.quantity, result.value);
     const internalNumber = jsonNumber(result.value);
     const displayNumber = jsonNumber(result.value * displayDefinition.factor);
     return {
@@ -3314,7 +3398,7 @@ button{color:inherit}
       physicalName: symbol.canonicalName,
       localLabel: result.label,
       quantity: result.quantity,
-      internal: { ...internalNumber, unit: canonical.unit, meaning: canonical.meaning },
+      internal: { ...internalNumber, unit: internalUnit, meaning: result.unitSemantics === 'rate' ? 'characteristic rate' : canonical.meaning },
       display: { ...displayNumber, unit: displayDefinition.unit },
       canonicalSiUnit: symbol.canonicalSiUnit,
     };
@@ -3374,10 +3458,12 @@ button{color:inherit}
         },
         physicsCore: {
           baseline: Meta.physicsCoreBaseline,
+          baselineStatus: Meta.physicsCoreBaselineStatus,
+          changeSet: Meta.physicsCoreChangeSet,
           sha256: Meta.physicsCoreSha256,
           baselineUrl: Meta.physicsBaselineUrl,
           evidenceClass: 'P_PROVENANCE',
-          note: 'The core hash identifies code provenance; it is not evidence of scientific correctness.',
+          note: 'The core hash identifies the loaded code. The release baseline records ancestry; the change set transparently identifies the approved SD-10 correction. Neither is evidence of scientific correctness.',
         },
       },
       calculation: {
@@ -3394,6 +3480,9 @@ button{color:inherit}
           modelScopeNote: formula.note || null,
           references: formula.references.map(reference => ({ ...reference })),
           semanticMetadataReviewStatus: formula.symbolReviewStatus,
+          scientificReviewStatus: formula.scientificReviewStatus,
+          decisionIds: [...formula.decisionIds],
+          sourceDomain: formula.sourceDomain ? JSON.parse(JSON.stringify(formula.sourceDomain)) : null,
           equationSymbolIds: [...formula.equationSymbolIds],
         },
         inputs: formula.inputs.map(input => inputRecord(input, internalInputs[input.key], unitSystemId, displayInputs[input.key])),
@@ -4103,24 +4192,27 @@ button{color:inherit}
 
   function calculate() {
     const formula = activeFormula();
+    const values = currentValues(formula);
+    const preflightWarnings = Guardrails.evaluate(formula, values, []);
     try {
-      const values = currentValues(formula);
       const results = formula.calculate(values);
       state.lastResults = results;
       state.lastWarnings = Guardrails.evaluate(formula, values, results);
       state.lastDomainDiagnostics = Guardrails.diagnostics(formula, values, results);
       $('calculationError').hidden = true;
       $('resultList').innerHTML = results.map(result => {
-        const formatted = formatQuantity(result.quantity, result.value);
+        const formatted = result.displayUnit
+          ? { value: formatNumber(result.value), unit: result.displayUnit }
+          : formatQuantity(result.quantity, result.value);
         return `<div class="result-row"><dt>${result.label}</dt><dd>${result.symbol ? `<span class="result-symbol">${result.symbol}</span>` : ''}<span>${formatted.value}</span>${formatted.unit ? `<span class="result-unit">${formatted.unit}</span>` : ''}</dd></div>`;
       }).join('');
       renderWarnings(state.lastWarnings, state.lastDomainDiagnostics);
     } catch (error) {
       state.lastResults = [];
-      state.lastWarnings = [];
+      state.lastWarnings = preflightWarnings;
       state.lastDomainDiagnostics = [];
       $('resultList').innerHTML = '';
-      renderWarnings([]);
+      renderWarnings(preflightWarnings);
       $('calculationError').textContent = error.message || 'The supplied values are outside the calculator domain.';
       $('calculationError').hidden = false;
     }
@@ -5079,7 +5171,7 @@ button{color:inherit}
         <div class="release-status" role="group" aria-label="Release provenance">
           <span><strong>Version</strong> 1.0.1</span>
           <span><strong>Release date</strong> 10 August 2026</span>
-          <span><strong>Physics-core provenance baseline</strong> <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a></span>
+          <span><strong>Physics-core provenance</strong> release baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>; loaded development core includes approved SD-10 correction</span>
         </div>
         <div id="validationSummary" class="validation-summary"></div>
         <div id="validationGroups" class="validation-groups"></div>
@@ -5177,7 +5269,7 @@ button{color:inherit}
             <button id="copyCitation" class="secondary-button" type="button">Copy citation</button>
             <button id="copyBibtex" class="secondary-button" type="button">Copy BibTeX</button>
           </div>
-          <p class="small-text">Version 1.0.1 · released 10 August 2026 · physics-core provenance baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. The hash and baseline identify code provenance; they do not prove scientific correctness. A DOI will be added only after the release is formally archived.</p>
+          <p class="small-text">Version 1.0.1 · released 10 August 2026 · physics-core release baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>. This development core transparently records the approved Scientific Resolution Pass 1 SD-10 correction; its hash and baseline identify code provenance, not scientific correctness. A DOI will be added only after the release is formally archived.</p>
         </section>
       </div>
     </section>

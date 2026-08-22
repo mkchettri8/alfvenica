@@ -438,24 +438,27 @@
 
   function calculate() {
     const formula = activeFormula();
+    const values = currentValues(formula);
+    const preflightWarnings = Guardrails.evaluate(formula, values, []);
     try {
-      const values = currentValues(formula);
       const results = formula.calculate(values);
       state.lastResults = results;
       state.lastWarnings = Guardrails.evaluate(formula, values, results);
       state.lastDomainDiagnostics = Guardrails.diagnostics(formula, values, results);
       $('calculationError').hidden = true;
       $('resultList').innerHTML = results.map(result => {
-        const formatted = formatQuantity(result.quantity, result.value);
+        const formatted = result.displayUnit
+          ? { value: formatNumber(result.value), unit: result.displayUnit }
+          : formatQuantity(result.quantity, result.value);
         return `<div class="result-row"><dt>${result.label}</dt><dd>${result.symbol ? `<span class="result-symbol">${result.symbol}</span>` : ''}<span>${formatted.value}</span>${formatted.unit ? `<span class="result-unit">${formatted.unit}</span>` : ''}</dd></div>`;
       }).join('');
       renderWarnings(state.lastWarnings, state.lastDomainDiagnostics);
     } catch (error) {
       state.lastResults = [];
-      state.lastWarnings = [];
+      state.lastWarnings = preflightWarnings;
       state.lastDomainDiagnostics = [];
       $('resultList').innerHTML = '';
-      renderWarnings([]);
+      renderWarnings(preflightWarnings);
       $('calculationError').textContent = error.message || 'The supplied values are outside the calculator domain.';
       $('calculationError').hidden = false;
     }

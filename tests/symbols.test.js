@@ -138,7 +138,7 @@ assert.equal(inputUses, 240, 'Calculator input-use inventory changed');
 assert.equal(numericOutputUses, 165, 'Calculator output-use inventory changed');
 assert.equal(inputUses + numericOutputUses, 405, 'Not all 405 calculator symbol uses were migrated');
 assert.equal(textOutputs, 10, 'Categorical-output inventory changed');
-assert.equal(pendingFormulaIds.length, 27, 'Review-pending formula inventory changed');
+assert.equal(pendingFormulaIds.length, 16, 'Review-pending formula inventory changed');
 assert.throws(() => Symbols.formulaSymbols({ id:'unknown-ui-formula', symbolUses:[{ semanticId:'not-a-real-symbol' }] }), /unknown semantic symbol ID/, 'Unknown UI semantic IDs must fail closed');
 
 for (const [key, semanticId] of Object.entries(Plots.stateSemanticIds)) {
@@ -197,6 +197,8 @@ assert.equal(baseline.schemaVersion, 1, 'Unexpected numerical-baseline schema');
 assert.equal(baseline.evidenceClass, 'F_REGRESSION', 'Numerical baseline must remain regression evidence');
 assert.match(baseline.description, /not independent scientific evidence/i, 'Numerical baseline overstates evidence');
 assert.equal(baseline.baselineCommit, 'eab588abb672f6fdf7e169a36e6a630a2b02ecfb', 'Baseline checkpoint mismatch');
+assert.equal(baseline.baselineLineage.resolutionPass, 'SCIENTIFIC_RESOLUTION_PASS_1', 'Approved numerical-change lineage missing');
+assert.deepEqual(baseline.baselineLineage.approvedNumericalChanges.map(change => change.decisionId), ['SD-10'], 'Unapproved numerical baseline change entered');
 assert.equal(JSON.stringify(baseline, null, 2) + '\n', baselineBytes, 'Numerical baseline is not canonical deterministic JSON');
 assert.equal(baseline.calculators.length, Formulas.formulas.length, 'Numerical baseline coverage mismatch');
 assert.equal(new Set(baseline.calculators.map(item => item.formulaId)).size, baseline.calculators.length, 'Duplicate baseline calculator ID');
@@ -213,19 +215,18 @@ for (const formula of Formulas.formulas) {
     assert.equal(actual.label, expected.label, formula.id + ': output label changed');
     assert.equal(actual.symbol, expected.symbol, formula.id + ': compatibility glyph changed');
     assert.equal(actual.quantity, expected.quantity, formula.id + ': output quantity changed');
-    assert.ok(Object.is(actual.value, expected.value), formula.id + ': numerical value changed from eab588a');
+    assert.ok(Object.is(actual.value, expected.value), formula.id + ': numerical value differs from the approved regression baseline');
     compared += 1;
   }
 }
 assert.equal(compared, 165, 'Not all numerical outputs were compared');
 
 for (const id of [
-  'lower-hybrid-angular-frequency','electron-ion-coulomb-logarithm','electrical-resistivity',
-  'electron-hall-parameter','walen-ratio','kaw-angular-frequency',
-  'kaw-parallel-to-perpendicular-electric-field-ratio','hellinger-mirror-threshold-anisotropy',
+  'lower-hybrid-angular-frequency','electron-hall-parameter','walen-ratio','kaw-regime-ratio',
+  'hellinger-mirror-threshold-anisotropy','hellinger-oblique-firehose-threshold-anisotropy',
 ]) assert.equal(Symbols.get(id).reviewStatus, 'QUARANTINED_SCIENCE', id + ': quarantined science was promoted');
 
 console.log('Alfvenica symbol checks passed: ' + entries.length + ' canonical semantic IDs, ' +
   Formulas.formulas.length + ' calculators, ' + (inputUses + numericOutputUses) +
   ' calculator symbol uses, ' + Plots.variables.length + ' plot variables, ' +
-  Plots.metrics.length + ' plot metrics, and ' + compared + ' exact eab588a numerical regressions.');
+  Plots.metrics.length + ' plot metrics, and ' + compared + ' exact approved numerical regressions.');

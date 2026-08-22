@@ -137,18 +137,18 @@
   // Lengths, speeds, waves, and times.
   D('electron-debye-length','Electron Debye length','λ_De','lambda_De','\\lambda_{De}','Electron electrostatic shielding length for the implemented scalar-temperature definition.','length',{species:{subject:'electron'}});
   D('combined-debye-length','Combined Debye length','λ_D','lambda_D','\\lambda_D','Debye screening length formed from the modeled electron and ion shielding contributions.','length');
-  D('ion-debye-length','Ion Debye length','λ_Di','lambda_Di','\\lambda_{Di}','Selected-ion Debye length used by the current ion-ion Coulomb-logarithm implementation.','length',quarantined);
+  D('ion-debye-length','Ion Debye length','λ_Di','lambda_Di','\\lambda_{Di}','Selected-ion Debye length used as the screening scale in the adopted identical-ion impact-parameter Coulomb-logarithm estimate.','length');
   D('electron-gyroradius','Electron thermal gyroradius','ρ_e','rho_e','\\rho_e','Electron gyroradius using the implemented electron thermal-speed convention.','length',{species:{subject:'electron'},conventionNotes:['Uses sqrt(k_B T/m); scalar temperature stands in for the relevant perpendicular temperature.']});
   D('ion-gyroradius','Ion thermal gyroradius','ρ_i','rho_i','\\rho_i','Selected-ion gyroradius using the implemented ion thermal-speed convention.','length',{species:{subject:'selected-ion'},conventionNotes:['Uses sqrt(k_B T/m); scalar temperature stands in for the relevant perpendicular temperature.']});
   D('electron-inertial-length','Electron inertial length','d_e','d_e','d_e','Electron inertial length defined from speed of light and electron plasma angular frequency.','length',{species:{subject:'electron'}});
   D('ion-inertial-length','Ion inertial length','d_i','d_i','d_i','Selected-ion inertial length defined from speed of light and ion plasma angular frequency.','length',{species:{subject:'selected-ion'}});
   D('ion-sound-gyroradius','Ion-sound gyroradius','ρ_s','rho_s','\\rho_s','Ion-sound dispersive length returned by the implemented electron-pressure model.','length',{species:{subject:'selected-ion'},conventionNotes:['The current model omits the ion-temperature contribution.']});
   D('debye-sphere-particle-count','Particles in a Debye sphere','N_D','N_D','N_D','Electron count within a sphere of the implemented electron Debye radius.','dimensionless',{conventionNotes:['Uses the 4 pi/3 sphere-volume convention.']});
-  D('minimum-impact-parameter','Minimum Coulomb impact parameter','b_min','b_min','b_{min}','Short-distance cutoff selected by the current Coulomb-logarithm implementation.','length',{scope:'derived',...quarantined});
+  D('minimum-impact-parameter','Minimum Coulomb impact parameter','b_min','b_min','b_{min}','Short-distance cutoff selected as the larger of the implemented classical 90-degree and quantum-diffraction impact parameters.','length',{scope:'derived'});
   D('wigner-seitz-radius','Wigner-Seitz radius','a','a','a','Mean interparticle spacing used by the current plasma-coupling parameter.','length',{scope:'derived',...pending});
   D('generic-mean-free-path','Mean free path','λ_mfp','lambda_mfp','\\lambda_{mfp}','Supplied collisional mean free path.','length');
-  D('electron-mean-free-path','Electron mean free path','λ_ei','lambda_ei','\\lambda_{ei}','Distance given by the implemented electron thermal speed divided by electron-ion collision frequency.','length',{species:{subject:'electron'},...quarantined});
-  D('ion-mean-free-path','Ion mean free path','λ_ii','lambda_ii','\\lambda_{ii}','Distance given by the implemented selected-ion thermal speed divided by ion-ion collision frequency.','length',{species:{subject:'selected-ion'},...quarantined});
+  D('electron-mean-free-path','Electron mean free path','λ_ei','lambda_ei','\\lambda_{ei}','Distance given by the implemented electron thermal speed divided by the adopted characteristic electron-ion collision rate.','length',{species:{subject:'electron'}});
+  D('ion-mean-free-path','Ion mean free path','λ_ii','lambda_ii','\\lambda_{ii}','Distance given by the implemented selected-ion thermal speed divided by the adopted characteristic ion-ion collision rate.','length',{species:{subject:'selected-ion'}});
   D('current-sheet-crossing-thickness','Current-sheet crossing thickness','L','L_crossing','L_{crossing}','One-dimensional thickness estimated from normal relative speed and crossing duration.','length',{scope:'formula-local'});
   D('sweet-parker-sheet-half-thickness','Sweet-Parker sheet half-thickness','δ','delta','\\delta','Current-sheet half-thickness returned by the implemented Sweet-Parker scaling.','length',{scope:'formula-local',...quarantined});
   D('inverse-wavenumber-scale','Inverse-wavenumber scale','1/k','1/k','1/k','Length equal to the reciprocal of the Taylor-mapped wavenumber.','length');
@@ -168,7 +168,7 @@
   D('reconnection-inflow-speed','Reconnection inflow speed','v_in','v_in','v_{in}','Inflow speed returned by the implemented Sweet-Parker estimate.','speed',quarantined);
   D('electromagnetic-e-over-b-speed','Electromagnetic E/B speed','v_EB','v_EB','v_{EB}','Speed magnitude formed from perpendicular electric and magnetic fluctuation magnitudes.','speed',{conventionNotes:['Interpretation depends on frame and polarization.']});
   D('observed-e-over-b-speed','Observed E/B speed','v_EB','v_EB_observed','v_{EB}','Observed electromagnetic E/B speed used by the KAW diagnostic.','speed',quarantined);
-  D('kaw-parallel-phase-speed','KAW parallel phase speed','v_ph,∥','v_ph_parallel','v_{ph,\\parallel}','Parallel phase speed returned by or supplied to the reduced KAW diagnostics.','speed',quarantined);
+  D('kaw-parallel-phase-speed','Reduced dispersive-Alfvén parallel phase speed','v_ph,∥','v_ph_parallel','v_{ph,\\parallel}','Parallel phase speed returned by the reduced low-frequency two-fluid dispersive-Alfvén approximation or supplied to related diagnostics.','speed');
   D('magnetic-fluctuation-velocity-equivalent','Magnetic fluctuation in velocity units','δb','delta_b','\\delta b','Signed magnetic fluctuation divided by the square root of vacuum permeability times the implemented mass density.','speed',quarantined);
   D('signed-velocity-fluctuation','Signed velocity fluctuation','δv','delta_v','\\delta v','Signed scalar velocity fluctuation used by the reduced Alfvénicity diagnostics.','speed',quarantined);
   D('elsasser-plus-amplitude','Elsasser plus amplitude','z+','z_plus','z^+','Scalar plus Elsasser amplitude returned by the current Alfvénicity implementation.','speed',quarantined);
@@ -196,9 +196,9 @@
   D('total-electron-ion-plasma-beta','Total electron-ion plasma beta','β','beta_total','\\beta','Ratio of modeled total electron-ion scalar thermal pressure to magnetic pressure.','dimensionless');
   D('parallel-species-plasma-beta','Parallel species plasma beta','β∥','beta_parallel','\\beta_\\parallel','Plasma beta formed from the selected species parallel temperature component.','dimensionless',{species:{subject:'generic-species'},...pending});
   D('perpendicular-species-plasma-beta','Perpendicular species plasma beta','β⊥','beta_perpendicular','\\beta_\\perp','Plasma beta formed from the selected species perpendicular temperature component.','dimensionless',{species:{subject:'generic-species'},...pending});
-  D('parallel-proton-plasma-beta','Parallel proton plasma beta','β∥p','beta_parallel_p','\\beta_{\\parallel p}','Parallel proton beta supplied to a Hellinger fit.','dimensionless',{species:{subject:'proton'},...quarantined});
+  D('parallel-proton-plasma-beta','Parallel proton plasma beta','β∥p','beta_parallel_p','\\beta_{\\parallel p}','Parallel proton beta supplied to a coefficient-specific Hellinger fit.','dimensionless',{species:{subject:'proton'}});
   D('generic-temperature-anisotropy','Temperature anisotropy','T⊥/T∥','T_perpendicular/T_parallel','T_\\perp/T_\\parallel','Ratio of perpendicular to parallel temperature for the selected species.','dimensionless',{species:{subject:'generic-species'},...pending});
-  D('proton-temperature-anisotropy','Proton temperature anisotropy','T⊥p/T∥p','T_perpendicular_p/T_parallel_p','T_{\\perp p}/T_{\\parallel p}','Ratio of perpendicular to parallel proton temperature.','dimensionless',{species:{subject:'proton'},...quarantined});
+  D('proton-temperature-anisotropy','Proton temperature anisotropy','T⊥p/T∥p','T_perpendicular_p/T_parallel_p','T_{\\perp p}/T_{\\parallel p}','Ratio of perpendicular to parallel proton temperature.','dimensionless',{species:{subject:'proton'}});
   D('alfven-mach-number','Alfvén Mach number','M_A','M_A','M_A','Bulk-flow speed divided by the implemented Alfvén speed.','dimensionless');
   D('sonic-mach-number','Sonic Mach number','M_s','M_s','M_s','Bulk-flow speed divided by the implemented MHD sound speed.','dimensionless');
   D('fast-magnetosonic-mach-number','Fast magnetosonic Mach number','M_f','M_f','M_f','Bulk-flow speed divided by the implemented fast magnetosonic speed.','dimensionless');
@@ -227,16 +227,16 @@
   D('fluid-mirror-criterion','Fluid mirror criterion value','C','mirror_criterion','C','Value of the current simplified fluid-mirror criterion.','dimensionless',{scope:'formula-local',...pending});
   D('fluid-mirror-margin','Fluid mirror threshold margin','margin','mirror_margin','\\mathrm{margin}','Implemented simplified mirror criterion value minus its current threshold.','dimensionless',{scope:'formula-local',...pending});
 
-  // Collision and transport identities remain scientifically quarantined.
-  D('electron-ion-coulomb-logarithm','Electron-ion Coulomb logarithm','ln Λ_ei','ln Lambda_ei','\\ln\\Lambda_{ei}','Coulomb logarithm supplied to or returned by the current electron-ion convention.','dimensionless',{species:{subject:'electron-ion'},...quarantined});
-  D('ion-ion-coulomb-logarithm','Ion-ion Coulomb logarithm','ln Λ_ii','ln Lambda_ii','\\ln\\Lambda_{ii}','Coulomb logarithm supplied to or returned by the current ion-ion convention.','dimensionless',{species:{subject:'selected-ion'},...quarantined});
-  D('electron-ion-collision-frequency','Electron-ion collision frequency','ν_ei','nu_ei','\\nu_{ei}','Collision-rate quantity returned by the current electron-ion implementation.','frequency',{species:{subject:'electron-ion'},conventionNotes:['Its rate versus cyclic-frequency presentation remains under review.'],...quarantined});
-  D('ion-ion-collision-frequency','Ion-ion collision frequency','ν_ii','nu_ii','\\nu_{ii}','Collision-rate quantity returned by the current ion-ion implementation.','frequency',{species:{subject:'selected-ion'},conventionNotes:['Its rate versus cyclic-frequency presentation remains under review.'],...quarantined});
-  D('electron-ion-collision-time','Electron-ion collision time','τ_ei','tau_ei','\\tau_{ei}','Reciprocal of the implemented electron-ion collision frequency.','time',{species:{subject:'electron-ion'},...quarantined});
-  D('ion-ion-collision-time','Ion-ion collision time','τ_ii','tau_ii','\\tau_{ii}','Reciprocal of the implemented ion-ion collision frequency.','time',{species:{subject:'selected-ion'},...quarantined});
-  D('electrical-resistivity','Electrical resistivity','η','eta_resistivity','\\eta','Electrical resistivity returned or consumed by the current transport implementation.','resistivity',{conventionNotes:['Spitzer/Lorentz terminology and coefficient interpretation remain quarantined.'],...quarantined});
-  D('electrical-conductivity','Electrical conductivity','σ','sigma_conductivity','\\sigma','Reciprocal of the implemented electrical resistivity.','conductivity',quarantined);
-  D('magnetic-diffusivity','Magnetic diffusivity','η_m','eta_m','\\eta_m','Implemented electrical resistivity divided by vacuum permeability.','diffusivity',quarantined);
+  // Collision and transport identities resolved by SD-01 through SD-03.
+  D('electron-ion-coulomb-logarithm','Electron-ion impact-parameter Coulomb logarithm','ln Λ_ei','ln Lambda_ei','\\ln\\Lambda_{ei}','Adopted impact-parameter estimate ln(lambda_D/b_min), with combined electron-ion Debye screening and b_min=max(b_90,b_quantum).','dimensionless',{species:{subject:'electron-ion'},conventionNotes:['This explicit estimate is not claimed identical to every regime-specific fitted NRL expression.']});
+  D('ion-ion-coulomb-logarithm','Ion-ion impact-parameter Coulomb logarithm','ln Λ_ii','ln Lambda_ii','\\ln\\Lambda_{ii}','Adopted identical-ion impact-parameter estimate ln(lambda_Di/b_min), with b_min=max(b_90,b_quantum).','dimensionless',{species:{subject:'selected-ion'},conventionNotes:['This explicit estimate is not claimed identical to every regime-specific fitted NRL expression.']});
+  D('electron-ion-collision-frequency','Electron-ion characteristic Coulomb collision rate','ν_ei','nu_ei','\\nu_{ei}','Characteristic electron-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','frequency',{species:{subject:'electron-ion'},canonicalSiUnit:'s^-1',productionUnit:'s^-1',acceptedDisplayUnits:['s^-1'],conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
+  D('ion-ion-collision-frequency','Ion-ion characteristic Coulomb collision rate','ν_ii','nu_ii','\\nu_{ii}','Characteristic identical-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','frequency',{species:{subject:'selected-ion'},canonicalSiUnit:'s^-1',productionUnit:'s^-1',acceptedDisplayUnits:['s^-1'],conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
+  D('electron-ion-collision-time','Electron-ion collision time','τ_ei','tau_ei','\\tau_{ei}','Reciprocal of the adopted characteristic electron-ion collision rate.','time',{species:{subject:'electron-ion'}});
+  D('ion-ion-collision-time','Ion-ion collision time','τ_ii','tau_ii','\\tau_{ii}','Reciprocal of the adopted characteristic ion-ion collision rate.','time',{species:{subject:'selected-ion'}});
+  D('electrical-resistivity','Electron-ion collisional resistivity','η_coll','eta_coll','\\eta_{coll}','Scalar resistive-transport quantity eta_coll=m_e nu_ei/(n_e e^2) evaluated from Alfvenica’s characteristic electron-ion collision rate.','resistivity',{conventionNotes:['This is not claimed to be a complete source-specific Spitzer or Braginskii transport coefficient.']});
+  D('electrical-conductivity','Electrical conductivity','σ','sigma_conductivity','\\sigma','Reciprocal of the implemented electron-ion collisional resistivity.','conductivity');
+  D('magnetic-diffusivity','Magnetic diffusivity','η_m','eta_m','\\eta_m','Implemented electron-ion collisional resistivity divided by vacuum permeability.','diffusivity');
 
   // Spacecraft and fluctuation quantities.
   D('taylor-convected-wavenumber','Taylor-mapped convected wavenumber','k','k_Taylor','k','Wavenumber obtained from the current frozen-flow frequency mapping.','wavenumber');
@@ -247,22 +247,22 @@
   D('current-density-estimate','Current-density estimate','J','J','J','One-dimensional current-density magnitude estimated from field jump and sheet thickness.','currentDensity');
   D('reconnection-electric-field','Reconnection electric field','E_rec','E_rec','E_{rec}','Electric-field magnitude returned by the implemented Sweet-Parker estimate.','electricField',quarantined);
 
-  // Reduced kinetic-Alfvén diagnostics remain quarantined.
+  // Reduced kinetic-Alfvén diagnostics; formula-specific review state is retained where unresolved.
   D('kaw-regime-ratio','KAW kinetic-to-inertial regime ratio','R','R_KAW','R','Electron beta divided by the implemented electron-to-ion mass ratio.','dimensionless',quarantined);
   D('perpendicular-wavenumber-ion-gyroradius-product','Perpendicular wavenumber-ion gyroradius product','k⊥ρ_i','k_perpendicular rho_i','k_\\perp\\rho_i','Dimensionless product locating perpendicular scale relative to selected-ion gyroradius.','dimensionless',quarantined);
   D('perpendicular-wavenumber-ion-sound-gyroradius-product','Perpendicular wavenumber-ion-sound gyroradius product','k⊥ρ_s','k_perpendicular rho_s','k_\\perp\\rho_s','Dimensionless product locating perpendicular scale relative to ion-sound gyroradius.','dimensionless',quarantined);
   D('perpendicular-wavenumber-ion-inertial-length-product','Perpendicular wavenumber-ion inertial length product','k⊥d_i','k_perpendicular d_i','k_\\perp d_i','Dimensionless product locating perpendicular scale relative to selected-ion inertial length.','dimensionless',quarantined);
   D('perpendicular-wavenumber-electron-inertial-length-product','Perpendicular wavenumber-electron inertial length product','k⊥d_e','k_perpendicular d_e','k_\\perp d_e','Dimensionless product locating perpendicular scale relative to electron inertial length.','dimensionless',quarantined);
-  D('kaw-angular-frequency','Reduced KAW angular frequency','ω','omega_KAW','\\omega','Angular frequency returned by the current reduced kinetic/inertial Alfvén model.','angularFrequency',quarantined);
-  D('kaw-frequency','Reduced KAW cyclic frequency','f','f_KAW','f','Cyclic frequency corresponding to the current reduced KAW angular frequency.','frequency',quarantined);
-  D('kaw-dispersive-factor','Reduced KAW dispersive factor','D','D_KAW','D','Dimensionless multiplicative phase-speed factor returned by the current reduced KAW model.','dimensionless',{scope:'formula-local',...quarantined});
+  D('kaw-angular-frequency','Reduced dispersive-Alfvén angular frequency','ω','omega_KAW','\\omega','Angular frequency returned by the reduced low-frequency two-fluid dispersive-Alfvén approximation.','angularFrequency');
+  D('kaw-frequency','Reduced dispersive-Alfvén cyclic frequency','f','f_KAW','f','Cyclic frequency corresponding to the reduced dispersive-Alfvén angular frequency.','frequency');
+  D('kaw-dispersive-factor','Reduced dispersive-Alfvén factor','D','D_KAW','D','Dimensionless phase-speed factor containing the retained electron-pressure and electron-inertia terms.','dimensionless',{scope:'formula-local'});
   D('kaw-resonant-speed-ratio','KAW resonant-speed ratio','x_e','x_e','x_e','Magnitude of supplied parallel phase speed divided by the implemented electron thermal speed.','dimensionless',quarantined);
   D('kaw-maxwellian-factor','KAW Maxwellian factor','exp(−x_e²/2)','exp(-x_e^2/2)','\\exp(-x_e^2/2)','Normalized Maxwellian factor returned by the current Landau-accessibility diagnostic.','dimensionless',quarantined);
   D('maxwellian-distribution-function','Maxwellian distribution function','f_M','f_M','f_M','Maxwellian function appearing only through its normalized ratio in the current accessibility equation.','dimensionless',{scope:'formula-local',...quarantined});
   D('kaw-e-over-b-ratio','KAW E/B diagnostic ratio','R_EB','R_EB','R_{EB}','Observed E/B speed divided by supplied reduced-model parallel phase speed.','dimensionless',quarantined);
-  D('kaw-parallel-to-perpendicular-electric-field-ratio','KAW parallel/perpendicular electric-field ratio','|E∥/E⊥|','|E_parallel/E_perpendicular|','|E_\\parallel/E_\\perp|','Ratio returned by the current reduced Padé-style KAW parallel-electric scaling.','dimensionless',quarantined);
+  D('kaw-parallel-to-perpendicular-electric-field-ratio','Reduced KAW parallel/perpendicular electric-field ratio','|E∥/E⊥|','|E_parallel/E_perpendicular|','|E_\\parallel/E_\\perp|','Reduced warm/kinetic low-FLR ratio |k_parallel k_perpendicular| rho_s^2 with the ion-sound pressure contribution retained.','dimensionless',{conventionNotes:['Not a full kinetic or all-k_perpendicular polarization relation; ion FLR, electron-inertial polarization, and kinetic damping are omitted.']});
 
-  // Hellinger fit symbols are metadata-only placeholders for quarantined coefficients.
+  // Hellinger source verification applies only to the proton-cyclotron and parallel-firehose branches.
   const hellinger = [
     ['proton-cyclotron','Proton-cyclotron'],
     ['mirror','Mirror'],
@@ -270,14 +270,17 @@
     ['oblique-firehose','Oblique-firehose'],
   ];
   for (const [idPart, namePart] of hellinger) {
-    D('hellinger-' + idPart + '-threshold-anisotropy', 'Hellinger ' + namePart + ' threshold anisotropy', 'A_th', 'A_th_' + idPart, 'A_{th}', 'Threshold anisotropy returned by the current Hellinger ' + idPart + ' fit.', 'dimensionless', {scope:'formula-local',...quarantined});
-    D('hellinger-' + idPart + '-margin', 'Hellinger ' + namePart + ' contour margin', 'margin', 'margin_' + idPart, '\\mathrm{margin}', 'Signed distance from the current Hellinger ' + idPart + ' contour in anisotropy coordinates.', 'dimensionless', {scope:'formula-local',...quarantined});
-    D('hellinger-' + idPart + '-fit-amplitude', 'Hellinger ' + namePart + ' fit amplitude', 'a', 'a_' + idPart, 'a', 'Amplitude coefficient role in the current Hellinger ' + idPart + ' fit; the numerical value and provenance remain in scientific quarantine.', 'dimensionless', {scope:'formula-local',...quarantined});
-    D('hellinger-' + idPart + '-fit-exponent', 'Hellinger ' + namePart + ' fit exponent', 'b', 'b_' + idPart, 'b', 'Exponent role in the current Hellinger ' + idPart + ' fit; the numerical value and provenance remain in scientific quarantine.', 'dimensionless', {scope:'formula-local',...quarantined});
+    const sourceVerified = idPart === 'proton-cyclotron' || idPart === 'parallel-firehose';
+    const statusOptions = sourceVerified ? {} : quarantined;
+    const provenanceSuffix = sourceVerified ? ' Source fit verified to Hellinger et al. (2006).' : ' Numerical value and provenance remain in scientific quarantine.';
+    D('hellinger-' + idPart + '-threshold-anisotropy', 'Hellinger ' + namePart + ' threshold anisotropy', 'A_th', 'A_th_' + idPart, 'A_{th}', 'Threshold anisotropy returned by the current Hellinger ' + idPart + ' fit.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
+    D('hellinger-' + idPart + '-margin', 'Hellinger ' + namePart + ' contour margin', 'margin', 'margin_' + idPart, '\\mathrm{margin}', 'Signed distance from the current Hellinger ' + idPart + ' contour in anisotropy coordinates.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
+    D('hellinger-' + idPart + '-fit-amplitude', 'Hellinger ' + namePart + ' fit amplitude', 'a', 'a_' + idPart, 'a', 'Amplitude coefficient role in the current Hellinger ' + idPart + ' fit.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
+    D('hellinger-' + idPart + '-fit-exponent', 'Hellinger ' + namePart + ' fit exponent', 'b', 'b_' + idPart, 'b', 'Exponent role in the current Hellinger ' + idPart + ' fit.' + provenanceSuffix, 'dimensionless', {scope:'formula-local',...statusOptions});
   }
-  D('hellinger-proton-cyclotron-beta-shift','Hellinger proton-cyclotron beta shift','β₀','beta_0_pc','\\beta_0','Beta-shift role in the current proton-cyclotron fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
+  D('hellinger-proton-cyclotron-beta-shift','Hellinger proton-cyclotron beta shift','β₀','beta_0_pc','\\beta_0','Source-verified beta-shift coefficient beta0=-0.0004 in the proton-cyclotron fit.','dimensionless',{scope:'formula-local'});
   D('hellinger-mirror-beta-shift','Hellinger mirror beta shift','β₀','beta_0_mirror','\\beta_0','Beta-shift role in the current mirror fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
-  D('hellinger-parallel-firehose-beta-offset','Hellinger parallel-firehose beta offset','β₀','beta_0_parallel_firehose','\\beta_0','Beta-offset role in the current parallel-firehose fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
+  D('hellinger-parallel-firehose-beta-offset','Hellinger parallel-firehose beta offset','β₀','beta_0_parallel_firehose','\\beta_0','Source-verified beta-offset coefficient beta0=0.59; it is the real-valued branch boundary, not a physical threshold.','dimensionless',{scope:'formula-local'});
   D('hellinger-oblique-firehose-beta-shift','Hellinger oblique-firehose beta shift','β₀','beta_0_oblique_firehose','\\beta_0','Beta-shift role in the current oblique-firehose fit; value and provenance remain quarantined.','dimensionless',{scope:'formula-local',...quarantined});
 
   const symbols = {};
@@ -293,7 +296,7 @@
       latex,
       definition,
       quantityType,
-      canonicalSiUnit: quantity.canonicalSiUnit,
+      canonicalSiUnit: options.canonicalSiUnit || quantity.canonicalSiUnit,
       productionUnit: options.productionUnit || quantity.productionUnit || quantity.canonicalSiUnit,
       dimensionalStatus: quantity.dimensionalStatus,
       dimensionless: quantity.dimensionless,
@@ -343,8 +346,8 @@
     {
       id:'frequency',
       title:'Cyclic and angular frequency',
-      summary:'Symbols beginning with f denote cyclic frequency in hertz. Symbols using omega or capital Omega denote angular frequency in radians per second; the corresponding calculator equations and definitions retain the relevant species and model interpretation.',
-      symbolIds:['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-plasma-frequency','electron-plasma-angular-frequency','ion-cyclotron-frequency','ion-cyclotron-angular-frequency'],
+      summary:'Symbols beginning with f denote cyclic frequency in hertz. Symbols using omega or capital Omega denote angular frequency in radians per second. Collision nu quantities are characteristic rates in inverse seconds, not cyclic oscillation frequencies, and receive no 2 pi conversion.',
+      symbolIds:['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-plasma-frequency','electron-plasma-angular-frequency','ion-cyclotron-frequency','ion-cyclotron-angular-frequency','electron-ion-collision-frequency','ion-ion-collision-frequency'],
     },
     {
       id:'parallel-perpendicular',

@@ -72,6 +72,8 @@ for (const [formulaIndex, item] of Registry.formulas.entries()) {
   assert.equal(record.application.build.sourceCommit, null, `${item.id}: unverified source commit was claimed`);
   assert.equal(record.application.build.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED', `${item.id}: unavailable source commit is not explicit`);
   assert.equal(record.application.physicsCore.sha256, Meta.physicsCoreSha256, `${item.id}: physics-core provenance mismatch`);
+  assert.equal(record.application.physicsCore.baselineStatus, 'APPROVED_UNCOMMITTED_CHANGE_FROM_RELEASE_BASELINE', `${item.id}: approved core-delta status missing`);
+  assert.equal(record.application.physicsCore.changeSet, 'SCIENTIFIC_RESOLUTION_PASS_1_SD_10', `${item.id}: SD-10 change-set provenance missing`);
   assert.equal(record.application.physicsCore.evidenceClass, 'P_PROVENANCE', `${item.id}: core hash has the wrong evidence meaning`);
   assert.equal(record.calculation.calculator.id, item.id, `${item.id}: calculator ID missing`);
   assert.equal(record.calculation.calculator.title, item.name, `${item.id}: calculator title missing`);
@@ -119,8 +121,10 @@ for (const [formulaIndex, item] of Registry.formulas.entries()) {
       assert.ok(Symbols.has(exported.semanticId), `${item.id}/${outputIndex}: unknown output semantic ID`);
       assert.equal(exported.physicalName, Symbols.get(output.semanticId).canonicalName, `${item.id}/${outputIndex}: output name bypassed registry`);
       assert.ok(Object.is(decodedNumber(exported.internal), output.value), `${item.id}/${outputIndex}: canonical result changed`);
-      assert.equal(exported.internal.unit, Units.canonicalQuantities[output.quantity].unit, `${item.id}/${outputIndex}: canonical output unit mismatch`);
-      assert.equal(exported.display.unit, Units.outputDefinition(systemId, output.quantity, output.value).unit, `${item.id}/${outputIndex}: displayed output unit mismatch`);
+      const expectedInternalUnit = output.unitSemantics === 'rate' ? Symbols.get(output.semanticId).productionUnit : Units.canonicalQuantities[output.quantity].unit;
+      const expectedDisplayUnit = output.displayUnit || Units.outputDefinition(systemId, output.quantity, output.value).unit;
+      assert.equal(exported.internal.unit, expectedInternalUnit, `${item.id}/${outputIndex}: canonical output unit mismatch`);
+      assert.equal(exported.display.unit, expectedDisplayUnit, `${item.id}/${outputIndex}: displayed output unit mismatch`);
     }
   }
 
@@ -219,12 +223,19 @@ assert.ok(Object.is(decodedNumber(superluminalRecord.calculation.outputs[0].inte
 const kaw = formula('kaw-dispersion');
 const kawRecord = Exporter.createRecord({ formula: kaw, canonicalInputs: defaults(kaw), exportedAt: timestampA });
 assert.equal(kawRecord.calculation.applicability.activeWarnings.length, 0, 'Review-pending KAW condition was falsely activated');
-assert.deepEqual(kawRecord.calculation.applicability.reviewPending.map(item => item.id), ['kaw-low-frequency-ordering-review-pending'], 'KAW review-pending state missing');
+assert.deepEqual(kawRecord.calculation.applicability.reviewPending, [], 'Resolved KAW qualitative ordering remains review-pending');
+assert.equal(kawRecord.calculation.applicability.diagnostics[0].reviewStatus, 'RESOLVED_QUALITATIVE_ORDERING', 'Resolved KAW diagnostic status missing');
 for (const id of ['hellinger-proton-cyclotron', 'hellinger-parallel-firehose']) {
   const item = formula(id);
   const record = Exporter.createRecord({ formula: item, canonicalInputs: defaults(item), exportedAt: timestampA });
-  assert.equal(record.calculation.applicability.activeWarnings.length, 0, `${id}: review-pending domain was falsely activated`);
-  assert.deepEqual(record.calculation.applicability.reviewPending.map(pending => pending.id), ['hellinger-fit-domain-review-pending'], `${id}: review-pending domain metadata missing`);
+  assert.equal(record.calculation.applicability.activeWarnings.length, 0, `${id}: valid source-domain default triggered a warning`);
+  assert.deepEqual(record.calculation.applicability.reviewPending, [], `${id}: source-verified domain remains review-pending`);
+  assert.deepEqual(record.calculation.formula.sourceDomain.betaParallelProtonInterval, [0.01,30], `${id}: source-domain provenance missing`);
+}
+for (const id of ['hellinger-mirror', 'hellinger-oblique-firehose']) {
+  const item = formula(id);
+  const record = Exporter.createRecord({ formula: item, canonicalInputs: defaults(item), exportedAt: timestampA });
+  assert.deepEqual(record.calculation.applicability.reviewPending.map(pending => pending.id), ['hellinger-fit-domain-review-pending'], `${id}: unresolved domain metadata missing`);
 }
 
 assert.match(Exporter.filename('ion-gyrofrequency', timestampA), /^alfvenica-ion-gyrofrequency-20260822T010203Z\.json$/, 'Informative export filename changed');

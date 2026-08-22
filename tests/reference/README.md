@@ -51,9 +51,13 @@ seven anchors under the supported Node.js 24 runtime.
 The proton gyrofrequency target is intentionally absent: the existing v1.0.1
 target does not have a documented rounding lineage precise enough for this
 artifact. Convention-sensitive thermal speeds and gyroradii are also excluded.
-Collision coefficients, Coulomb logarithms, Hellinger fits, reduced KAW
-expressions, and the other scientifically quarantined items are outside this
-batch and must not be promoted through this artifact.
+Collision coefficients, Coulomb logarithms, Hellinger fits, and reduced KAW
+expressions remain outside this independent numerical-reference artifact even
+where Scientific Resolution Pass 1 has resolved their terminology, scope,
+source-domain metadata, or an analytical equation identity. They must not be
+promoted to `A_REFERENCE` without an independently anchored published numerical
+target and reproducible lineage. The remaining quarantined items are likewise
+outside this artifact.
 
 To regenerate and audit:
 

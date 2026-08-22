@@ -54,13 +54,13 @@
     },
     'kaw-low-frequency-ordering-review-pending': {
       id: 'kaw-low-frequency-ordering-review-pending',
-      severity: 'REVIEW_PENDING',
+      severity: 'CAUTION',
       formulaIds: ['kaw-dispersion'],
       condition: 'ω << Ω_ci',
-      message: 'A source-justified numerical warning threshold for the reduced model low-frequency ordering remains under review.',
-      rationale: 'The accepted repository sources state a low-frequency reduced-model ordering but do not establish a numerical cutoff for the asymptotic symbol <<.',
-      provenance: 'Reduced-model assumption already documented in the formula registry; numerical cutoff requires equation-level source review.',
-      reviewStatus: 'REVIEW_PENDING',
+      message: 'The reduced model assumes the qualitative ordering ω << Ω_ci; no numerical warning cutoff is assigned.',
+      rationale: 'The accepted model scope states a low-frequency ordering, while the asymptotic symbol << does not define a unique numerical cutoff.',
+      provenance: 'Resolved SD-04 model-scope decision; the neutral ω/Ω_ci diagnostic is retained without a pass/fail threshold.',
+      reviewStatus: 'RESOLVED_QUALITATIVE_ORDERING',
       warningType: 'PHYSICAL_MODEL',
       evidenceClass: null,
       active: false,
@@ -68,7 +68,7 @@
     'hellinger-fit-domain-review-pending': {
       id: 'hellinger-fit-domain-review-pending',
       severity: 'REVIEW_PENDING',
-      formulaIds: ['hellinger-proton-cyclotron', 'hellinger-mirror', 'hellinger-parallel-firehose', 'hellinger-oblique-firehose'],
+      formulaIds: ['hellinger-mirror', 'hellinger-oblique-firehose'],
       condition: 'coefficient-specific beta domain and contour conditions verified from the primary source',
       message: 'Automated Hellinger fit-domain warnings remain pending primary-source verification.',
       rationale: 'The exact coefficient set, beta range, growth-rate contour, and ancillary model conditions must be verified together before enforcing a domain.',
@@ -77,6 +77,45 @@
       warningType: 'PHYSICAL_MODEL',
       evidenceClass: null,
       active: false,
+    },
+    'hellinger-proton-cyclotron-beta-domain': {
+      id: 'hellinger-proton-cyclotron-beta-domain',
+      severity: 'CAUTION',
+      formulaIds: ['hellinger-proton-cyclotron'],
+      condition: 'beta_parallel_p < 0.01 or beta_parallel_p > 30',
+      message: 'The proton-cyclotron fit is being evaluated outside its source-verified parallel-proton-beta interval 0.01–30.',
+      rationale: 'Hellinger et al. (2006) tabulate this fit for the gamma_max = 10^-3 Omega_p contour over 0.01 <= beta_parallel_p <= 30.',
+      provenance: 'Hellinger et al. (2006), Geophysical Research Letters 33, L09101, DOI: 10.1029/2006GL025925.',
+      reviewStatus: 'RESOLVED_SOURCE_VERIFIED',
+      warningType: 'APPLICABILITY',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
+    },
+    'hellinger-parallel-firehose-beta-domain': {
+      id: 'hellinger-parallel-firehose-beta-domain',
+      severity: 'CAUTION',
+      formulaIds: ['hellinger-parallel-firehose'],
+      condition: 'beta_parallel_p > 30',
+      message: 'The parallel-firehose fit is being evaluated above its source-verified parallel-proton-beta survey interval, beta_parallel_p <= 30.',
+      rationale: 'The source survey covers 0.01 <= beta_parallel_p <= 30, but this fitted branch is separately real-valued only for beta_parallel_p > 0.59.',
+      provenance: 'Hellinger et al. (2006), Geophysical Research Letters 33, L09101, DOI: 10.1029/2006GL025925.',
+      reviewStatus: 'RESOLVED_SOURCE_VERIFIED',
+      warningType: 'APPLICABILITY',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
+    },
+    'hellinger-parallel-firehose-mathematical-domain': {
+      id: 'hellinger-parallel-firehose-mathematical-domain',
+      severity: 'INVALID',
+      formulaIds: ['hellinger-parallel-firehose'],
+      condition: 'beta_parallel_p <= 0.59',
+      message: 'The parallel-firehose fitted branch is not real-valued for beta_parallel_p <= 0.59 because its noninteger power has base beta_parallel_p - 0.59.',
+      rationale: 'The implemented exponent 0.53 is noninteger, so a real-valued result requires beta_parallel_p - 0.59 > 0. The value 0.59 is a mathematical branch boundary, not a physical instability threshold.',
+      provenance: 'Mathematical domain of the source-verified fitted expression A = 1 - 0.47/(beta_parallel_p - 0.59)^0.53.',
+      reviewStatus: 'CONFIRMED_LOGICAL_BOUNDARY',
+      warningType: 'NUMERICAL',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
     },
   });
 
@@ -130,6 +169,24 @@
       }
     }
 
+    if (formula.id === 'hellinger-proton-cyclotron' && Number.isFinite(values.beta) && (values.beta < 0.01 || values.beta > 30)) {
+      warnings.push(warningRecord(definitions['hellinger-proton-cyclotron-beta-domain'], formula.id, {
+        quantity: 'beta_parallel_p', operator: 'outside-inclusive-interval', interval: [0.01, 30], actual: values.beta, result: true,
+      }));
+    }
+
+    if (formula.id === 'hellinger-parallel-firehose' && Number.isFinite(values.beta)) {
+      if (values.beta <= 0.59) {
+        warnings.push(warningRecord(definitions['hellinger-parallel-firehose-mathematical-domain'], formula.id, {
+          quantity: 'beta_parallel_p', operator: '<=', threshold: 0.59, actual: values.beta, result: true,
+        }));
+      } else if (values.beta > 30) {
+        warnings.push(warningRecord(definitions['hellinger-parallel-firehose-beta-domain'], formula.id, {
+          quantity: 'beta_parallel_p', operator: '>', threshold: 30, actual: values.beta, result: true,
+        }));
+      }
+    }
+
     return Object.freeze(warnings);
   }
 
@@ -151,13 +208,13 @@
       denominator: omegaCi,
       denominatorUnit: 'rad s⁻¹',
       interpretation: 'Low-frequency ordering metric only; no numerical pass/fail threshold is assigned to <<.',
-      reviewStatus: 'REVIEW_PENDING_NUMERICAL_THRESHOLD',
+      reviewStatus: 'RESOLVED_QUALITATIVE_ORDERING',
       warningId: null,
     }]);
   }
 
   function reviewPendingFor(formulaId) {
-    return Object.freeze(Object.values(definitions).filter(definition => !definition.active && definition.formulaIds.includes(formulaId)));
+    return Object.freeze(Object.values(definitions).filter(definition => definition.reviewStatus === 'REVIEW_PENDING' && definition.formulaIds.includes(formulaId)));
   }
 
   return Object.freeze({ severities, warningTypes, definitions, evaluate, diagnostics, reviewPendingFor });

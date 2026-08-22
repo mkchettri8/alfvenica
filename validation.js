@@ -51,6 +51,7 @@
     PUBLISHED_TARGET_UNVERIFIED: Object.freeze({ id: 'PUBLISHED_TARGET_UNVERIFIED', label: 'cited fixed target; independent lineage pending' }),
     ANALYTICAL_RELATION: Object.freeze({ id: 'ANALYTICAL_RELATION', label: 'analytical relation or limiting case' }),
     LOGICAL_DOMAIN_BOUNDARY: Object.freeze({ id: 'LOGICAL_DOMAIN_BOUNDARY', label: 'logically unambiguous physical or applicability boundary' }),
+    SOURCE_BACKED_DOMAIN: Object.freeze({ id: 'SOURCE_BACKED_DOMAIN', label: 'source-verified applicability domain' }),
     INTERNAL_DERIVATION: Object.freeze({ id: 'INTERNAL_DERIVATION', label: 'production-path restatement or shared constants' }),
     NOMINAL_EXAMPLE: Object.freeze({ id: 'NOMINAL_EXAMPLE', label: 'nominal positive example' }),
     EXECUTION_SMOKE: Object.freeze({ id: 'EXECUTION_SMOKE', label: 'execution-only smoke result' }),
@@ -159,15 +160,15 @@
     out.push(test('Doppler zero-flow identity', P.dopplerShiftedFrequency(3,2e-3,0,0), 3, 1e-13, 'Zero-flow limit of the stated Galilean frequency mapping.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     const aw=P.reducedAlfvenDispersion(1e-6,0,1e5,100,0);
     out.push(test('Reduced Alfvén MHD limit', aw.phaseParallel, 1e5, 1e-13, 'Zero-perpendicular-wavenumber limit of the implemented reduced dispersion relation.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
-    const lowRatio=P.reducedKawParallelElectricRatio(1e-6,1e-3,10);
-    out.push(test('Reduced KAW parallel-field formula', lowRatio, (1e-6/1e-3)*((1e-3*10)**2/(1+(1e-3*10)**2)), 1e-13, 'Expected expression duplicates the implemented reduced expression and coefficients.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    const lowRatio=P.reducedKawParallelElectricRatio(2e-6,3e-4,400);
+    out.push(test('Reduced KAW low-FLR parallel-field relation', lowRatio, 0.000096, 1e-13, 'Independent fixed-value evaluation of R=|k_parallel k_perpendicular| rho_s^2 for k_parallel=2e-6 m^-1, k_perpendicular=3e-4 m^-1, and rho_s=400 m; classified as an analytical equation identity, not an externally published numerical benchmark. Source lineage: Lysak & Lotko (1996), Hollweg (1999), and the Stasiewicz et al. (2000) review.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     const al=P.alfvenicityDiagnostics(50e3,50e3*Math.sqrt(P.constants.vacuumPermeability*ni*P.constants.protonMass),ni,1);
     out.push(test('Aligned Alfvénicity cross helicity', al.normalizedCrossHelicity, 1, 1e-13, 'Perfectly aligned, energy-balanced Elsasser-variable limit.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.identity));
     out.push(test('Aligned Alfvénicity residual energy', Math.abs(al.normalizedResidualEnergy)<1e-12?1:0, 1, 0, 'Energy-balanced Elsasser-variable limit, reduced to an exact Boolean assertion.', 'B_IDENTITY', 'ANALYTICAL_RELATION', rationale.exact));
     const logei=P.coulombLogElectronIon(ne,Te,Ti,1,1);
     out.push(test('Solar-wind Coulomb logarithm is finite', Number.isFinite(logei)&&logei>0?1:0, 1, 0, 'Nominal positive example only; no applicability boundary, rejection, or warning is exercised.', 'F_REGRESSION', 'NOMINAL_EXAMPLE', rationale.exact));
     const h=P.hellingerThreshold(1,0.43,0.42,-0.0004);
-    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+    out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Implementation-regression calculation using the source-verified coefficient tuple from Hellinger et al. (2006), GRL 33, L09101, DOI: 10.1029/2006GL025925; the expected arithmetic remains an inline production-coefficient restatement.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
 
     const coulombFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='coulomb-log-ei');
@@ -182,6 +183,20 @@
       const values={B:2*P.constants.speedOfLight*Math.sqrt(P.constants.vacuumPermeability*niGuard*muGuard*P.constants.protonMass),ni:niGuard,mu:muGuard};
       const warnings=Guardrails.evaluate(alfvenFormula,values,alfvenFormula.calculate(values));
       out.push(test('Nonrelativistic Alfvén speed causal-limit guardrail', warnings.some(warning=>warning.id==='nonrelativistic-alfven-at-or-above-c')?1:0, 1, 0, 'Logical physical boundary: an explicitly classical nonrelativistic speed expression is outside its intended regime when its computed value reaches or exceeds the causal limiting speed c.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
+    }
+    const protonCyclotronFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='hellinger-proton-cyclotron');
+    if (protonCyclotronFormula) {
+      const values={beta:31,A:1};
+      const warnings=Guardrails.evaluate(protonCyclotronFormula,values,protonCyclotronFormula.calculate(values));
+      out.push(test('Hellinger proton-cyclotron source beta-domain guardrail', warnings.some(warning=>warning.id==='hellinger-proton-cyclotron-beta-domain')?1:0, 1, 0, 'Source-verified 0.01 <= beta_parallel_p <= 30 fit interval from Hellinger et al. (2006), GRL 33, L09101, DOI: 10.1029/2006GL025925.', 'E_DOMAIN', 'SOURCE_BACKED_DOMAIN', rationale.exact));
+    }
+    const parallelFirehoseFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='hellinger-parallel-firehose');
+    if (parallelFirehoseFormula) {
+      const highValues={beta:31,A:0.6};
+      const highWarnings=Guardrails.evaluate(parallelFirehoseFormula,highValues,parallelFirehoseFormula.calculate(highValues));
+      out.push(test('Hellinger parallel-firehose source beta-domain guardrail', highWarnings.some(warning=>warning.id==='hellinger-parallel-firehose-beta-domain')?1:0, 1, 0, 'Source-verified beta_parallel_p <= 30 survey boundary from Hellinger et al. (2006), with the fitted branch separately restricted to beta_parallel_p > 0.59.', 'E_DOMAIN', 'SOURCE_BACKED_DOMAIN', rationale.exact));
+      const invalidWarnings=Guardrails.evaluate(parallelFirehoseFormula,{beta:0.59,A:0.6},[]);
+      out.push(test('Hellinger parallel-firehose mathematical-domain guardrail', invalidWarnings.some(warning=>warning.id==='hellinger-parallel-firehose-mathematical-domain')?1:0, 1, 0, 'Logical real-valued domain of the noninteger power (beta_parallel_p - 0.59)^0.53; 0.59 is not interpreted as a physical instability threshold.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
     }
 
     if (Registry && Registry.formulas) {
