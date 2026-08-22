@@ -95,10 +95,11 @@ assert.equal(jsonLd.dateModified, Meta.validationDate);
 assert.match(html, /Version<\/strong> 1\.1\.0/);
 assert.match(html, /Released<\/strong> 22 August 2026/);
 assert.match(html, /Source provenance<\/strong> immutable Git tag <code>v1\.1\.0<\/code>/);
-assert.match(html, /archival DOI pending/);
+assert.doesNotMatch(html, /DOI pending/i, 'Current public UI still shows DOI-pending wording');
 assert.doesNotMatch(html, /release candidate/i, 'Current UI still describes v1.1.0 as a release candidate');
 assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v1.1.0 tag is pending');
-assert.match(html, /no institutional endorsement is claimed/i);
+assert.match(html, /Alfvenica · Developed and maintained by <a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a><br>Version 1\.1\.0 · Released 22 August 2026 · Immutable source tag <a href="https:\/\/github\.com\/mkchettri8\/alfvenica\/releases\/tag\/v1\.1\.0">v1\.1\.0<\/a>/);
+assert.match(html, /<footer class="site-footer">\s*<span>Alfvenica · Developed and maintained by <a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a><\/span>\s*<\/footer>/);
 assert.match(fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8'), new RegExp(`<lastmod>${Meta.validationDate}<\\/lastmod>`));
 
 assert.equal(Registry.formulas.length, 70);

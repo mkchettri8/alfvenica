@@ -56,7 +56,7 @@ retained. Timestamp and display presentation remain outside deterministic state.
 ## Release artifacts and tests
 
 - Standalone build: regenerated from source; SHA-256
-  `56f9a0df763b0f862b6f4bbd03b2d5fc70a00df155d1c97ef1db97c5cdf823aa`
+  `6b3b7b01f3535cd1e584e5bcddcde77adf3554c7159c2e3fe49ced26841b8f82`
 - Citation metadata: `CITATION.cff` identifies v1.1.0 and its 2026-08-22 release
   date; no DOI is claimed before archival
 - License: MIT, unchanged
