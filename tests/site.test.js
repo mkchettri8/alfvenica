@@ -81,10 +81,12 @@ assert.match(html, /data-plot-mass-ratio-relation/, 'Plot mass-ratio relation is
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
 assert.match(html, /six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor/, 'Independent in-browser evidence inventory is not disclosed');
 assert.match(html, /hash and baseline identify code provenance, not scientific correctness/, 'Hash limitation is not disclosed');
-assert.match(html, /<strong>Version<\/strong> 1\.1\.0 release candidate/, 'v1.1.0 release-candidate version is missing');
-assert.match(html, /<strong>Release status<\/strong> tag, GitHub release, and archival DOI pending/, 'Pending release status is missing');
-assert.match(html, /Version 1\.1\.0 release candidate · tag, GitHub release, and archival DOI pending ·/, 'Citation box does not identify the pending candidate state');
-assert.doesNotMatch(html, /<strong>Release date<\/strong>/, 'Unpublished candidate fabricates a release date');
+assert.match(html, /<strong>Version<\/strong> 1\.1\.0/, 'v1.1.0 version is missing');
+assert.match(html, /<strong>Released<\/strong> 22 August 2026/, 'Release date is missing');
+assert.match(html, /Version 1\.1\.0 · released 22 August 2026 · immutable source tag <code>v1\.1\.0<\/code>/, 'Citation box does not identify the released/tagged state');
+assert.match(html, /archival DOI pending/, 'Pending archival DOI state is missing');
+assert.doesNotMatch(html, /release candidate/i, 'Current UI still describes v1.1.0 as a release candidate');
+assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v1.1.0 tag is pending');
 assert.doesNotMatch(html, /<strong>Last validated<\/strong>/, 'Ambiguous last-validated release label remains');
 assert.doesNotMatch(html, /Evidence record date|evidence record dated/i, 'Invented evidence-record date remains');
 assert.doesNotMatch(packageMetadata.description, /^Validated\b/i, 'package.json overstates validation status');
@@ -112,8 +114,9 @@ assert.equal(Meta.applicationName, 'Alfvenica', 'Application provenance name mis
 assert.equal(Meta.constantsRevision, 'NIST CODATA 2022', 'Constants revision metadata missing');
 assert.equal(Meta.sourceCommit, null, 'An unverified source commit is exposed');
 assert.equal(Meta.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED', 'Unavailable source commit is not explicit');
-assert.equal(Meta.releaseStatus, 'RELEASE_CANDIDATE_PENDING', 'Release-candidate status is missing');
-assert.equal(Meta.releaseDate, null, 'Unpublished candidate fabricates a release date');
+assert.equal(Meta.releaseStatus, 'RELEASED', 'Released status is missing');
+assert.equal(Meta.releaseDate, '2026-08-22', 'Release date is missing');
+assert.equal(Meta.releaseTag, 'v1.1.0', 'Release tag is missing');
 const decisionLog = fs.readFileSync(path.join(root, 'SCIENTIFIC_DECISION_LOG.md'), 'utf8');
 for (let index = 1; index <= 10; index += 1) assert.match(decisionLog, new RegExp(`SD-${String(index).padStart(2, '0')}`), `Scientific decision SD-${index} missing`);
 for (const field of ['Calculator/formula ID', 'Production functions', 'Current implementation', 'Current reference metadata', 'Why quarantined', 'Decision required', 'Would a scientific change alter results?', 'Affected surfaces', 'Source needed', 'Priority', 'Recommended action']) {
@@ -135,7 +138,7 @@ for (const [id,status] of Object.entries(pass2Statuses)) {
 assert.doesNotMatch(decisionLog, /\*\*Status:\*\* `OPEN`/, 'A scientific decision remains open');
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
-assert.doesNotMatch(citationCff, /^date-released:/m, 'Unpublished candidate CFF fabricates a release date');
+assert.match(citationCff, /^date-released: 2026-08-22$/m, 'CITATION.cff release date mismatch');
 assert.equal(packageMetadata.version, Meta.version, 'package.json version mismatch');
 assert.match(fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8'), new RegExp(`## ${Meta.version.replace(/\./g, '\\.')}`), 'Changelog version missing');
 const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
@@ -150,7 +153,7 @@ const identityHtml = identityMatch[1];
 assert.match(identityHtml, /Alfvenica is independently developed and maintained by/, 'Independent-development statement missing');
 assert.match(identityHtml, /<a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a>/, 'Maintainer website link missing or incorrect');
 assert.match(identityHtml, /<a href="https:\/\/orcid\.org\/0009-0000-1368-9263">ORCID<\/a>/, 'ORCID link missing or incorrect');
-assert.match(identityHtml, /No dedicated external funding supported this release candidate/, 'No-funding disclosure missing');
+assert.match(identityHtml, /No dedicated external funding supported this release/, 'No-funding disclosure missing');
 assert.match(identityHtml, /no institutional endorsement is claimed/, 'No-endorsement disclosure missing');
 assert.doesNotMatch(html, /Author and independence/, 'Old authorship heading remains');
 assert.doesNotMatch(html, /final-year PhD candidate/, 'Old PhD-candidate biography remains');

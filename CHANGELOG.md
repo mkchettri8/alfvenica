@@ -2,7 +2,7 @@
 
 All notable changes to Alfvenica are recorded here.
 
-## 1.1.0 — Release candidate (pending release)
+## 1.1.0 — 2026-08-22
 
 ### Publication and scientific hardening
 
@@ -29,8 +29,8 @@ All notable changes to Alfvenica are recorded here.
   `|E_parallel/E_perp|=|k_parallel k_perp|rho_s^2`; this is the only deliberate
   numerical-physics change since v1.0.1.
 
-This entry describes a release candidate. The `v1.1.0` tag, GitHub release, and
-archival DOI have not yet been created.
+The `v1.1.0` tag establishes immutable source provenance. An archival Zenodo DOI
+has not yet been assigned.
 
 ## 1.0.1 — 2026-08-10
 

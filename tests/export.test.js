@@ -69,12 +69,13 @@ for (const [formulaIndex, item] of Registry.formulas.entries()) {
   assert.equal(new Date(record.exportedAt).toISOString(), record.exportedAt, `${item.id}: invalid ISO timestamp`);
   assert.equal(record.application.name, 'Alfvenica', `${item.id}: application name missing`);
   assert.equal(record.application.version, '1.1.0', `${item.id}: package version missing`);
-  assert.equal(record.application.releaseStatus, 'RELEASE_CANDIDATE_PENDING', `${item.id}: release-candidate status missing`);
-  assert.equal(record.application.releaseDate, null, `${item.id}: unpublished candidate fabricates a release date`);
+  assert.equal(record.application.releaseStatus, 'RELEASED', `${item.id}: released status missing`);
+  assert.equal(record.application.releaseDate, '2026-08-22', `${item.id}: release date missing`);
+  assert.equal(record.application.releaseTag, 'v1.1.0', `${item.id}: release tag missing`);
   assert.equal(record.application.build.sourceCommit, null, `${item.id}: unverified source commit was claimed`);
   assert.equal(record.application.build.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED', `${item.id}: unavailable source commit is not explicit`);
   assert.equal(record.application.physicsCore.sha256, Meta.physicsCoreSha256, `${item.id}: physics-core provenance mismatch`);
-  assert.equal(record.application.physicsCore.baselineStatus, 'V1_1_0_RELEASE_CANDIDATE_FROZEN', `${item.id}: frozen release-candidate core status missing`);
+  assert.equal(record.application.physicsCore.baselineStatus, 'V1_1_0_RELEASED_FROZEN', `${item.id}: frozen released core status missing`);
   assert.equal(record.application.physicsCore.changeSet, 'SCIENTIFIC_RESOLUTION_PASS_1_SD_10', `${item.id}: SD-10 change-set provenance missing`);
   assert.equal(record.application.physicsCore.evidenceClass, 'P_PROVENANCE', `${item.id}: core hash has the wrong evidence meaning`);
   assert.equal(record.calculation.calculator.id, item.id, `${item.id}: calculator ID missing`);

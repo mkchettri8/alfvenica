@@ -50,12 +50,13 @@ for (const [file, expected] of Object.entries(expectedHashes)) assert.equal(sha2
 assert.equal(Meta.applicationName, 'Alfvenica');
 assert.equal(Meta.version, '1.1.0');
 assert.equal(packageMetadata.version, Meta.version);
-assert.equal(Meta.releaseStatus, 'RELEASE_CANDIDATE_PENDING');
-assert.equal(Meta.releaseDate, null, 'Unpublished v1.1.0 candidate fabricates a release date');
+assert.equal(Meta.releaseStatus, 'RELEASED');
+assert.equal(Meta.releaseDate, '2026-08-22');
+assert.equal(Meta.releaseTag, 'v1.1.0');
 assert.equal(Meta.validationDate, '2026-08-22');
-assert.equal(Meta.sourceCommit, null, 'Uncommitted release candidate fabricates a source commit');
+assert.equal(Meta.sourceCommit, null, 'Released metadata fabricates a source commit');
 assert.equal(Meta.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED');
-assert.equal(Meta.physicsCoreBaselineStatus, 'V1_1_0_RELEASE_CANDIDATE_FROZEN');
+assert.equal(Meta.physicsCoreBaselineStatus, 'V1_1_0_RELEASED_FROZEN');
 
 const citation = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citation, /^cff-version: 1\.2\.0$/m);
@@ -65,22 +66,23 @@ assert.match(citation, /^\s+- family-names: Chettri$/m);
 assert.match(citation, /^version: 1\.1\.0$/m);
 assert.match(citation, /repository-code: "https:\/\/github\.com\/mkchettri8\/alfvenica"/);
 assert.match(citation, /^url: "https:\/\/alfvenica\.org\/"$/m);
-assert.doesNotMatch(citation, /^date-released:/m, 'Candidate CFF claims a release date');
-assert.doesNotMatch(citation, /^doi:/mi, 'Candidate CFF claims an archival DOI');
+assert.match(citation, /^date-released: 2026-08-22$/m);
+assert.doesNotMatch(citation, /^doi:/mi, 'CFF claims an unassigned archival DOI');
 assert.match(fs.readFileSync(path.join(root, 'LICENSE'), 'utf8'), /^MIT License/);
 
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 const changelog = fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8');
 const readiness = fs.readFileSync(path.join(root, 'RELEASE_READINESS.md'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-assert.match(readme, /Release candidate:\*\* 1\.1\.0/);
+assert.match(readme, /Current version:\*\* 1\.1\.0 \(released 2026-08-22/);
 assert.ok(readme.replace(/[\r\n*]+/g, ' ').replace(/\s+/g, ' ').includes(Meta.citation));
 assert.match(readme, /no institutional endorsement is claimed/i);
 assert.match(readme, /killing a\s+mutation demonstrates sensitivity/i);
-assert.match(changelog, /^## 1\.1\.0 — Release candidate \(pending release\)$/m);
-assert.match(changelog, /tag, GitHub release, and\s+archival DOI have not yet been created/);
-assert.match(readiness, /Release candidate:\*\* Alfvenica v1\.1\.0/);
-assert.match(readiness, /tag, GitHub release, deployment, and archival DOI/);
+assert.match(changelog, /^## 1\.1\.0 — 2026-08-22$/m);
+assert.match(changelog, /`v1\.1\.0` tag establishes immutable source provenance/);
+assert.match(readiness, /Release:\*\* Alfvenica v1\.1\.0/);
+assert.match(readiness, /release-candidate audit passed/);
+assert.match(readiness, /`v1\.1\.0` tag.*released-source provenance/s);
 for (const currentFile of ['release-metadata.js','package.json','index.html','README.md','CITATION.cff','RELEASE_READINESS.md']) {
   assert.doesNotMatch(fs.readFileSync(path.join(root, currentFile), 'utf8'), /Version 1\.0\.1|Current version:\*\* 1\.0\.1|version["': ]+1\.0\.1/i, `${currentFile}: stale current-version wording`);
 }
@@ -90,9 +92,12 @@ assert.ok(jsonLdMatch, 'SoftwareApplication JSON-LD missing');
 const jsonLd = JSON.parse(jsonLdMatch[1]);
 assert.equal(jsonLd.softwareVersion, Meta.version);
 assert.equal(jsonLd.dateModified, Meta.validationDate);
-assert.match(html, /Version<\/strong> 1\.1\.0 release candidate/);
-assert.match(html, /Release status<\/strong> tag, GitHub release, and archival DOI pending/);
-assert.doesNotMatch(html, /<strong>Release date<\/strong>/, 'Candidate UI fabricates a release date');
+assert.match(html, /Version<\/strong> 1\.1\.0/);
+assert.match(html, /Released<\/strong> 22 August 2026/);
+assert.match(html, /Source provenance<\/strong> immutable Git tag <code>v1\.1\.0<\/code>/);
+assert.match(html, /archival DOI pending/);
+assert.doesNotMatch(html, /release candidate/i, 'Current UI still describes v1.1.0 as a release candidate');
+assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v1.1.0 tag is pending');
 assert.match(html, /no institutional endorsement is claimed/i);
 assert.match(fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8'), new RegExp(`<lastmod>${Meta.validationDate}<\\/lastmod>`));
 
@@ -112,8 +117,9 @@ for (const formula of Registry.formulas) {
   }
   const record = Exporter.createRecord({formula, canonicalInputs:defaults(formula), exportedAt:'2026-08-22T00:00:00.000Z'});
   assert.equal(record.application.version, '1.1.0');
-  assert.equal(record.application.releaseStatus, 'RELEASE_CANDIDATE_PENDING');
-  assert.equal(record.application.releaseDate, null);
+  assert.equal(record.application.releaseStatus, 'RELEASED');
+  assert.equal(record.application.releaseDate, '2026-08-22');
+  assert.equal(record.application.releaseTag, 'v1.1.0');
   assert.equal(record.application.build.sourceCommit, null);
   assert.equal(record.schema.name, 'org.alfvenica.reproducible-calculation-record');
   assert.equal(record.schema.version, '1.0.0');
@@ -183,4 +189,4 @@ assert.ok(recordedStandaloneHash, 'Release manifest lacks final standalone SHA-2
 assert.equal(standaloneHash, recordedStandaloneHash[1], 'Standalone SHA differs from release manifest');
 assert.match(fs.readFileSync(path.join(root, 'alfvenica_standalone.html'),'utf8'), /Version 1\.1\.0/);
 
-console.log(`Alfvenica release audit passed: v${Meta.version} candidate, ${Registry.formulas.length} calculators, ${numericOutputs} frozen numeric outputs, ${Object.keys(Symbols.symbols).length} symbols, ${Units.quantityFamilies.length} unit families, ${exportRecords} exports, ${markdownFiles.length} Markdown files, and protected/standalone hashes verified.`);
+console.log(`Alfvenica release audit passed: v${Meta.version} released, ${Registry.formulas.length} calculators, ${numericOutputs} frozen numeric outputs, ${Object.keys(Symbols.symbols).length} symbols, ${Units.quantityFamilies.length} unit families, ${exportRecords} exports, ${markdownFiles.length} Markdown files, and protected/standalone hashes verified.`);

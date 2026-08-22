@@ -5,7 +5,7 @@
 Every calculator also exposes a generated **Symbols & Definitions** table, and the application includes a searchable **Notation & Conventions** view. Both are resolved from `symbol-registry.js`; documentation and UI code do not maintain independent symbol definitions.
 
 - **Live site:** [alfvenica.org](https://alfvenica.org/)
-- **Release candidate:** 1.1.0 (tag, GitHub release, and archival DOI pending)
+- **Current version:** 1.1.0 (released 2026-08-22; archival DOI pending)
 - **Creator and maintainer:** [Mani K Chettri](https://mkchettri.in/) ([ORCID](https://orcid.org/0009-0000-1368-9263))
 
 Alfvenica runs entirely in the browser. It needs no server-side code, account,
@@ -44,7 +44,7 @@ Reduced models and empirical contours are labelled explicitly. Alfvenica is a tr
 - `tests/` — independent unit anchors, domain-warning behaviour, physics, plots, and static-site integrity checks
 - `FORMULA_AUDIT.md` — scientific scope and limitations audit
 - `SCIENTIFIC_DECISION_LOG.md` — historical scientific audit and explicit publication decisions for SD-01 through SD-10
-- `RELEASE_READINESS.md` — factual v1.1.0 release-candidate freeze and audit manifest
+- `RELEASE_READINESS.md` — factual v1.1.0 freeze, release-audit, and finalization manifest
 - `CITATION.cff` — machine-readable citation metadata
 
 ## Local preview
@@ -151,9 +151,10 @@ Timestamp, unit-display choice, display formatting, outputs, diagnostics, and
 warnings are excluded, so equivalent scientific input states serialize
 identically. No digest is currently claimed; a standard hash can be layered on
 this canonical serialization when the release build has a verified fingerprint
-path. The browser build does not currently embed a truthful source commit, so
-the field is explicitly null and marked unavailable rather than inferred from a
-checkout.
+path. The browser build does not embed a self-referential source commit, so the
+field is explicitly null and marked unavailable rather than inferred from a
+checkout. Immutable source provenance for this release is established by the
+`v1.1.0` Git tag.
 
 For formulas using μ, the record identifies the canonical semantic ID
 `ion-to-proton-mass-ratio` and relation `mu = m_i / m_p`. The historical
@@ -178,9 +179,8 @@ Scientific corrections, independent benchmarks, documentation improvements, and 
 ## Citation
 
 GitHub displays a **Cite this repository** panel from `CITATION.cff`. The current
-metadata identifies the v1.1.0 software release candidate. A Zenodo DOI will be
-added only after the final tag and GitHub release are formally archived; no DOI
-has been assigned or implied in this candidate.
+metadata identifies Alfvenica v1.1.0, released 2026-08-22. A Zenodo DOI will be
+added only after archival; no DOI has yet been assigned or implied.
 
 Suggested citation:
 

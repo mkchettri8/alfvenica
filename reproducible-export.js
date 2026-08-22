@@ -262,6 +262,7 @@
         version: Meta.version,
         releaseStatus: Meta.releaseStatus,
         releaseDate: Meta.releaseDate,
+        releaseTag: Meta.releaseTag,
         repositoryUrl: Meta.repositoryUrl,
         build: {
           kind: Meta.buildKind,

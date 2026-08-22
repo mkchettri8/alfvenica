@@ -1,12 +1,16 @@
 # Alfvenica v1.1.0 Release Readiness
 
-## Candidate identity
+## Release identity and audit history
 
-- **Release candidate:** Alfvenica v1.1.0
+- **Release:** Alfvenica v1.1.0
+- **Release date:** 2026-08-22
+- **Immutable source tag:** `v1.1.0`
 - **Preparation branch:** `v1.1.0-paper-hardening`
-- **Status:** pending final commit, tag, GitHub release, deployment, and archival DOI
+- **Status:** the release-candidate audit passed; v1.1.0 is released and tagged,
+  while archival through Zenodo and its DOI remain pending
 - **Source commit in browser/export metadata:** unavailable/not embedded; no
-  release commit is claimed by this uncommitted candidate
+  self-referential commit hash is fabricated; the `v1.1.0` tag establishes
+  immutable released-source provenance
 
 ## Scientific freeze
 
@@ -42,7 +46,8 @@ All 70 calculators produce records using:
 - `org.alfvenica.reproducible-calculation-record` version `1.0.0`
 - `org.alfvenica.deterministic-calculation-state` version `1.0.0`
 
-Application version is v1.1.0. Source commit remains null and explicitly
+Application version is v1.1.0 with release status `RELEASED`, release date
+2026-08-22, and tag `v1.1.0`. Source commit remains null and explicitly
 unavailable. Canonical inputs, formula provenance, outputs, assumptions,
 references, display-mode metadata, active warnings, scientific review status,
 the `mu=m_i/m_p` convention, and deprecated `ion_mass_number` compatibility are
@@ -51,9 +56,9 @@ retained. Timestamp and display presentation remain outside deterministic state.
 ## Release artifacts and tests
 
 - Standalone build: regenerated from source; SHA-256
-  `0ff4268047e6fe035db529ccafcef1b24c7c82f512e41459a92b9db6beee550c`
-- Citation metadata: `CITATION.cff` identifies v1.1.0; no release date or DOI is
-  claimed before publication and archival
+  `56f9a0df763b0f862b6f4bbd03b2d5fc70a00df155d1c97ef1db97c5cdf823aa`
+- Citation metadata: `CITATION.cff` identifies v1.1.0 and its 2026-08-22 release
+  date; no DOI is claimed before archival
 - License: MIT, unchanged
 - Repository hygiene: the tracked-file audit found no release-blocking secrets,
   machine-local paths, or scratch artifacts; `.codex/paper-hardening/` remains
@@ -75,5 +80,6 @@ retained. Timestamp and display presentation remain outside deterministic state.
 - The deterministic state supplies canonical serialization but no claimed
   cryptographic state fingerprint.
 
-No v1.1.0 tag, GitHub release, deployment, Zenodo archive, or DOI exists at this
-candidate stage.
+The release-candidate audit recorded above passed before finalization. The
+`v1.1.0` tag now establishes the released source state. No Zenodo archive or DOI
+has yet been created.
