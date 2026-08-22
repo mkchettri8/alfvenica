@@ -260,6 +260,7 @@
       application: {
         name: Meta.applicationName,
         version: Meta.version,
+        releaseStatus: Meta.releaseStatus,
         releaseDate: Meta.releaseDate,
         repositoryUrl: Meta.repositoryUrl,
         build: {

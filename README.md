@@ -5,10 +5,12 @@
 Every calculator also exposes a generated **Symbols & Definitions** table, and the application includes a searchable **Notation & Conventions** view. Both are resolved from `symbol-registry.js`; documentation and UI code do not maintain independent symbol definitions.
 
 - **Live site:** [alfvenica.org](https://alfvenica.org/)
-- **Current version:** 1.0.1
+- **Release candidate:** 1.1.0 (tag, GitHub release, and archival DOI pending)
 - **Creator and maintainer:** [Mani K Chettri](https://mkchettri.in/) ([ORCID](https://orcid.org/0009-0000-1368-9263))
 
-Alfvenica runs entirely in the browser. It needs no server-side code, account, database, or analytics service, and user inputs are not transmitted.
+Alfvenica runs entirely in the browser. It needs no server-side code, account,
+database, or analytics service, and user inputs are not transmitted. The project
+is independently developed; no institutional endorsement is claimed.
 
 ## Scientific scope
 
@@ -41,7 +43,8 @@ Reduced models and empirical contours are labelled explicitly. Alfvenica is a tr
 - `app.js` — search interaction, unit-registry delegation, presets, rendering, plotting, export, and navigation
 - `tests/` — independent unit anchors, domain-warning behaviour, physics, plots, and static-site integrity checks
 - `FORMULA_AUDIT.md` — scientific scope and limitations audit
-- `SCIENTIFIC_DECISION_LOG.md` — finite human-review queue for quarantined equations, coefficients, conventions, and domains
+- `SCIENTIFIC_DECISION_LOG.md` — historical scientific audit and explicit publication decisions for SD-01 through SD-10
+- `RELEASE_READINESS.md` — factual v1.1.0 release-candidate freeze and audit manifest
 - `CITATION.cff` — machine-readable citation metadata
 
 ## Local preview
@@ -75,8 +78,14 @@ local assets. The physics-core hash is a `P_PROVENANCE` change detector, not
 evidence of scientific correctness. See [`FORMULA_AUDIT.md`](FORMULA_AUDIT.md)
 and the public
 [test workflow](https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml).
+The mutation matrix measures whether selected defects are detected: killing a
+mutation demonstrates sensitivity to that injected defect, not universal
+scientific correctness.
 
-The public name and relation for μ are registry-owned as the ion-to-proton mass ratio. The existing plot-export field `ion_mass_number` remains a legacy compatibility key in this development batch; it is associated internally with the canonical semantic ID and is not the public scientific term.
+The public name and relation for μ are registry-owned as the ion-to-proton mass
+ratio. The existing plot-export field `ion_mass_number` remains an explicitly
+deprecated v1.1.0 compatibility key; it is associated internally with the
+canonical semantic ID and is not the public scientific term.
 
 The unit layer enumerates all 20 current conversion families across Space, SI
 display, and CGS-oriented display modes. The latter is explicitly a mixed
@@ -87,8 +96,8 @@ their own factor-one `rate` family in `s^-1`; they are neither cyclic frequencie
 in Hz nor angular frequencies in rad/s and receive no adaptive Hz-prefix scaling.
 Exact SI-prefix conversions and the independent eV/K anchor are exercised
 separately from round trips. Scientific Resolution Pass 2 changes no numerical
-formula: all 165 current frozen numerical outputs remain unchanged from commit
-`03e30f8`.
+formula: all 165 current frozen numerical outputs remain unchanged from the
+approved scientific-freeze checkpoint preceding this release audit.
 
 Runtime domain records currently warn without changing results when a computed
 Coulomb logarithm is non-positive or when the classical Alfvén speed reaches or
@@ -153,9 +162,10 @@ compatibility object and does not denote mass number A.
 
 The export captures state and provenance; it does not establish scientific
 correctness, validate applicability beyond the recorded evidence, or perform
-uncertainty propagation. Scientific validation remains separately classified,
-and unresolved convention-sensitive work is listed in
-[`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md).
+uncertainty propagation. Scientific validation remains separately classified.
+The resolved publication decisions and their retained historical questions are
+recorded in [`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md); known
+model limitations remain explicit even though no SD-01–SD-10 item is open.
 
 ## Deployment
 
@@ -167,12 +177,14 @@ Scientific corrections, independent benchmarks, documentation improvements, and 
 
 ## Citation
 
-GitHub displays a **Cite this repository** panel from `CITATION.cff`. A Zenodo DOI
-will be added only after the release is formally archived.
+GitHub displays a **Cite this repository** panel from `CITATION.cff`. The current
+metadata identifies the v1.1.0 software release candidate. A Zenodo DOI will be
+added only after the final tag and GitHub release are formally archived; no DOI
+has been assigned or implied in this candidate.
 
 Suggested citation:
 
-> Chettri, M. K. (2026). *Alfvenica: Interactive Space Plasma Toolkit* (Version 1.0.1) [Computer software]. https://alfvenica.org/
+> Chettri, M. K. (2026). *Alfvenica: Interactive Space Plasma Toolkit* (Version 1.1.0) [Computer software]. https://alfvenica.org/
 
 ## Licence
 

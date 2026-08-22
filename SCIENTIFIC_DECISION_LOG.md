@@ -2,12 +2,12 @@
 
 ## Purpose and controls
 
-This is the finite human-review queue for convention-sensitive production
-science that remains quarantined during paper hardening. It records the code as
-implemented and retains the historical questions that led to each decision.
-Entries carry explicit resolved or open status. A decision may change production
-science only after the requested source evidence is reviewed, the affected
-metadata is reconciled, and new independent validation is added where possible.
+This began as the finite human-review queue for convention-sensitive production
+science quarantined during paper hardening. It now records the implemented code,
+the historical questions that led to each decision, and the explicit publication
+resolution for SD-01 through SD-10. No entry remains open. Closing this log does
+not claim universal model validity or promote every formula to independent
+reference evidence.
 
 Allowed priority values are `CRITICAL_FOR_PAPER`, `IMPORTANT_BUT_DEFERRABLE`,
 and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,

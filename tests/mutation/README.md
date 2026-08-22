@@ -60,6 +60,11 @@ removed SD-10 `1/(1+k_perp^2 rho_s^2)` denominator and must be killed by the
 fixed-value `B_IDENTITY` for `R=|k_parallel k_perp|rho_s^2`. The preceding 17
 mutation definitions are retained unchanged.
 
+The protected corpus retains historical `QUARANTINED_DIAGNOSTIC` labels where
+no accepted independent numerical benchmark kills the mutation. That mutation
+classification identifies an evidence limitation; it does not mean an
+SD-01–SD-10 publication decision remains open.
+
 The JSON corpus is static transformation metadata. `observedResult` and
 `detectedBy` are attached to structured result records at runtime so a stale
 frozen result cannot disguise a change in sensitivity. The deterministic

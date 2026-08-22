@@ -2,6 +2,36 @@
 
 All notable changes to Alfvenica are recorded here.
 
+## 1.1.0 — Release candidate (pending release)
+
+### Publication and scientific hardening
+
+- Introduced an evidence taxonomy that separates independent references,
+  analytical identities, unit anchors, applicability domains, implementation
+  regressions, and provenance controls without treating them as equivalent.
+- Added independently generated NRL/CODATA reference benchmarks and scientific
+  mutation-sensitivity testing with an explicit required-kill gate.
+- Added the canonical symbol registry, generated Symbols & Definitions tables,
+  and the searchable Notation & Conventions view.
+- Independently exercised all display-unit families, separated characteristic
+  collision rates from cyclic and angular frequencies, and documented the
+  limitations of the CGS-oriented mixed display mode.
+- Added structured applicability warnings for unambiguous Coulomb-logarithm,
+  nonrelativistic Alfvén-speed, and source-verified Hellinger fit domains.
+- Added versioned reproducible calculation records with deterministic canonical
+  state serialization, registry-resolved provenance, active warnings, and
+  explicit legacy `ion_mass_number` compatibility.
+- Closed SD-01 through SD-10 with explicit publication decisions. Clarified the
+  scope and terminology of collision rates, collisional resistive transport,
+  Coulomb-log estimates, reduced Alfvén models, lower-hybrid approximation,
+  Hall/magnetization parameters, and scalar Alfvénicity diagnostics.
+- Corrected the reduced low-FLR KAW parallel electric-field ratio to
+  `|E_parallel/E_perp|=|k_parallel k_perp|rho_s^2`; this is the only deliberate
+  numerical-physics change since v1.0.1.
+
+This entry describes a release candidate. The `v1.1.0` tag, GitHub release, and
+archival DOI have not yet been created.
+
 ## 1.0.1 — 2026-08-10
 
 ### Credibility and usability hardening

@@ -4,10 +4,9 @@ message: "If you use Alfvenica in research, please cite the software using this 
 type: software
 authors:
   - family-names: Chettri
-    given-names: Mani K
+    given-names: Mani Kumar
     orcid: "https://orcid.org/0009-0000-1368-9263"
-version: 1.0.1
-date-released: 2026-08-10
+version: 1.1.0
 url: "https://alfvenica.org/"
 repository-code: "https://github.com/mkchettri8/alfvenica"
 license: MIT

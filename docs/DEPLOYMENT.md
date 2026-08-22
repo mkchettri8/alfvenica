@@ -74,20 +74,21 @@ The final addresses should be:
 - `https://alfvenica.org/`
 - `https://www.alfvenica.org/` → redirects to the apex domain
 
-## 8. Version 1.0.0 baseline, version 1.0.1, and DOI
+## 8. Historical releases, version 1.1.0, and DOI
 
-The repository history shows that `9ad37ae` is the complete public 1.0.0 baseline,
-including the automated test workflow. Before publishing 1.0.1:
+The repository history preserves the v1.0.0 baseline at `9ad37ae` and the
+v1.0.1 release separately. For v1.1.0:
 
-1. Create an annotated `v1.0.0` tag on commit `9ad37ae` and publish the matching
-   historical GitHub release.
-2. Merge the reviewed v1.0.1 changes only after all local and pull-request checks
-   pass.
-3. Confirm the public site and the Tests workflow are green at the v1.0.1 commit.
-4. Create an annotated `v1.0.1` tag and a GitHub release from that exact commit.
-5. Connect the repository to Zenodo and archive the v1.0.1 release.
-6. Add the issued version DOI to `CITATION.cff`, release metadata, README, and
-   About in a separately tested metadata update. Do not display a placeholder DOI.
+1. Prepare and review the release candidate on its dedicated branch.
+2. Run the full scientific, unit, export, mutation, build, site, and release
+   audit suites; verify the protected hashes in `RELEASE_READINESS.md`.
+3. Merge only after the candidate diff and checks are reviewed.
+4. Confirm the public Tests workflow is green on the final release commit.
+5. Create the annotated `v1.1.0` tag and matching GitHub release from that exact
+   commit.
+6. Archive that immutable release through Zenodo.
+7. Add the issued DOI to `CITATION.cff`, release metadata, README, and About in a
+   separately tested metadata update. Do not display a placeholder DOI.
 
 ## Updating the site later
 

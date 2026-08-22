@@ -23,7 +23,8 @@ The audit applies four rules:
   anisotropy interval, and plasma assumptions are verified to Hellinger et al.
   (2006), *Geophysical Research Letters* 33, L09101,
   [DOI: 10.1029/2006GL025925](https://doi.org/10.1029/2006GL025925). Mirror and
-  oblique-firehose source-domain decisions remain open.
+  oblique-firehose automated domain metadata remains `REVIEW_PENDING`; this is
+  a retained model limitation, not an open SD-01–SD-10 decision.
 - **Simplified mirror threshold:** Hasegawa (1969) and Pokhotelov et al. (2004),
   with the implemented single-species long-wavelength approximation labelled as
   simplified and its finite-Larmor-radius limitation stated.
