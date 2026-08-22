@@ -63,7 +63,7 @@
     });
   }
 
-  const formulas = [
+  const rawFormulas = [
     // Frequencies
     entry('electron-gyrofrequency','Frequencies','Electron gyrofrequency','f<sub>ce</sub> = |e|B/(2πm<sub>e</sub>)','f_{ce}=|e|B/(2\\pi m_e)','Electron cyclotron frequency and angular frequency.',[common.B()],x=>{const w=P.electronGyroAngular(x.B);return[O('Frequency','fce','frequency',w/PI2),O('Angular frequency','ωce','angularFrequency',w),O('Period','τce','time',PI2/w)];},{keywords:['cyclotron','electron','fce']}),
     entry('ion-gyrofrequency','Frequencies','Ion gyrofrequency','f<sub>ci</sub> = Z|e|B/(2πm<sub>i</sub>)','f_{ci}=Z|e|B/(2\\pi m_i)','Ion cyclotron frequency for a single ion species.',[common.B(),common.Z(),common.mu()],x=>{const w=P.ionGyroAngular(x.B,x.Z,x.mu);return[O('Frequency','fci','frequency',w/PI2),O('Angular frequency','Ωci','angularFrequency',w),O('Period','τci','time',PI2/w)];},{keywords:['cyclotron','ion','fci']}),
@@ -154,6 +154,423 @@
     entry('hellinger-parallel-firehose','Instability thresholds','Hellinger parallel-firehose contour','A = 1 − 0.47/(β<sub>∥p</sub> − 0.59)<sup>0.53</sup>','A=1-0.47/(\\beta_{\\parallel p}-0.59)^{0.53}','Approximate γmax = 10⁻³ Ωp parallel-firehose contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',2,{min:0.591}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',0.6,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,-0.47,0.53,0.59);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','Ath−A','dimensionless',th-x.A),T('Relative to contour',x.A<th?'Below contour':'Above contour')];},{references:[REF.hellinger],assumptions:['Fit is undefined for β∥p ≤ 0.59; model assumptions follow Hellinger et al. (2006).']}),
     entry('hellinger-oblique-firehose','Instability thresholds','Hellinger oblique-firehose contour','A = 1 − 1.4/(β<sub>∥p</sub> + 0.11)','A=1-1.4/(\\beta_{\\parallel p}+0.11)','Approximate γmax = 10⁻³ Ωp oblique-firehose contour from Hellinger et al. (2006).',[I('beta','Parallel proton beta','β∥p','dimensionless',2,{min:0}),I('A','Observed anisotropy','T⊥/T∥','dimensionless',0.5,{min:0})],x=>{const th=P.hellingerThreshold(x.beta,-1.4,1.0,-0.11);return[O('Threshold anisotropy','Ath','dimensionless',th),O('Observed anisotropy','A','dimensionless',x.A),O('Margin','Ath−A','dimensionless',th-x.A),T('Relative to contour',x.A<th?'Below contour':'Above contour')];},{references:[REF.hellinger],assumptions:['Fit domain and model assumptions follow Hellinger et al. (2006).']}),
   ];
+
+  const M = (inputs, outputs, equationSymbolIds, symbolReviewStatus = 'REVIEWED_METADATA') => Object.freeze({
+    inputs: Object.freeze(inputs),
+    outputs: Object.freeze(outputs),
+    equationSymbolIds: Object.freeze(equationSymbolIds),
+    symbolReviewStatus,
+  });
+
+  // Semantic IDs are presentation-independent scientific identities. The
+  // existing labels, glyphs, equations, and calculation callbacks remain
+  // unchanged during this metadata-only migration.
+  const formulaSymbolMetadata = Object.freeze({
+    'electron-gyrofrequency': M(
+      { B:'magnetic-field-magnitude' },
+      ['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-cyclotron-period'],
+      ['electron-cyclotron-frequency','elementary-charge-magnitude','magnetic-field-magnitude','electron-mass']
+    ),
+    'ion-gyrofrequency': M(
+      { B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['ion-cyclotron-frequency','ion-cyclotron-angular-frequency','ion-cyclotron-period'],
+      ['ion-cyclotron-frequency','ion-charge-state','elementary-charge-magnitude','magnetic-field-magnitude','ion-mass']
+    ),
+    'electron-plasma-frequency': M(
+      { ne:'electron-number-density' },
+      ['electron-plasma-frequency','electron-plasma-angular-frequency','electron-plasma-period'],
+      ['electron-plasma-frequency','electron-number-density','elementary-charge-magnitude','vacuum-permittivity','electron-mass']
+    ),
+    'ion-plasma-frequency': M(
+      { ni:'ion-number-density', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['ion-plasma-frequency','ion-plasma-angular-frequency','ion-plasma-period'],
+      ['ion-plasma-frequency','ion-number-density','ion-charge-state','elementary-charge-magnitude','vacuum-permittivity','ion-mass']
+    ),
+    'upper-hybrid-frequency': M(
+      { ne:'electron-number-density', B:'magnetic-field-magnitude' },
+      ['upper-hybrid-frequency','upper-hybrid-angular-frequency'],
+      ['upper-hybrid-angular-frequency','electron-plasma-angular-frequency','electron-cyclotron-angular-frequency']
+    ),
+    'lower-hybrid-frequency': M(
+      { ne:'electron-number-density', B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['lower-hybrid-frequency','lower-hybrid-angular-frequency','lower-hybrid-to-ion-cyclotron-frequency-ratio'],
+      ['lower-hybrid-angular-frequency','ion-cyclotron-angular-frequency','electron-cyclotron-angular-frequency','electron-plasma-angular-frequency'],
+      'REVIEW_PENDING'
+    ),
+    'electron-debye-length': M(
+      { ne:'electron-number-density', Te:'electron-temperature' },
+      ['electron-debye-length'],
+      ['electron-debye-length','vacuum-permittivity','boltzmann-constant','electron-temperature','electron-number-density','elementary-charge-magnitude']
+    ),
+    'total-debye-length': M(
+      { ne:'electron-number-density', Te:'electron-temperature', ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state' },
+      ['combined-debye-length'],
+      ['combined-debye-length','generic-species-index','generic-species-number-density','generic-species-charge-magnitude','vacuum-permittivity','boltzmann-constant','generic-species-temperature']
+    ),
+    'electron-gyroradius': M(
+      { Te:'electron-temperature', B:'magnetic-field-magnitude' },
+      ['electron-gyroradius','electron-thermal-speed'],
+      ['electron-gyroradius','electron-thermal-speed','electron-cyclotron-angular-frequency']
+    ),
+    'ion-gyroradius': M(
+      { Ti:'ion-temperature', B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['ion-gyroradius','ion-thermal-speed'],
+      ['ion-gyroradius','ion-thermal-speed','ion-cyclotron-angular-frequency']
+    ),
+    'electron-inertial-length': M(
+      { ne:'electron-number-density' },
+      ['electron-inertial-length'],
+      ['electron-inertial-length','speed-of-light','electron-plasma-angular-frequency']
+    ),
+    'ion-inertial-length': M(
+      { ni:'ion-number-density', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['ion-inertial-length'],
+      ['ion-inertial-length','speed-of-light','ion-plasma-angular-frequency']
+    ),
+    'ion-sound-gyroradius': M(
+      { Te:'electron-temperature', B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', gamma:'adiabatic-index' },
+      ['ion-sound-gyroradius','ion-sound-speed'],
+      ['ion-sound-gyroradius','ion-sound-speed','ion-cyclotron-angular-frequency']
+    ),
+    'debye-sphere-population': M(
+      { ne:'electron-number-density', Te:'electron-temperature' },
+      ['electron-debye-length','debye-sphere-particle-count'],
+      ['debye-sphere-particle-count','electron-number-density','electron-debye-length']
+    ),
+    'electron-thermal-speed': M(
+      { Te:'electron-temperature' },
+      ['electron-thermal-speed','electron-most-probable-speed'],
+      ['electron-thermal-speed','boltzmann-constant','electron-temperature','electron-mass']
+    ),
+    'ion-thermal-speed': M(
+      { Ti:'ion-temperature', mu:'ion-to-proton-mass-ratio' },
+      ['ion-thermal-speed','ion-most-probable-speed'],
+      ['ion-thermal-speed','boltzmann-constant','ion-temperature','ion-mass']
+    ),
+    'alfven-speed': M(
+      { B:'magnetic-field-magnitude', ni:'ion-number-density', mu:'ion-to-proton-mass-ratio' },
+      ['alfven-speed','alfven-to-light-speed-ratio'],
+      ['alfven-speed','magnetic-field-magnitude','vacuum-permeability','single-ion-mass-density']
+    ),
+    'relativistic-alfven-speed': M(
+      { B:'magnetic-field-magnitude', ni:'ion-number-density', mu:'ion-to-proton-mass-ratio' },
+      ['cold-magnetization-parameter','relativistic-alfven-speed'],
+      ['relativistic-alfven-speed','speed-of-light','cold-magnetization-parameter']
+    ),
+    'ion-sound-speed': M(
+      { Te:'electron-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', gamma:'adiabatic-index' },
+      ['ion-sound-speed'],
+      ['ion-sound-speed','adiabatic-index','ion-charge-state','boltzmann-constant','electron-temperature','ion-mass']
+    ),
+    'mhd-sound-speed': M(
+      { Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', gammaE:'electron-adiabatic-index', gammaI:'ion-adiabatic-index' },
+      ['mhd-sound-speed'],
+      ['mhd-sound-speed','electron-adiabatic-index','ion-adiabatic-index','ion-charge-state','boltzmann-constant','electron-temperature','ion-temperature','ion-mass']
+    ),
+    'magnetosonic-speeds': M(
+      { B:'magnetic-field-magnitude', ni:'ion-number-density', Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', theta:'propagation-angle-to-magnetic-field' },
+      ['alfven-speed','mhd-sound-speed','fast-magnetosonic-speed','slow-magnetosonic-speed'],
+      ['fast-magnetosonic-speed','slow-magnetosonic-speed','alfven-speed','mhd-sound-speed','propagation-angle-to-magnetic-field']
+    ),
+    'exb-drift': M(
+      { E:'perpendicular-electric-field-magnitude', B:'magnetic-field-magnitude' },
+      ['electric-cross-magnetic-drift-speed'],
+      ['electric-cross-magnetic-drift-speed','perpendicular-electric-field-magnitude','magnetic-field-magnitude']
+    ),
+    'diamagnetic-drift': M(
+      { T:'generic-species-temperature', B:'magnetic-field-magnitude', Ln:'density-gradient-scale-length', q:'charge-to-elementary-charge-ratio' },
+      ['diamagnetic-drift-speed'],
+      ['diamagnetic-drift-speed','generic-species-index','boltzmann-constant','generic-species-temperature','generic-species-charge-magnitude','magnetic-field-magnitude','density-gradient-scale-length']
+    ),
+    'species-pressure': M(
+      { ns:'generic-species-number-density', Ts:'generic-species-temperature' },
+      ['generic-species-thermal-pressure','generic-species-thermal-energy-density'],
+      ['generic-species-thermal-pressure','generic-species-number-density','boltzmann-constant','generic-species-temperature']
+    ),
+    'total-thermal-pressure': M(
+      { ne:'electron-number-density', Te:'electron-temperature', ni:'ion-number-density', Ti:'ion-temperature' },
+      ['electron-thermal-pressure','ion-thermal-pressure','total-electron-ion-thermal-pressure'],
+      ['total-electron-ion-thermal-pressure','electron-number-density','boltzmann-constant','electron-temperature','ion-number-density','ion-temperature']
+    ),
+    'magnetic-pressure': M(
+      { B:'magnetic-field-magnitude' },
+      ['magnetic-pressure','magnetic-energy-density'],
+      ['magnetic-pressure','magnetic-field-magnitude','vacuum-permeability']
+    ),
+    'dynamic-pressure': M(
+      { ni:'ion-number-density', V:'bulk-flow-speed', mu:'ion-to-proton-mass-ratio' },
+      ['space-physics-dynamic-pressure','bulk-kinetic-energy-density'],
+      ['space-physics-dynamic-pressure','single-ion-mass-density','bulk-flow-speed']
+    ),
+    'field-energy-density': M(
+      { E:'electric-field-magnitude', B:'magnetic-field-magnitude' },
+      ['electric-energy-density','magnetic-energy-density','electric-to-magnetic-energy-density-ratio'],
+      ['electric-energy-density','magnetic-energy-density','vacuum-permittivity','electric-field-magnitude','magnetic-field-magnitude','vacuum-permeability']
+    ),
+    'poynting-flux': M(
+      { E:'electric-field-magnitude', B:'magnetic-field-magnitude', angle:'electric-magnetic-field-angle' },
+      ['poynting-flux-magnitude'],
+      ['poynting-flux-magnitude','electric-field-magnitude','magnetic-field-magnitude','vacuum-permeability']
+    ),
+    'pressure-balance-field': M(
+      { p:'target-scalar-pressure' },
+      ['magnetic-field-magnitude'],
+      ['magnetic-field-magnitude','vacuum-permeability','target-scalar-pressure']
+    ),
+    'species-beta': M(
+      { ns:'generic-species-number-density', Ts:'generic-species-temperature', B:'magnetic-field-magnitude' },
+      ['generic-species-plasma-beta'],
+      ['generic-species-plasma-beta','vacuum-permeability','generic-species-number-density','boltzmann-constant','generic-species-temperature','magnetic-field-magnitude']
+    ),
+    'total-beta': M(
+      { ne:'electron-number-density', Te:'electron-temperature', ni:'ion-number-density', Ti:'ion-temperature', B:'magnetic-field-magnitude' },
+      ['electron-plasma-beta','ion-plasma-beta','total-electron-ion-plasma-beta'],
+      ['total-electron-ion-plasma-beta','vacuum-permeability','electron-number-density','boltzmann-constant','electron-temperature','ion-number-density','ion-temperature','magnetic-field-magnitude']
+    ),
+    'mach-numbers': M(
+      { V:'bulk-flow-speed', B:'magnetic-field-magnitude', ni:'ion-number-density', Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', theta:'propagation-angle-to-magnetic-field' },
+      ['alfven-mach-number','sonic-mach-number','fast-magnetosonic-mach-number'],
+      ['alfven-mach-number','sonic-mach-number','fast-magnetosonic-mach-number','bulk-flow-speed','alfven-speed','mhd-sound-speed','fast-magnetosonic-speed']
+    ),
+    'magnetization-parameter': M(
+      { B:'magnetic-field-magnitude', ni:'ion-number-density', mu:'ion-to-proton-mass-ratio' },
+      ['cold-magnetization-parameter','relativistic-alfven-speed'],
+      ['cold-magnetization-parameter','magnetic-field-magnitude','vacuum-permeability','single-ion-mass-density','speed-of-light']
+    ),
+    'electron-magnetization-ratio': M(
+      { B:'magnetic-field-magnitude', ne:'electron-number-density' },
+      ['electron-cyclotron-to-plasma-frequency-ratio','electron-plasma-to-cyclotron-frequency-ratio'],
+      ['electron-cyclotron-to-plasma-frequency-ratio','electron-cyclotron-angular-frequency','electron-plasma-angular-frequency']
+    ),
+    'plasma-coupling': M(
+      { ns:'generic-species-number-density', Ts:'generic-species-temperature', q:'charge-to-elementary-charge-ratio' },
+      ['plasma-coupling-parameter',null],
+      ['plasma-coupling-parameter','generic-species-charge-magnitude','vacuum-permittivity','wigner-seitz-radius','boltzmann-constant','generic-species-temperature','generic-species-number-density'],
+      'REVIEW_PENDING'
+    ),
+    'electron-hall-parameter': M(
+      { B:'magnetic-field-magnitude', ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
+      ['electron-ion-collision-frequency','electron-hall-parameter'],
+      ['electron-hall-parameter','electron-cyclotron-angular-frequency','electron-ion-collision-frequency'],
+      'REVIEW_PENDING'
+    ),
+    'ion-hall-parameter': M(
+      { B:'magnetic-field-magnitude', ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', lnLambda:'ion-ion-coulomb-logarithm' },
+      ['ion-ion-collision-frequency','ion-hall-parameter'],
+      ['ion-hall-parameter','ion-cyclotron-angular-frequency','ion-ion-collision-frequency'],
+      'REVIEW_PENDING'
+    ),
+    'knudsen-number': M(
+      { mfp:'generic-mean-free-path', Lsys:'system-scale-length' },
+      ['knudsen-number',null],
+      ['knudsen-number','generic-mean-free-path','system-scale-length']
+    ),
+    'coulomb-log-ei': M(
+      { ne:'electron-number-density', Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['electron-ion-coulomb-logarithm'],
+      ['electron-ion-coulomb-logarithm','combined-debye-length','minimum-impact-parameter'],
+      'REVIEW_PENDING'
+    ),
+    'coulomb-log-ii': M(
+      { ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['ion-ion-coulomb-logarithm'],
+      ['ion-ion-coulomb-logarithm','ion-debye-length','minimum-impact-parameter'],
+      'REVIEW_PENDING'
+    ),
+    'electron-ion-collision-frequency': M(
+      { ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
+      ['electron-ion-collision-frequency','electron-ion-collision-time'],
+      ['electron-ion-collision-frequency','electron-number-density','ion-charge-state','elementary-charge-magnitude','electron-ion-coulomb-logarithm','vacuum-permittivity','electron-mass','boltzmann-constant','electron-temperature'],
+      'REVIEW_PENDING'
+    ),
+    'ion-ion-collision-frequency': M(
+      { ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', lnLambda:'ion-ion-coulomb-logarithm' },
+      ['ion-ion-collision-frequency','ion-ion-collision-time'],
+      ['ion-ion-collision-frequency','ion-number-density','ion-charge-state','elementary-charge-magnitude','ion-ion-coulomb-logarithm','vacuum-permittivity','ion-mass','boltzmann-constant','ion-temperature'],
+      'REVIEW_PENDING'
+    ),
+    'electron-mean-free-path': M(
+      { ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
+      ['electron-thermal-speed','electron-ion-collision-frequency','electron-mean-free-path'],
+      ['electron-mean-free-path','electron-thermal-speed','electron-ion-collision-frequency'],
+      'REVIEW_PENDING'
+    ),
+    'ion-mean-free-path': M(
+      { ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', lnLambda:'ion-ion-coulomb-logarithm' },
+      ['ion-thermal-speed','ion-ion-collision-frequency','ion-mean-free-path'],
+      ['ion-mean-free-path','ion-thermal-speed','ion-ion-collision-frequency'],
+      'REVIEW_PENDING'
+    ),
+    'spitzer-transport': M(
+      { ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
+      ['electron-ion-collision-frequency','electrical-resistivity','electrical-conductivity','magnetic-diffusivity'],
+      ['electrical-resistivity','electron-mass','electron-ion-collision-frequency','electron-number-density','elementary-charge-magnitude','electrical-conductivity','magnetic-diffusivity','vacuum-permeability'],
+      'REVIEW_PENDING'
+    ),
+    'shock-compression': M(
+      { M:'upstream-mach-number', gamma:'adiabatic-index' },
+      ['shock-compression-ratio','strong-shock-compression-limit'],
+      ['shock-compression-ratio','adiabatic-index','upstream-mach-number']
+    ),
+    'lundquist-number': M(
+      { L:'system-length', vA:'alfven-speed', eta:'electrical-resistivity' },
+      ['lundquist-number','alfven-transit-time','resistive-diffusion-time'],
+      ['lundquist-number','vacuum-permeability','system-length','alfven-speed','electrical-resistivity'],
+      'REVIEW_PENDING'
+    ),
+    'magnetic-reynolds-number': M(
+      { L:'system-length', V:'bulk-flow-speed', eta:'electrical-resistivity' },
+      ['magnetic-reynolds-number','advection-time','resistive-diffusion-time'],
+      ['magnetic-reynolds-number','vacuum-permeability','bulk-flow-speed','system-length','electrical-resistivity'],
+      'REVIEW_PENDING'
+    ),
+    'sweet-parker': M(
+      { L:'current-sheet-length', vA:'alfven-speed', eta:'electrical-resistivity', B:'magnetic-field-magnitude' },
+      ['lundquist-number','sweet-parker-sheet-half-thickness','reconnection-inflow-speed','sweet-parker-normalized-rate','reconnection-electric-field'],
+      ['sweet-parker-sheet-half-thickness','current-sheet-length','reconnection-inflow-speed','alfven-speed','lundquist-number'],
+      'REVIEW_PENDING'
+    ),
+    'alfven-transit-time': M(
+      { L:'system-length', vA:'alfven-speed' },
+      ['alfven-transit-time','inverse-alfven-transit-time'],
+      ['alfven-transit-time','system-length','alfven-speed']
+    ),
+    'taylor-mapping': M(
+      { f:'spacecraft-frame-frequency', V:'bulk-flow-speed' },
+      ['taylor-convected-wavenumber','inverse-wavenumber-scale','convected-wavelength'],
+      ['taylor-convected-wavenumber','spacecraft-frame-frequency','bulk-flow-speed','inverse-wavenumber-scale']
+    ),
+    'doppler-shift': M(
+      { fpl:'plasma-frame-frequency', k:'wavenumber-magnitude', V:'bulk-flow-speed', theta:'propagation-angle-to-magnetic-field' },
+      ['spacecraft-frame-frequency','convective-doppler-frequency'],
+      ['spacecraft-frame-frequency','plasma-frame-frequency','wavenumber-magnitude','bulk-flow-speed','propagation-angle-to-magnetic-field']
+    ),
+    'kinetic-break-frequencies': M(
+      { V:'bulk-flow-speed', ni:'ion-number-density', ne:'electron-number-density', B:'magnetic-field-magnitude', Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['electron-inertial-convected-frequency','ion-inertial-convected-frequency','ion-gyroradius-convected-frequency','ion-sound-gyroradius-convected-frequency'],
+      ['generic-convected-scale-frequency','bulk-flow-speed','generic-length-scale']
+    ),
+    'eb-phase-speed': M(
+      { dE:'perpendicular-electric-field-fluctuation', dB:'perpendicular-magnetic-field-fluctuation', vA:'alfven-speed' },
+      ['electromagnetic-e-over-b-speed','e-over-b-to-alfven-speed-ratio'],
+      ['electromagnetic-e-over-b-speed','perpendicular-electric-field-fluctuation','perpendicular-magnetic-field-fluctuation']
+    ),
+    'current-sheet-crossing': M(
+      { Vn:'normal-crossing-speed', dt:'crossing-duration' },
+      ['current-sheet-crossing-thickness'],
+      ['current-sheet-crossing-thickness','normal-crossing-speed','crossing-duration']
+    ),
+    'current-density-sheet': M(
+      { dB:'magnetic-field-jump', L:'current-sheet-thickness' },
+      ['current-density-estimate'],
+      ['current-density-estimate','magnetic-field-jump','vacuum-permeability','current-sheet-thickness']
+    ),
+    'alfvenicity': M(
+      { dv:'signed-velocity-fluctuation', dB:'signed-magnetic-field-fluctuation', ni:'ion-number-density', mu:'ion-to-proton-mass-ratio' },
+      ['magnetic-fluctuation-velocity-equivalent','elsasser-plus-amplitude','elsasser-minus-amplitude','normalized-cross-helicity','normalized-residual-energy','alfven-ratio','walen-ratio'],
+      ['magnetic-fluctuation-velocity-equivalent','signed-magnetic-field-fluctuation','vacuum-permeability','single-ion-mass-density','normalized-cross-helicity','signed-velocity-fluctuation'],
+      'REVIEW_PENDING'
+    ),
+    'kaw-regime': M(
+      { ne:'electron-number-density', Te:'electron-temperature', B:'magnetic-field-magnitude', mu:'ion-to-proton-mass-ratio' },
+      ['electron-plasma-beta','kaw-regime-ratio',null],
+      ['kaw-regime-ratio','electron-plasma-beta','electron-to-ion-mass-ratio'],
+      'REVIEW_PENDING'
+    ),
+    'kaw-normalizations': M(
+      { kperp:'perpendicular-wavenumber', ni:'ion-number-density', ne:'electron-number-density', B:'magnetic-field-magnitude', Te:'electron-temperature', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['perpendicular-wavenumber-ion-gyroradius-product','perpendicular-wavenumber-ion-sound-gyroradius-product','perpendicular-wavenumber-ion-inertial-length-product','perpendicular-wavenumber-electron-inertial-length-product'],
+      ['perpendicular-wavenumber','ion-gyroradius','ion-sound-gyroradius','ion-inertial-length','electron-inertial-length'],
+      'REVIEW_PENDING'
+    ),
+    'kaw-dispersion': M(
+      { kpar:'parallel-wavenumber', kperp:'perpendicular-wavenumber', ni:'ion-number-density', ne:'electron-number-density', B:'magnetic-field-magnitude', Te:'electron-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['kaw-angular-frequency','kaw-frequency','kaw-parallel-phase-speed','kaw-dispersive-factor'],
+      ['kaw-angular-frequency','parallel-wavenumber','alfven-speed','perpendicular-wavenumber','ion-sound-gyroradius','electron-inertial-length'],
+      'REVIEW_PENDING'
+    ),
+    'kaw-landau-accessibility': M(
+      { vph:'kaw-parallel-phase-speed', Te:'electron-temperature' },
+      ['electron-thermal-speed','kaw-resonant-speed-ratio','kaw-maxwellian-factor',null],
+      ['kaw-resonant-speed-ratio','kaw-parallel-phase-speed','electron-thermal-speed','kaw-maxwellian-factor','maxwellian-distribution-function'],
+      'REVIEW_PENDING'
+    ),
+    'kaw-eb-diagnostic': M(
+      { dE:'perpendicular-electric-field-fluctuation', dB:'perpendicular-magnetic-field-fluctuation', vph:'kaw-parallel-phase-speed' },
+      ['observed-e-over-b-speed','kaw-e-over-b-ratio'],
+      ['kaw-e-over-b-ratio','perpendicular-electric-field-fluctuation','perpendicular-magnetic-field-fluctuation','kaw-parallel-phase-speed'],
+      'REVIEW_PENDING'
+    ),
+    'kaw-parallel-electric-field': M(
+      { kpar:'parallel-wavenumber', kperp:'perpendicular-wavenumber', Te:'electron-temperature', B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
+      ['ion-sound-gyroradius','perpendicular-wavenumber-ion-sound-gyroradius-product','kaw-parallel-to-perpendicular-electric-field-ratio'],
+      ['kaw-parallel-to-perpendicular-electric-field-ratio','parallel-wavenumber','perpendicular-wavenumber','ion-sound-gyroradius'],
+      'REVIEW_PENDING'
+    ),
+    'fluid-firehose': M(
+      { n:'generic-species-number-density', Tpar:'parallel-species-temperature', Tperp:'perpendicular-species-temperature', B:'magnetic-field-magnitude' },
+      ['parallel-species-plasma-beta','perpendicular-species-plasma-beta','fluid-firehose-criterion','fluid-firehose-margin',null],
+      ['parallel-species-plasma-beta','perpendicular-species-plasma-beta'],
+      'REVIEW_PENDING'
+    ),
+    'fluid-mirror': M(
+      { n:'generic-species-number-density', Tpar:'parallel-species-temperature', Tperp:'perpendicular-species-temperature', B:'magnetic-field-magnitude' },
+      ['perpendicular-species-plasma-beta','generic-temperature-anisotropy','fluid-mirror-criterion','fluid-mirror-margin',null],
+      ['perpendicular-species-plasma-beta','generic-temperature-anisotropy'],
+      'REVIEW_PENDING'
+    ),
+    'hellinger-proton-cyclotron': M(
+      { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
+      ['hellinger-proton-cyclotron-threshold-anisotropy','proton-temperature-anisotropy','hellinger-proton-cyclotron-margin',null],
+      ['hellinger-proton-cyclotron-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-proton-cyclotron-fit-amplitude','hellinger-proton-cyclotron-fit-exponent','hellinger-proton-cyclotron-beta-shift'],
+      'REVIEW_PENDING'
+    ),
+    'hellinger-mirror': M(
+      { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
+      ['hellinger-mirror-threshold-anisotropy','proton-temperature-anisotropy','hellinger-mirror-margin',null],
+      ['hellinger-mirror-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-mirror-fit-amplitude','hellinger-mirror-fit-exponent','hellinger-mirror-beta-shift'],
+      'REVIEW_PENDING'
+    ),
+    'hellinger-parallel-firehose': M(
+      { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
+      ['hellinger-parallel-firehose-threshold-anisotropy','proton-temperature-anisotropy','hellinger-parallel-firehose-margin',null],
+      ['hellinger-parallel-firehose-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-parallel-firehose-fit-amplitude','hellinger-parallel-firehose-fit-exponent','hellinger-parallel-firehose-beta-offset'],
+      'REVIEW_PENDING'
+    ),
+    'hellinger-oblique-firehose': M(
+      { beta:'parallel-proton-plasma-beta', A:'proton-temperature-anisotropy' },
+      ['hellinger-oblique-firehose-threshold-anisotropy','proton-temperature-anisotropy','hellinger-oblique-firehose-margin',null],
+      ['hellinger-oblique-firehose-threshold-anisotropy','parallel-proton-plasma-beta','hellinger-oblique-firehose-fit-amplitude','hellinger-oblique-firehose-fit-exponent','hellinger-oblique-firehose-beta-shift'],
+      'REVIEW_PENDING'
+    ),
+  });
+
+  const formulas = rawFormulas.map(formula => {
+    const metadata = formulaSymbolMetadata[formula.id];
+    if (!metadata) throw new Error(`${formula.id}: semantic symbol metadata missing`);
+    const inputs = formula.inputs.map(input => {
+      const semanticId = metadata.inputs[input.key];
+      if (!semanticId) throw new Error(`${formula.id}: semantic ID missing for input ${input.key}`);
+      return Object.freeze({ ...input, semanticId });
+    });
+    if (Object.keys(metadata.inputs).length !== inputs.length) throw new Error(`${formula.id}: stale semantic input mapping`);
+    const calculate = formula.calculate;
+    const inputIds = new Set(Object.values(metadata.inputs));
+    const outputIds = new Set(metadata.outputs.filter(Boolean));
+    const equationOnlySymbolIds = metadata.equationSymbolIds.filter(id => !inputIds.has(id) && !outputIds.has(id));
+    return Object.freeze({
+      ...formula,
+      inputs: Object.freeze(inputs),
+      calculate(values) {
+        const outputs = calculate(values);
+        if (outputs.length !== metadata.outputs.length) throw new Error(`${formula.id}: semantic output mapping is stale`);
+        return outputs.map((output, index) => Object.freeze({ ...output, semanticId: metadata.outputs[index] || null }));
+      },
+      equationSymbolIds: metadata.equationSymbolIds,
+      equationOnlySymbolIds: Object.freeze(equationOnlySymbolIds),
+      symbolReviewStatus: metadata.symbolReviewStatus,
+    });
+  });
 
   const categories = [...new Set(formulas.map(f => f.category))];
   return Object.freeze({ formulas: Object.freeze(formulas), categories: Object.freeze(categories), references: REF });

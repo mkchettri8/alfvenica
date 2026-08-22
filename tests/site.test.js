@@ -5,7 +5,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'formula-registry.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js'];
+const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'symbol-registry.js', 'formula-registry.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js'];
 for (const file of requiredFiles) assert.ok(fs.existsSync(path.join(root, file)), `Missing local asset: ${file}`);
 const Meta = require(path.join(root, 'release-metadata.js'));
 const packageMetadata = require(path.join(root, 'package.json'));

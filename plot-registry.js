@@ -19,12 +19,22 @@
     mu: 1,
   });
 
+  const stateSemanticIds = Object.freeze({
+    ni:'ion-number-density',
+    B:'magnetic-field-magnitude',
+    Te:'electron-temperature',
+    Ti:'ion-temperature',
+    V:'bulk-flow-speed',
+    Z:'ion-charge-state',
+    mu:'ion-to-proton-mass-ratio',
+  });
+
   const variables = Object.freeze([
-    Object.freeze({ key:'ni', label:'Ion density', symbol:'nᵢ', quantity:'density', positive:true }),
-    Object.freeze({ key:'B', label:'Magnetic-field magnitude', symbol:'B', quantity:'magneticField', positive:true }),
-    Object.freeze({ key:'Te', label:'Electron temperature', symbol:'Tₑ', quantity:'temperature', positive:true }),
-    Object.freeze({ key:'Ti', label:'Ion temperature', symbol:'Tᵢ', quantity:'temperature', positive:true }),
-    Object.freeze({ key:'V', label:'Bulk-flow speed', symbol:'V', quantity:'speed', positive:false }),
+    Object.freeze({ key:'ni', semanticId:stateSemanticIds.ni, label:'Ion density', symbol:'nᵢ', quantity:'density', positive:true }),
+    Object.freeze({ key:'B', semanticId:stateSemanticIds.B, label:'Magnetic-field magnitude', symbol:'B', quantity:'magneticField', positive:true }),
+    Object.freeze({ key:'Te', semanticId:stateSemanticIds.Te, label:'Electron temperature', symbol:'Tₑ', quantity:'temperature', positive:true }),
+    Object.freeze({ key:'Ti', semanticId:stateSemanticIds.Ti, label:'Ion temperature', symbol:'Tᵢ', quantity:'temperature', positive:true }),
+    Object.freeze({ key:'V', semanticId:stateSemanticIds.V, label:'Bulk-flow speed', symbol:'V', quantity:'speed', positive:false }),
   ]);
 
   function canonicalState(input) {
@@ -50,8 +60,21 @@
     });
   }
 
+  const metricSemanticIds = Object.freeze({
+    fci:'ion-cyclotron-frequency', fLH:'lower-hybrid-frequency', fce:'electron-cyclotron-frequency',
+    fpi:'ion-plasma-frequency', fpe:'electron-plasma-frequency', fUH:'upper-hybrid-frequency',
+    fdi:'ion-inertial-convected-frequency', frhoi:'ion-gyroradius-convected-frequency',
+    lambdaDe:'electron-debye-length', rhoE:'electron-gyroradius', de:'electron-inertial-length',
+    rhoS:'ion-sound-gyroradius', rhoI:'ion-gyroradius', di:'ion-inertial-length',
+    vA:'alfven-speed', cs:'mhd-sound-speed', vTe:'electron-thermal-speed', vTi:'ion-thermal-speed',
+    betaE:'electron-plasma-beta', betaI:'ion-plasma-beta', betaTotal:'total-electron-ion-plasma-beta',
+    machA:'alfven-mach-number', machS:'sonic-mach-number', kawRatio:'kaw-regime-ratio',
+    pE:'electron-thermal-pressure', pI:'ion-thermal-pressure', pB:'magnetic-pressure',
+    pDyn:'space-physics-dynamic-pressure',
+  });
+
   const metric = (id, family, label, symbol, quantity, calculate, options = {}) => Object.freeze({
-    id, family, label, symbol, quantity, calculate,
+    id, semanticId:metricSemanticIds[id], family, label, symbol, quantity, calculate,
     note: options.note || '',
     requiresFlow: Boolean(options.requiresFlow),
   });
@@ -144,6 +167,7 @@
 
   return Object.freeze({
     defaultState,
+    stateSemanticIds,
     variables,
     metrics,
     metricMap,

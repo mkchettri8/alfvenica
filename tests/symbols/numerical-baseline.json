@@ -1,0 +1,1893 @@
+{
+  "schemaVersion": 1,
+  "evidenceClass": "F_REGRESSION",
+  "baselineCommit": "eab588abb672f6fdf7e169a36e6a630a2b02ecfb",
+  "description": "Default calculator outputs frozen solely to detect implementation changes during semantic-symbol metadata migration. This is not independent scientific evidence.",
+  "calculators": [
+    {
+      "formulaId": "electron-gyrofrequency",
+      "inputState": {
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency",
+          "symbol": "fce",
+          "quantity": "frequency",
+          "value": 139.9624491711436
+        },
+        {
+          "outputIndex": 1,
+          "label": "Angular frequency",
+          "symbol": "ωce",
+          "quantity": "angularFrequency",
+          "value": 879.4100041889991
+        },
+        {
+          "outputIndex": 2,
+          "label": "Period",
+          "symbol": "τce",
+          "quantity": "time",
+          "value": 0.007144773515482126
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-gyrofrequency",
+      "inputState": {
+        "B": 5e-9,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency",
+          "symbol": "fci",
+          "quantity": "frequency",
+          "value": 0.07622593218805414
+        },
+        {
+          "outputIndex": 1,
+          "label": "Angular frequency",
+          "symbol": "Ωci",
+          "quantity": "angularFrequency",
+          "value": 0.47894165715004927
+        },
+        {
+          "outputIndex": 2,
+          "label": "Period",
+          "symbol": "τci",
+          "quantity": "time",
+          "value": 13.118894991443824
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-plasma-frequency",
+      "inputState": {
+        "ne": 5000000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency",
+          "symbol": "fpe",
+          "quantity": "frequency",
+          "value": 20076.900393192707
+        },
+        {
+          "outputIndex": 1,
+          "label": "Angular frequency",
+          "symbol": "ωpe",
+          "quantity": "angularFrequency",
+          "value": 126146.88556421649
+        },
+        {
+          "outputIndex": 2,
+          "label": "Period",
+          "symbol": "τpe",
+          "quantity": "time",
+          "value": 0.00004980848539444171
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-plasma-frequency",
+      "inputState": {
+        "ni": 5000000,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency",
+          "symbol": "fpi",
+          "quantity": "frequency",
+          "value": 468.53524926662544
+        },
+        {
+          "outputIndex": 1,
+          "label": "Angular frequency",
+          "symbol": "ωpi",
+          "quantity": "angularFrequency",
+          "value": 2943.893794087786
+        },
+        {
+          "outputIndex": 2,
+          "label": "Period",
+          "symbol": "τpi",
+          "quantity": "time",
+          "value": 0.002134311135747523
+        }
+      ]
+    },
+    {
+      "formulaId": "upper-hybrid-frequency",
+      "inputState": {
+        "ne": 5000000,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency",
+          "symbol": "fUH",
+          "quantity": "frequency",
+          "value": 20077.388248608422
+        },
+        {
+          "outputIndex": 1,
+          "label": "Angular frequency",
+          "symbol": "ωUH",
+          "quantity": "angularFrequency",
+          "value": 126149.95085019653
+        }
+      ]
+    },
+    {
+      "formulaId": "lower-hybrid-frequency",
+      "inputState": {
+        "ne": 5000000,
+        "B": 5e-9,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency",
+          "symbol": "fLH",
+          "quantity": "frequency",
+          "value": 3.2662286647225827
+        },
+        {
+          "outputIndex": 1,
+          "label": "Angular frequency",
+          "symbol": "ωLH",
+          "quantity": "angularFrequency",
+          "value": 20.52231995607373
+        },
+        {
+          "outputIndex": 2,
+          "label": "Ratio to ion gyrofrequency",
+          "symbol": "fLH/fci",
+          "quantity": "dimensionless",
+          "value": 42.849310870539334
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-debye-length",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Debye length",
+          "symbol": "λDe",
+          "quantity": "length",
+          "value": 11.516613420760825
+        }
+      ]
+    },
+    {
+      "formulaId": "total-debye-length",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "ni": 5000000,
+        "Ti": 10,
+        "Z": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Combined Debye length",
+          "symbol": "λD",
+          "quantity": "length",
+          "value": 7.764499184319277
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-gyroradius",
+      "inputState": {
+        "Te": 12,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron gyroradius",
+          "symbol": "ρe",
+          "quantity": "length",
+          "value": 1651.9995319086786
+        },
+        {
+          "outputIndex": 1,
+          "label": "Thermal speed convention",
+          "symbol": "vTe",
+          "quantity": "speed",
+          "value": 1452784.9152760357
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-gyroradius",
+      "inputState": {
+        "Ti": 10,
+        "B": 5e-9,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Ion gyroradius",
+          "symbol": "ρi",
+          "quantity": "length",
+          "value": 64621.00255786493
+        },
+        {
+          "outputIndex": 1,
+          "label": "Thermal speed convention",
+          "symbol": "vTi",
+          "quantity": "speed",
+          "value": 30949.6900517614
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-inertial-length",
+      "inputState": {
+        "ne": 5000000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron inertial length",
+          "symbol": "de",
+          "quantity": "length",
+          "value": 2376.534756756934
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-inertial-length",
+      "inputState": {
+        "ni": 5000000,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Ion inertial length",
+          "symbol": "di",
+          "quantity": "length",
+          "value": 101835.35105854443
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-sound-gyroradius",
+      "inputState": {
+        "Te": 12,
+        "B": 5e-9,
+        "Z": 1,
+        "mu": 1,
+        "gamma": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Ion-sound gyroradius",
+          "symbol": "ρs",
+          "quantity": "length",
+          "value": 70788.76157908331
+        },
+        {
+          "outputIndex": 1,
+          "label": "Ion-sound speed",
+          "symbol": "cs",
+          "quantity": "speed",
+          "value": 33903.6867782859
+        }
+      ]
+    },
+    {
+      "formulaId": "debye-sphere-population",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Debye length",
+          "symbol": "λDe",
+          "quantity": "length",
+          "value": 11.516613420760825
+        },
+        {
+          "outputIndex": 1,
+          "label": "Particles in Debye sphere",
+          "symbol": "ND",
+          "quantity": "dimensionless",
+          "value": 31991380470.636772
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-thermal-speed",
+      "inputState": {
+        "Te": 12
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Thermal speed",
+          "symbol": "vTe",
+          "quantity": "speed",
+          "value": 1452784.9152760357
+        },
+        {
+          "outputIndex": 1,
+          "label": "Most-probable 3D speed",
+          "symbol": "√2 vTe",
+          "quantity": "speed",
+          "value": 2054548.1303944173
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-thermal-speed",
+      "inputState": {
+        "Ti": 10,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Thermal speed",
+          "symbol": "vTi",
+          "quantity": "speed",
+          "value": 30949.6900517614
+        },
+        {
+          "outputIndex": 1,
+          "label": "Most-probable 3D speed",
+          "symbol": "√2 vTi",
+          "quantity": "speed",
+          "value": 43769.47142244463
+        }
+      ]
+    },
+    {
+      "formulaId": "alfven-speed",
+      "inputState": {
+        "B": 5e-9,
+        "ni": 5000000,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Alfvén speed",
+          "symbol": "vA",
+          "quantity": "speed",
+          "value": 48773.19179240719
+        },
+        {
+          "outputIndex": 1,
+          "label": "vA/c",
+          "symbol": "vA/c",
+          "quantity": "dimensionless",
+          "value": 0.0001626898559016024
+        }
+      ]
+    },
+    {
+      "formulaId": "relativistic-alfven-speed",
+      "inputState": {
+        "B": 5e-9,
+        "ni": 5000000,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Magnetization",
+          "symbol": "σ",
+          "quantity": "dimensionless",
+          "value": 2.6467989213284152e-8
+        },
+        {
+          "outputIndex": 1,
+          "label": "Relativistic Alfvén speed",
+          "symbol": "vA,rel",
+          "quantity": "speed",
+          "value": 48773.19114694305
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-sound-speed",
+      "inputState": {
+        "Te": 12,
+        "Z": 1,
+        "mu": 1,
+        "gamma": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Ion sound speed",
+          "symbol": "cs",
+          "quantity": "speed",
+          "value": 33903.6867782859
+        }
+      ]
+    },
+    {
+      "formulaId": "mhd-sound-speed",
+      "inputState": {
+        "Te": 12,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1,
+        "gammaE": 1.6666666666666667,
+        "gammaI": 1.6666666666666667
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "MHD sound speed",
+          "symbol": "cs",
+          "quantity": "speed",
+          "value": 59264.144464426055
+        }
+      ]
+    },
+    {
+      "formulaId": "magnetosonic-speeds",
+      "inputState": {
+        "B": 5e-9,
+        "ni": 5000000,
+        "Te": 12,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1,
+        "theta": 1.5707963267948966
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Alfvén speed",
+          "symbol": "vA",
+          "quantity": "speed",
+          "value": 48773.19179240719
+        },
+        {
+          "outputIndex": 1,
+          "label": "Sound speed",
+          "symbol": "cs",
+          "quantity": "speed",
+          "value": 59264.144464426055
+        },
+        {
+          "outputIndex": 2,
+          "label": "Fast speed",
+          "symbol": "vf",
+          "quantity": "speed",
+          "value": 76753.2608865532
+        },
+        {
+          "outputIndex": 3,
+          "label": "Slow speed",
+          "symbol": "vs",
+          "quantity": "speed",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "formulaId": "exb-drift",
+      "inputState": {
+        "E": 0.001,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "E × B drift",
+          "symbol": "vE",
+          "quantity": "speed",
+          "value": 200000
+        }
+      ]
+    },
+    {
+      "formulaId": "diamagnetic-drift",
+      "inputState": {
+        "T": 100,
+        "B": 5e-9,
+        "Ln": 1000000,
+        "q": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Drift magnitude",
+          "symbol": "v*",
+          "quantity": "speed",
+          "value": 20000
+        }
+      ]
+    },
+    {
+      "formulaId": "species-pressure",
+      "inputState": {
+        "ns": 5000000,
+        "Ts": 10
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Thermal pressure",
+          "symbol": "ps",
+          "quantity": "pressure",
+          "value": 8.01088317e-12
+        },
+        {
+          "outputIndex": 1,
+          "label": "Thermal energy density",
+          "symbol": "3ps/2",
+          "quantity": "energyDensity",
+          "value": 1.2016324755e-11
+        }
+      ]
+    },
+    {
+      "formulaId": "total-thermal-pressure",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "ni": 5000000,
+        "Ti": 10
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron pressure",
+          "symbol": "pe",
+          "quantity": "pressure",
+          "value": 9.613059803999998e-12
+        },
+        {
+          "outputIndex": 1,
+          "label": "Ion pressure",
+          "symbol": "pi",
+          "quantity": "pressure",
+          "value": 8.01088317e-12
+        },
+        {
+          "outputIndex": 2,
+          "label": "Total pressure",
+          "symbol": "p",
+          "quantity": "pressure",
+          "value": 1.7623942974e-11
+        }
+      ]
+    },
+    {
+      "formulaId": "magnetic-pressure",
+      "inputState": {
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Magnetic pressure",
+          "symbol": "pB",
+          "quantity": "pressure",
+          "value": 9.947183944556814e-12
+        },
+        {
+          "outputIndex": 1,
+          "label": "Magnetic energy density",
+          "symbol": "uB",
+          "quantity": "energyDensity",
+          "value": 9.947183944556814e-12
+        }
+      ]
+    },
+    {
+      "formulaId": "dynamic-pressure",
+      "inputState": {
+        "ni": 5000000,
+        "V": 400000,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Dynamic pressure",
+          "symbol": "pdyn",
+          "quantity": "pressure",
+          "value": 1.3380975407599999e-9
+        },
+        {
+          "outputIndex": 1,
+          "label": "Kinetic energy density",
+          "symbol": "uK",
+          "quantity": "energyDensity",
+          "value": 6.690487703799999e-10
+        }
+      ]
+    },
+    {
+      "formulaId": "field-energy-density",
+      "inputState": {
+        "E": 0.001,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electric energy density",
+          "symbol": "uE",
+          "quantity": "energyDensity",
+          "value": 4.427093909400001e-18
+        },
+        {
+          "outputIndex": 1,
+          "label": "Magnetic energy density",
+          "symbol": "uB",
+          "quantity": "energyDensity",
+          "value": 9.947183944556814e-12
+        },
+        {
+          "outputIndex": 2,
+          "label": "uE/uB",
+          "symbol": "uE/uB",
+          "quantity": "dimensionless",
+          "value": 4.4506002242197854e-7
+        }
+      ]
+    },
+    {
+      "formulaId": "poynting-flux",
+      "inputState": {
+        "E": 0.001,
+        "B": 5e-9,
+        "angle": 1.5707963267948966
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Poynting flux",
+          "symbol": "S",
+          "quantity": "flux",
+          "value": 0.000003978873577822725
+        }
+      ]
+    },
+    {
+      "formulaId": "pressure-balance-field",
+      "inputState": {
+        "p": 1e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Pressure-balance field",
+          "symbol": "B",
+          "quantity": "magneticField",
+          "value": 5.013256548931044e-8
+        }
+      ]
+    },
+    {
+      "formulaId": "species-beta",
+      "inputState": {
+        "ns": 5000000,
+        "Ts": 10,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Species beta",
+          "symbol": "βs",
+          "quantity": "dimensionless",
+          "value": 0.8053418147940881
+        }
+      ]
+    },
+    {
+      "formulaId": "total-beta",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "ni": 5000000,
+        "Ti": 10,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron beta",
+          "symbol": "βe",
+          "quantity": "dimensionless",
+          "value": 0.9664101777529055
+        },
+        {
+          "outputIndex": 1,
+          "label": "Ion beta",
+          "symbol": "βi",
+          "quantity": "dimensionless",
+          "value": 0.8053418147940881
+        },
+        {
+          "outputIndex": 2,
+          "label": "Total beta",
+          "symbol": "β",
+          "quantity": "dimensionless",
+          "value": 1.7717519925469936
+        }
+      ]
+    },
+    {
+      "formulaId": "mach-numbers",
+      "inputState": {
+        "V": 400000,
+        "B": 5e-9,
+        "ni": 5000000,
+        "Te": 12,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1,
+        "theta": 1.5707963267948966
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Alfvén Mach number",
+          "symbol": "MA",
+          "quantity": "dimensionless",
+          "value": 8.20122664316323
+        },
+        {
+          "outputIndex": 1,
+          "label": "Sonic Mach number",
+          "symbol": "Ms",
+          "quantity": "dimensionless",
+          "value": 6.749443590468168
+        },
+        {
+          "outputIndex": 2,
+          "label": "Fast Mach number",
+          "symbol": "Mf",
+          "quantity": "dimensionless",
+          "value": 5.2115049625217695
+        }
+      ]
+    },
+    {
+      "formulaId": "magnetization-parameter",
+      "inputState": {
+        "B": 5e-9,
+        "ni": 5000000,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Magnetization",
+          "symbol": "σ",
+          "quantity": "dimensionless",
+          "value": 2.6467989213284152e-8
+        },
+        {
+          "outputIndex": 1,
+          "label": "Relativistic Alfvén speed",
+          "symbol": "vA,rel",
+          "quantity": "speed",
+          "value": 48773.19114694305
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-magnetization-ratio",
+      "inputState": {
+        "B": 5e-9,
+        "ne": 5000000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Frequency ratio",
+          "symbol": "Ωce/ωpe",
+          "quantity": "dimensionless",
+          "value": 0.006971317605311196
+        },
+        {
+          "outputIndex": 1,
+          "label": "Inverse ratio",
+          "symbol": "ωpe/Ωce",
+          "quantity": "dimensionless",
+          "value": 143.44490620225594
+        }
+      ]
+    },
+    {
+      "formulaId": "plasma-coupling",
+      "inputState": {
+        "ns": 5000000,
+        "Ts": 10,
+        "q": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Coupling parameter",
+          "symbol": "Γ",
+          "quantity": "dimensionless",
+          "value": 3.969215427942182e-8
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-hall-parameter",
+      "inputState": {
+        "B": 5e-9,
+        "ne": 5000000,
+        "Te": 12,
+        "Z": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron-ion collision frequency",
+          "symbol": "νei",
+          "quantity": "frequency",
+          "value": 0.000006991511873534959
+        },
+        {
+          "outputIndex": 1,
+          "label": "Electron Hall parameter",
+          "symbol": "χe",
+          "quantity": "dimensionless",
+          "value": 125782523.16467325
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-hall-parameter",
+      "inputState": {
+        "B": 5e-9,
+        "ni": 5000000,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Ion-ion collision frequency",
+          "symbol": "νii",
+          "quantity": "frequency",
+          "value": 1.516608815730738e-7
+        },
+        {
+          "outputIndex": 1,
+          "label": "Ion Hall parameter",
+          "symbol": "χi",
+          "quantity": "dimensionless",
+          "value": 3157977.536345019
+        }
+      ]
+    },
+    {
+      "formulaId": "knudsen-number",
+      "inputState": {
+        "mfp": 100000000,
+        "Lsys": 1000000000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Knudsen number",
+          "symbol": "Kn",
+          "quantity": "dimensionless",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "formulaId": "coulomb-log-ei",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Coulomb logarithm",
+          "symbol": "lnΛei",
+          "quantity": "dimensionless",
+          "value": 25.586172408004266
+        }
+      ]
+    },
+    {
+      "formulaId": "coulomb-log-ii",
+      "inputState": {
+        "ni": 5000000,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Coulomb logarithm",
+          "symbol": "lnΛii",
+          "quantity": "dimensionless",
+          "value": 25.70700947720666
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-ion-collision-frequency",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "Z": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Collision frequency",
+          "symbol": "νei",
+          "quantity": "frequency",
+          "value": 0.000006991511873534959
+        },
+        {
+          "outputIndex": 1,
+          "label": "Collision time",
+          "symbol": "τei",
+          "quantity": "time",
+          "value": 143030.58023620187
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-ion-collision-frequency",
+      "inputState": {
+        "ni": 5000000,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Collision frequency",
+          "symbol": "νii",
+          "quantity": "frequency",
+          "value": 1.516608815730738e-7
+        },
+        {
+          "outputIndex": 1,
+          "label": "Collision time",
+          "symbol": "τii",
+          "quantity": "time",
+          "value": 6593658.09843441
+        }
+      ]
+    },
+    {
+      "formulaId": "electron-mean-free-path",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "Z": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Thermal speed",
+          "symbol": "vTe",
+          "quantity": "speed",
+          "value": 1452784.9152760357
+        },
+        {
+          "outputIndex": 1,
+          "label": "Collision frequency",
+          "symbol": "νei",
+          "quantity": "frequency",
+          "value": 0.000006991511873534959
+        },
+        {
+          "outputIndex": 2,
+          "label": "Mean free path",
+          "symbol": "λei",
+          "quantity": "length",
+          "value": 207792669390.33276
+        }
+      ]
+    },
+    {
+      "formulaId": "ion-mean-free-path",
+      "inputState": {
+        "ni": 5000000,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Thermal speed",
+          "symbol": "vTi",
+          "quantity": "speed",
+          "value": 30949.6900517614
+        },
+        {
+          "outputIndex": 1,
+          "label": "Collision frequency",
+          "symbol": "νii",
+          "quantity": "frequency",
+          "value": 1.516608815730738e-7
+        },
+        {
+          "outputIndex": 2,
+          "label": "Mean free path",
+          "symbol": "λii",
+          "quantity": "length",
+          "value": 204071674453.83145
+        }
+      ]
+    },
+    {
+      "formulaId": "spitzer-transport",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "Z": 1,
+        "lnLambda": 20
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Collision frequency",
+          "symbol": "νei",
+          "quantity": "frequency",
+          "value": 0.000006991511873534959
+        },
+        {
+          "outputIndex": 1,
+          "label": "Resistivity",
+          "symbol": "η",
+          "quantity": "resistivity",
+          "value": 0.00004962143322796474
+        },
+        {
+          "outputIndex": 2,
+          "label": "Conductivity",
+          "symbol": "σ",
+          "quantity": "conductivity",
+          "value": 20152.581958000326
+        },
+        {
+          "outputIndex": 3,
+          "label": "Magnetic diffusivity",
+          "symbol": "ηm",
+          "quantity": "magneticDiffusivity",
+          "value": 39.487481912888704
+        }
+      ]
+    },
+    {
+      "formulaId": "shock-compression",
+      "inputState": {
+        "M": 3,
+        "gamma": 1.6666666666666667
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Compression ratio",
+          "symbol": "r",
+          "quantity": "dimensionless",
+          "value": 3
+        },
+        {
+          "outputIndex": 1,
+          "label": "Strong-shock limit",
+          "symbol": "r∞",
+          "quantity": "dimensionless",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "formulaId": "lundquist-number",
+      "inputState": {
+        "L": 100000000,
+        "vA": 1000000,
+        "eta": 0.000001
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Lundquist number",
+          "symbol": "S",
+          "quantity": "dimensionless",
+          "value": 125663706127000.03
+        },
+        {
+          "outputIndex": 1,
+          "label": "Alfvén time",
+          "symbol": "τA",
+          "quantity": "time",
+          "value": 100
+        },
+        {
+          "outputIndex": 2,
+          "label": "Resistive diffusion time",
+          "symbol": "τη",
+          "quantity": "time",
+          "value": 12566370612700002
+        }
+      ]
+    },
+    {
+      "formulaId": "magnetic-reynolds-number",
+      "inputState": {
+        "L": 100000000,
+        "V": 400000,
+        "eta": 0.000001
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Magnetic Reynolds number",
+          "symbol": "Rm",
+          "quantity": "dimensionless",
+          "value": 50265482450800
+        },
+        {
+          "outputIndex": 1,
+          "label": "Advection time",
+          "symbol": "τadv",
+          "quantity": "time",
+          "value": 250
+        },
+        {
+          "outputIndex": 2,
+          "label": "Diffusion time",
+          "symbol": "τη",
+          "quantity": "time",
+          "value": 12566370612700002
+        }
+      ]
+    },
+    {
+      "formulaId": "sweet-parker",
+      "inputState": {
+        "L": 100000000,
+        "vA": 1000000,
+        "eta": 0.000001,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Lundquist number",
+          "symbol": "S",
+          "quantity": "dimensionless",
+          "value": 125663706127000.03
+        },
+        {
+          "outputIndex": 1,
+          "label": "Sheet half-thickness",
+          "symbol": "δ",
+          "quantity": "length",
+          "value": 8.920620581352763
+        },
+        {
+          "outputIndex": 2,
+          "label": "Inflow speed",
+          "symbol": "vin",
+          "quantity": "speed",
+          "value": 0.08920620581352762
+        },
+        {
+          "outputIndex": 3,
+          "label": "Normalized rate",
+          "symbol": "vin/vA",
+          "quantity": "dimensionless",
+          "value": 8.920620581352762e-8
+        },
+        {
+          "outputIndex": 4,
+          "label": "Reconnection electric field",
+          "symbol": "Erec",
+          "quantity": "electricField",
+          "value": 4.460310290676381e-10
+        }
+      ]
+    },
+    {
+      "formulaId": "alfven-transit-time",
+      "inputState": {
+        "L": 100000000,
+        "vA": 1000000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Alfvén time",
+          "symbol": "τA",
+          "quantity": "time",
+          "value": 100
+        },
+        {
+          "outputIndex": 1,
+          "label": "Characteristic frequency",
+          "symbol": "1/τA",
+          "quantity": "frequency",
+          "value": 0.01
+        }
+      ]
+    },
+    {
+      "formulaId": "taylor-mapping",
+      "inputState": {
+        "f": 1,
+        "V": 400000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Wavenumber",
+          "symbol": "k",
+          "quantity": "wavenumber",
+          "value": 0.000015707963267948964
+        },
+        {
+          "outputIndex": 1,
+          "label": "Inverse-wavenumber scale",
+          "symbol": "1/k",
+          "quantity": "length",
+          "value": 63661.977236758146
+        },
+        {
+          "outputIndex": 2,
+          "label": "Convected wavelength",
+          "symbol": "2π/k",
+          "quantity": "length",
+          "value": 400000.00000000006
+        }
+      ]
+    },
+    {
+      "formulaId": "doppler-shift",
+      "inputState": {
+        "fpl": 0,
+        "k": 0.00001,
+        "V": 400000,
+        "theta": 1.5707963267948966
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Spacecraft-frame frequency",
+          "symbol": "fsc",
+          "quantity": "frequency",
+          "value": 3.8981718325193755e-17
+        },
+        {
+          "outputIndex": 1,
+          "label": "Convective contribution",
+          "symbol": "fD",
+          "quantity": "frequency",
+          "value": 3.8981718325193755e-17
+        }
+      ]
+    },
+    {
+      "formulaId": "kinetic-break-frequencies",
+      "inputState": {
+        "V": 400000,
+        "ni": 5000000,
+        "ne": 5000000,
+        "B": 5e-9,
+        "Te": 12,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "f(de)",
+          "symbol": "f(de)",
+          "quantity": "frequency",
+          "value": 26.787732456155
+        },
+        {
+          "outputIndex": 1,
+          "label": "f(di)",
+          "symbol": "f(di)",
+          "quantity": "frequency",
+          "value": 0.6251461459602502
+        },
+        {
+          "outputIndex": 2,
+          "label": "f(ρi)",
+          "symbol": "f(ρi)",
+          "quantity": "frequency",
+          "value": 0.985159231779977
+        },
+        {
+          "outputIndex": 3,
+          "label": "f(ρs)",
+          "symbol": "f(ρs)",
+          "quantity": "frequency",
+          "value": 0.8993232233005896
+        }
+      ]
+    },
+    {
+      "formulaId": "eb-phase-speed",
+      "inputState": {
+        "dE": 0.001,
+        "dB": 1e-9,
+        "vA": 100000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "E/B speed",
+          "symbol": "vEB",
+          "quantity": "speed",
+          "value": 1000000
+        },
+        {
+          "outputIndex": 1,
+          "label": "Normalized ratio",
+          "symbol": "vEB/vA",
+          "quantity": "dimensionless",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "formulaId": "current-sheet-crossing",
+      "inputState": {
+        "Vn": 100000,
+        "dt": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Estimated thickness",
+          "symbol": "L",
+          "quantity": "length",
+          "value": 100000
+        }
+      ]
+    },
+    {
+      "formulaId": "current-density-sheet",
+      "inputState": {
+        "dB": 1e-8,
+        "L": 100000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Current density",
+          "symbol": "J",
+          "quantity": "currentDensity",
+          "value": 7.95774715564545e-8
+        }
+      ]
+    },
+    {
+      "formulaId": "alfvenicity",
+      "inputState": {
+        "dv": 30000,
+        "dB": 3.0000000000000004e-9,
+        "ni": 5000000,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Magnetic fluctuation in velocity units",
+          "symbol": "δb",
+          "quantity": "speed",
+          "value": 29263.915075444318
+        },
+        {
+          "outputIndex": 1,
+          "label": "Elsasser amplitude",
+          "symbol": "z+",
+          "quantity": "speed",
+          "value": 59263.91507544432
+        },
+        {
+          "outputIndex": 2,
+          "label": "Elsasser amplitude",
+          "symbol": "z−",
+          "quantity": "speed",
+          "value": 736.0849245556819
+        },
+        {
+          "outputIndex": 3,
+          "label": "Normalized cross helicity",
+          "symbol": "σc",
+          "quantity": "dimensionless",
+          "value": 0.999691512072394
+        },
+        {
+          "outputIndex": 4,
+          "label": "Normalized residual energy",
+          "symbol": "σr",
+          "quantity": "dimensionless",
+          "value": 0.02483708296903147
+        },
+        {
+          "outputIndex": 5,
+          "label": "Alfvén ratio",
+          "symbol": "rA",
+          "quantity": "dimensionless",
+          "value": 1.0509393508207874
+        },
+        {
+          "outputIndex": 6,
+          "label": "Walén ratio",
+          "symbol": "RW",
+          "quantity": "dimensionless",
+          "value": 1.0251533303954035
+        }
+      ]
+    },
+    {
+      "formulaId": "kaw-regime",
+      "inputState": {
+        "ne": 5000000,
+        "Te": 12,
+        "B": 5e-9,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron beta",
+          "symbol": "βe",
+          "quantity": "dimensionless",
+          "value": 0.9664101777529055
+        },
+        {
+          "outputIndex": 1,
+          "label": "Regime ratio",
+          "symbol": "R",
+          "quantity": "dimensionless",
+          "value": 1774.4766315027703
+        }
+      ]
+    },
+    {
+      "formulaId": "kaw-normalizations",
+      "inputState": {
+        "kperp": 0.00001,
+        "ni": 5000000,
+        "ne": 5000000,
+        "B": 5e-9,
+        "Te": 12,
+        "Ti": 10,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "k⊥ρi",
+          "symbol": "kρi",
+          "quantity": "dimensionless",
+          "value": 0.6462100255786494
+        },
+        {
+          "outputIndex": 1,
+          "label": "k⊥ρs",
+          "symbol": "kρs",
+          "quantity": "dimensionless",
+          "value": 0.7078876157908331
+        },
+        {
+          "outputIndex": 2,
+          "label": "k⊥di",
+          "symbol": "kdi",
+          "quantity": "dimensionless",
+          "value": 1.0183535105854444
+        },
+        {
+          "outputIndex": 3,
+          "label": "k⊥de",
+          "symbol": "kde",
+          "quantity": "dimensionless",
+          "value": 0.02376534756756934
+        }
+      ]
+    },
+    {
+      "formulaId": "kaw-dispersion",
+      "inputState": {
+        "kpar": 1.0000000000000001e-7,
+        "kperp": 0.00001,
+        "ni": 5000000,
+        "ne": 5000000,
+        "B": 5e-9,
+        "Te": 12,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Angular frequency",
+          "symbol": "ω",
+          "quantity": "angularFrequency",
+          "value": 0.005973984438531717
+        },
+        {
+          "outputIndex": 1,
+          "label": "Frequency",
+          "symbol": "f",
+          "quantity": "frequency",
+          "value": 0.0009507891533463837
+        },
+        {
+          "outputIndex": 2,
+          "label": "Parallel phase speed",
+          "symbol": "vph,∥",
+          "quantity": "speed",
+          "value": 59739.84438531716
+        },
+        {
+          "outputIndex": 3,
+          "label": "Dispersive factor",
+          "symbol": "D",
+          "quantity": "dimensionless",
+          "value": 1.224850008578221
+        }
+      ]
+    },
+    {
+      "formulaId": "kaw-landau-accessibility",
+      "inputState": {
+        "vph": 500000,
+        "Te": 12
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Electron thermal speed",
+          "symbol": "vTe",
+          "quantity": "speed",
+          "value": 1452784.9152760357
+        },
+        {
+          "outputIndex": 1,
+          "label": "Resonant-speed ratio",
+          "symbol": "xe",
+          "quantity": "dimensionless",
+          "value": 0.3441665691476413
+        },
+        {
+          "outputIndex": 2,
+          "label": "Maxwellian factor",
+          "symbol": "exp(−xe²/2)",
+          "quantity": "dimensionless",
+          "value": 0.9424943883722168
+        }
+      ]
+    },
+    {
+      "formulaId": "kaw-eb-diagnostic",
+      "inputState": {
+        "dE": 0.001,
+        "dB": 1e-9,
+        "vph": 500000
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Observed E/B speed",
+          "symbol": "vEB",
+          "quantity": "speed",
+          "value": 1000000
+        },
+        {
+          "outputIndex": 1,
+          "label": "Normalized E/B ratio",
+          "symbol": "REB",
+          "quantity": "dimensionless",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "formulaId": "kaw-parallel-electric-field",
+      "inputState": {
+        "kpar": 1.0000000000000001e-7,
+        "kperp": 0.00001,
+        "Te": 12,
+        "B": 5e-9,
+        "Z": 1,
+        "mu": 1
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Ion-sound gyroradius",
+          "symbol": "ρs",
+          "quantity": "length",
+          "value": 70788.76157908331
+        },
+        {
+          "outputIndex": 1,
+          "label": "k⊥ρs",
+          "symbol": "kρs",
+          "quantity": "dimensionless",
+          "value": 0.7078876157908331
+        },
+        {
+          "outputIndex": 2,
+          "label": "Parallel/perpendicular ratio",
+          "symbol": "|E∥/E⊥|",
+          "quantity": "dimensionless",
+          "value": 0.003338240281574197
+        }
+      ]
+    },
+    {
+      "formulaId": "fluid-firehose",
+      "inputState": {
+        "n": 5000000,
+        "Tpar": 20,
+        "Tperp": 10,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Parallel beta",
+          "symbol": "β∥",
+          "quantity": "dimensionless",
+          "value": 1.6106836295881761
+        },
+        {
+          "outputIndex": 1,
+          "label": "Perpendicular beta",
+          "symbol": "β⊥",
+          "quantity": "dimensionless",
+          "value": 0.8053418147940881
+        },
+        {
+          "outputIndex": 2,
+          "label": "Criterion",
+          "symbol": "β∥−β⊥",
+          "quantity": "dimensionless",
+          "value": 0.8053418147940881
+        },
+        {
+          "outputIndex": 3,
+          "label": "Margin to threshold",
+          "symbol": "margin",
+          "quantity": "dimensionless",
+          "value": -1.194658185205912
+        }
+      ]
+    },
+    {
+      "formulaId": "fluid-mirror",
+      "inputState": {
+        "n": 15000000,
+        "Tpar": 100,
+        "Tperp": 300,
+        "B": 5e-9
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Perpendicular beta",
+          "symbol": "β⊥",
+          "quantity": "dimensionless",
+          "value": 72.48076333146791
+        },
+        {
+          "outputIndex": 1,
+          "label": "Anisotropy",
+          "symbol": "T⊥/T∥",
+          "quantity": "dimensionless",
+          "value": 3
+        },
+        {
+          "outputIndex": 2,
+          "label": "Criterion",
+          "symbol": "C",
+          "quantity": "dimensionless",
+          "value": 144.96152666293582
+        },
+        {
+          "outputIndex": 3,
+          "label": "Margin to threshold",
+          "symbol": "margin",
+          "quantity": "dimensionless",
+          "value": 143.96152666293582
+        }
+      ]
+    },
+    {
+      "formulaId": "hellinger-proton-cyclotron",
+      "inputState": {
+        "beta": 1,
+        "A": 1.5
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Threshold anisotropy",
+          "symbol": "Ath",
+          "quantity": "dimensionless",
+          "value": 1.4299277805095425
+        },
+        {
+          "outputIndex": 1,
+          "label": "Observed anisotropy",
+          "symbol": "A",
+          "quantity": "dimensionless",
+          "value": 1.5
+        },
+        {
+          "outputIndex": 2,
+          "label": "Margin",
+          "symbol": "A−Ath",
+          "quantity": "dimensionless",
+          "value": 0.0700722194904575
+        }
+      ]
+    },
+    {
+      "formulaId": "hellinger-mirror",
+      "inputState": {
+        "beta": 1,
+        "A": 1.5
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Threshold anisotropy",
+          "symbol": "Ath",
+          "quantity": "dimensionless",
+          "value": 1.7607667220103342
+        },
+        {
+          "outputIndex": 1,
+          "label": "Observed anisotropy",
+          "symbol": "A",
+          "quantity": "dimensionless",
+          "value": 1.5
+        },
+        {
+          "outputIndex": 2,
+          "label": "Margin",
+          "symbol": "A−Ath",
+          "quantity": "dimensionless",
+          "value": -0.26076672201033424
+        }
+      ]
+    },
+    {
+      "formulaId": "hellinger-parallel-firehose",
+      "inputState": {
+        "beta": 2,
+        "A": 0.6
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Threshold anisotropy",
+          "symbol": "Ath",
+          "quantity": "dimensionless",
+          "value": 0.6082475436644712
+        },
+        {
+          "outputIndex": 1,
+          "label": "Observed anisotropy",
+          "symbol": "A",
+          "quantity": "dimensionless",
+          "value": 0.6
+        },
+        {
+          "outputIndex": 2,
+          "label": "Margin",
+          "symbol": "Ath−A",
+          "quantity": "dimensionless",
+          "value": 0.008247543664471224
+        }
+      ]
+    },
+    {
+      "formulaId": "hellinger-oblique-firehose",
+      "inputState": {
+        "beta": 2,
+        "A": 0.5
+      },
+      "numericOutputs": [
+        {
+          "outputIndex": 0,
+          "label": "Threshold anisotropy",
+          "symbol": "Ath",
+          "quantity": "dimensionless",
+          "value": 0.3364928909952607
+        },
+        {
+          "outputIndex": 1,
+          "label": "Observed anisotropy",
+          "symbol": "A",
+          "quantity": "dimensionless",
+          "value": 0.5
+        },
+        {
+          "outputIndex": 2,
+          "label": "Margin",
+          "symbol": "Ath−A",
+          "quantity": "dimensionless",
+          "value": -0.1635071090047393
+        }
+      ]
+    }
+  ]
+}
