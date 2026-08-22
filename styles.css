@@ -133,6 +133,7 @@ button{color:inherit}
 .result-row dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;color:var(--primary);font-weight:600}
 .result-symbol{font-family:Georgia,serif;color:var(--text);margin-right:.35rem;font-weight:400}
 .result-unit{font-size:.75rem;color:var(--muted);font-weight:400;margin-left:.25rem}
+.reproducible-record-note{color:var(--muted);font-size:.69rem;line-height:1.5;margin:.65rem 0 0}
 .symbol-definitions{border-top:1px solid var(--border);padding:22px 0 24px}
 .symbol-definitions-heading,.glossary-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:14px}
 .symbol-definitions-heading h3,.symbol-glossary h2{font-family:var(--serif);color:var(--primary);font-size:1.2rem;margin:0}
@@ -263,7 +264,7 @@ button{color:inherit}
   .unit-system-grid{grid-template-columns:1fr}
 }
 @media(max-width:680px){
-  .formula-detail{scroll-margin-top:110px}
+  .formula-detail{scroll-margin-top:110px}.result-actions{gap:5px;flex-wrap:wrap;justify-content:flex-end}
   .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
   .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.integrity-grid{grid-template-columns:1fr}.validation-summary,.validation-group summary{align-items:flex-start;flex-direction:column;gap:4px}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
   .symbol-definitions-heading,.glossary-heading{display:block}.symbol-definitions-status{text-align:left}.glossary-search-label{min-width:0;margin-top:14px}.symbol-table{display:block;min-width:0}.symbol-table thead{display:none}.symbol-table tbody,.symbol-table tr,.symbol-table td{display:block;width:100%!important}.symbol-table tr{padding:11px 12px;border-bottom:1px solid var(--border)}.symbol-table tr:last-child{border-bottom:0}.symbol-table td{padding:3px 0;border:0}.symbol-table td+td{margin-top:5px}.symbol-glyph>span,.symbol-glyph>small{display:inline}.symbol-glyph>small{margin-left:7px}.symbol-glossary,.notation-section,.unit-system-guide{padding:18px 15px}.glossary-table-wrap{max-height:none}.warning-heading{align-items:flex-start;flex-direction:column;gap:2px}.warning-heading span{text-align:left}

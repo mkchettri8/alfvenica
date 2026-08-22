@@ -8,9 +8,10 @@
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
+  const Exporter = window.AlfvenicaReproducibleExport;
   const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Exporter || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
@@ -513,6 +514,27 @@
       return `${stripHtml(r.label)}: ${f.value}${f.unit ? ` ${f.unit}` : ''}`;
     })];
     copyText(lines.join('\n'), 'Values copied');
+  }
+  function downloadCalculationRecord() {
+    const formula = activeFormula();
+    const exportedAt = new Date();
+    const displayInputs = Object.fromEntries([...$('inputGrid').querySelectorAll('[data-key]')].map(input => [input.dataset.key, {
+      enteredValue: input.value,
+      value: Number(input.value),
+    }]));
+    try {
+      const record = Exporter.createRecord({
+        formula,
+        canonicalInputs: currentValues(formula),
+        unitSystemId: state.unitSystem,
+        displayInputs,
+        exportedAt,
+      });
+      downloadTextFile(Exporter.filename(formula.id, exportedAt), Exporter.serializeRecord(record), 'application/json;charset=utf-8');
+      showToast('Reproducible record downloaded');
+    } catch (error) {
+      showToast(error.message || 'Calculation record unavailable');
+    }
   }
   function copyLatex() { copyText(activeFormula().latex, 'LaTeX copied'); }
   function copyCitation() { copyText(Meta.citation, 'Citation copied'); }
@@ -1076,6 +1098,7 @@
     $('applyPreset').addEventListener('click', applyPreset);
     $('copyResults').addEventListener('click', copyResults);
     $('copyLatex').addEventListener('click', copyLatex);
+    document.querySelector('[data-download-calculation-record]').addEventListener('click', downloadCalculationRecord);
     $('copyCitation').addEventListener('click', copyCitation);
     $('copyBibtex').addEventListener('click', copyBibtex);
     $('brandButton').addEventListener('click', () => setView('calculator'));

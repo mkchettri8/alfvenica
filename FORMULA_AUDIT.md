@@ -101,6 +101,52 @@ no numerical pass/fail meaning to `<<`; the exact warning threshold remains
 and primary-source applicability statement is verified together. Neither
 pending item is displayed as a solved warning or promoted to `E_DOMAIN`.
 
+## Reproducible calculator-record boundary
+
+`reproducible-export.js` creates a browser/CommonJS JSON record with schema
+identity `org.alfvenica.reproducible-calculation-record` and schema version
+`1.0.0`. The record owns no independent symbol definition, equation,
+coefficient, constant, unit factor, or warning rule: it resolves those fields
+from release metadata, the production core, and the symbol, unit, formula,
+domain, and validation registries at export time.
+
+For each calculator it records the stable calculator/formula identity, HTML and
+LaTeX equation forms, references, assumptions, scope notes and review status;
+every display and internal input value/unit; numeric and explicitly categorical
+outputs; relevant canonical symbols and formula-local roles; notation IDs;
+constants revision and loaded values; display-system limitations; all active
+warning records, threshold-free diagnostics, and review-pending guard metadata.
+Warnings are informational and the exporter calls the unchanged calculator path
+without clamping or replacing a result. The record explicitly disclaims output
+uncertainty propagation.
+
+The nested deterministic state has its own
+`org.alfvenica.deterministic-calculation-state` version. Its canonical JSON
+serialization recursively sorts object keys and contains the formula/equation
+identity, application version, physics-core SHA, loaded constants, and
+key-sorted canonical inputs.
+Timestamp and all presentation-only display state are excluded, as are outputs,
+warnings and diagnostics because they are determined consequences rather than
+inputs. Finite negative zero is normalized to zero. No hash is claimed in this
+version; the canonical serialization is the reproducibility identity artifact.
+This is `P_PROVENANCE`/regression infrastructure, not scientific-correctness
+evidence.
+
+The existing physics-core baseline and SHA are included with their provenance
+limitation. A source commit is explicitly unavailable because the current
+browser/standalone build does not inject and verify one; no checkout hash is
+fabricated. A future release process may add a verified source commit and a
+standard cryptographic digest without changing the deterministic-state field
+set. Records involving μ use the canonical `ion-to-proton-mass-ratio` identity
+and `mu = m_i / m_p` relation, while retaining `ion_mass_number` only as an
+explicitly deprecated compatibility field that is not mass number A.
+
+The export establishes what the loaded application evaluated and which
+provenance it could report. It does not establish that a formula is correct,
+extend a model beyond its assumptions, or replace the validation-evidence
+matrix. The remaining source-level decisions are enumerated in
+[`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md).
+
 ## Important limitations
 
 - Single-ion formulas do not represent a general multi-ion composition.
@@ -185,6 +231,11 @@ Passing the current suite establishes only the stated identities, properties,
 implementation consistency, execution behaviour, and provenance controls. It
 does not establish model applicability outside a stated regime or replace future
 independent benchmark and domain-guardrail work.
+
+The export/provenance suite is classified as `P_PROVENANCE` and
+`F_REGRESSION`: it checks schema, registry resolution, state determinism,
+warning capture, and exact numerical invariance across all calculators, without
+promoting those checks to independent scientific evidence.
 
 ## Interpretation coverage
 

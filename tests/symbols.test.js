@@ -188,7 +188,7 @@ const muInputs = Formulas.formulas.flatMap(formula => formula.inputs.filter(inpu
 assert.equal(muInputs.length, 26, 'Calculator mu-use inventory changed');
 for (const [formulaId, input] of muInputs) assert.equal(input.semanticId, 'ion-to-proton-mass-ratio', formulaId + ': wrong mu identity');
 
-for (const file of ['app.js','index.html','README.md','FORMULA_AUDIT.md','plot-registry.js','formula-registry.js']) {
+for (const file of ['app.js','index.html','README.md','FORMULA_AUDIT.md','reproducible-export.js','plot-registry.js','formula-registry.js']) {
   const source = fs.readFileSync(path.join(root, file), 'utf8');
   for (const entry of entries) assert.equal(source.includes(entry.definition), false, `${file}: independently duplicates canonical definition ${entry.id}`);
 }

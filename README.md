@@ -35,11 +35,13 @@ Reduced models and empirical contours are labelled explicitly. Alfvenica is a tr
 - `plot-registry.js` — plot metrics, hierarchies, sweep variables, and defaults
 - `formula-insights.js` — physical significance, interpretation, uses, and related calculators
 - `validation.js` — semantically classified validation records with evidence basis, source provenance, and tolerance rationale
+- `reproducible-export.js` — versioned calculation records, deterministic scientific-state serialization, registry-resolved provenance, and warning export
 - `search.js` — dependency-free accent- and notation-aware search across calculators and canonical symbols
 - `release-metadata.js` — citation, version, validation, and physics-core provenance
 - `app.js` — search interaction, unit-registry delegation, presets, rendering, plotting, export, and navigation
 - `tests/` — independent unit anchors, domain-warning behaviour, physics, plots, and static-site integrity checks
 - `FORMULA_AUDIT.md` — scientific scope and limitations audit
+- `SCIENTIFIC_DECISION_LOG.md` — finite human-review queue for quarantined equations, coefficients, conventions, and domains
 - `CITATION.cff` — machine-readable citation metadata
 
 ## Local preview
@@ -90,6 +92,47 @@ exceeds `c`. The KAW ordering ratio is exposed without assigning a numerical
 meaning to `<<`; its warning threshold and all automated Hellinger fit-domain
 checks remain review-pending until the necessary primary-source decisions are
 complete.
+
+## Reproducible calculation records
+
+Each calculator can download an
+`org.alfvenica.reproducible-calculation-record` JSON document under explicit
+schema version `1.0.0`. A record contains application and physics-core
+provenance; calculator and equation identity; assumptions, references, and
+review status; registry-resolved symbol metadata; every entered/display and
+canonical/internal input value and unit; numeric and explicitly categorical
+outputs; the active display mode and its limitations; the production constants
+revision and values; active warnings, applicability diagnostics, and
+review-pending guard metadata; and an explicit statement that output uncertainty
+propagation is not implemented.
+
+Canonical/internal values—not formatted display strings—are the calculation
+boundary. Temperature retains the documented internal energy-equivalent eV
+exception, while its thermodynamic SI unit is kelvin. Cyclic Hz and angular
+rad/s remain distinct. The mixed CGS-oriented selector and its retained-SI
+limitations are captured verbatim from `unit-registry.js`.
+
+The record also contains a deterministic calculation state and canonical,
+recursively key-sorted serialization. It includes only the formula/equation
+identity, application and physics-core identity, production constants, and canonical inputs.
+Timestamp, unit-display choice, display formatting, outputs, diagnostics, and
+warnings are excluded, so equivalent scientific input states serialize
+identically. No digest is currently claimed; a standard hash can be layered on
+this canonical serialization when the release build has a verified fingerprint
+path. The browser build does not currently embed a truthful source commit, so
+the field is explicitly null and marked unavailable rather than inferred from a
+checkout.
+
+For formulas using μ, the record identifies the canonical semantic ID
+`ion-to-proton-mass-ratio` and relation `mu = m_i / m_p`. The historical
+`ion_mass_number` field is retained only inside an explicitly deprecated legacy
+compatibility object and does not denote mass number A.
+
+The export captures state and provenance; it does not establish scientific
+correctness, validate applicability beyond the recorded evidence, or perform
+uncertainty propagation. Scientific validation remains separately classified,
+and unresolved convention-sensitive work is listed in
+[`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md).
 
 ## Deployment
 

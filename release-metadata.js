@@ -7,9 +7,16 @@
   'use strict';
 
   return Object.freeze({
+    applicationName: 'Alfvenica',
     version: '1.0.1',
     releaseDate: '2026-08-10',
     validationDate: '2026-08-10',
+    constantsRevision: 'NIST CODATA 2022',
+    constantsSourceLabel: 'NIST CODATA 2022 constants',
+    constantsSourceUrl: 'https://physics.nist.gov/cuu/Constants/',
+    sourceCommit: null,
+    sourceCommitStatus: 'UNAVAILABLE_NOT_EMBEDDED',
+    buildKind: 'browser-source-or-generated-standalone',
     physicsCoreBaseline: '9ad37ae',
     physicsCoreSha256: '3b55dd4e641aa6fb2de32de2b656a990055cf93ef8809f494c90f9d7f00d2f92',
     formulaSmokeCount: 70,

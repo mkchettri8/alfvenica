@@ -184,6 +184,7 @@ button{color:inherit}
 .result-row dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;color:var(--primary);font-weight:600}
 .result-symbol{font-family:Georgia,serif;color:var(--text);margin-right:.35rem;font-weight:400}
 .result-unit{font-size:.75rem;color:var(--muted);font-weight:400;margin-left:.25rem}
+.reproducible-record-note{color:var(--muted);font-size:.69rem;line-height:1.5;margin:.65rem 0 0}
 .symbol-definitions{border-top:1px solid var(--border);padding:22px 0 24px}
 .symbol-definitions-heading,.glossary-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:14px}
 .symbol-definitions-heading h3,.symbol-glossary h2{font-family:var(--serif);color:var(--primary);font-size:1.2rem;margin:0}
@@ -314,7 +315,7 @@ button{color:inherit}
   .unit-system-grid{grid-template-columns:1fr}
 }
 @media(max-width:680px){
-  .formula-detail{scroll-margin-top:110px}
+  .formula-detail{scroll-margin-top:110px}.result-actions{gap:5px;flex-wrap:wrap;justify-content:flex-end}
   .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
   .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.integrity-grid{grid-template-columns:1fr}.validation-summary,.validation-group summary{align-items:flex-start;flex-direction:column;gap:4px}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
   .symbol-definitions-heading,.glossary-heading{display:block}.symbol-definitions-status{text-align:left}.glossary-search-label{min-width:0;margin-top:14px}.symbol-table{display:block;min-width:0}.symbol-table thead{display:none}.symbol-table tbody,.symbol-table tr,.symbol-table td{display:block;width:100%!important}.symbol-table tr{padding:11px 12px;border-bottom:1px solid var(--border)}.symbol-table tr:last-child{border-bottom:0}.symbol-table td{padding:3px 0;border:0}.symbol-table td+td{margin-top:5px}.symbol-glyph>span,.symbol-glyph>small{display:inline}.symbol-glyph>small{margin-left:7px}.symbol-glossary,.notation-section,.unit-system-guide{padding:18px 15px}.glossary-table-wrap{max-height:none}.warning-heading{align-items:flex-start;flex-direction:column;gap:2px}.warning-heading span{text-align:left}
@@ -389,9 +390,16 @@ button{color:inherit}
   'use strict';
 
   return Object.freeze({
+    applicationName: 'Alfvenica',
     version: '1.0.1',
     releaseDate: '2026-08-10',
     validationDate: '2026-08-10',
+    constantsRevision: 'NIST CODATA 2022',
+    constantsSourceLabel: 'NIST CODATA 2022 constants',
+    constantsSourceUrl: 'https://physics.nist.gov/cuu/Constants/',
+    sourceCommit: null,
+    sourceCommitStatus: 'UNAVAILABLE_NOT_EMBEDDED',
+    buildKind: 'browser-source-or-generated-standalone',
     physicsCoreBaseline: '9ad37ae',
     physicsCoreSha256: '3b55dd4e641aa6fb2de32de2b656a990055cf93ef8809f494c90f9d7f00d2f92',
     formulaSmokeCount: 70,
@@ -3096,6 +3104,385 @@ button{color:inherit}
 
   </script>
   <script>
+/* Alfvenica versioned reproducible calculation records. No numerical physics lives here. */
+(function initReproducibleExport(root, factory) {
+  const api = factory(
+    root.AlfvenicaRelease,
+    root.PlasmaPhysics,
+    root.PlasmaSymbolRegistry,
+    root.PlasmaUnitRegistry,
+    root.PlasmaDomainGuardrails,
+    root.PlasmaValidation,
+  );
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.AlfvenicaReproducibleExport = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildReproducibleExport(Meta, P, Symbols, Units, Guardrails, Validation) {
+  'use strict';
+  if (!Meta || !P || !Symbols || !Units || !Guardrails || !Validation) {
+    throw new Error('Reproducible export dependencies are required');
+  }
+
+  const schema = Object.freeze({
+    name: 'org.alfvenica.reproducible-calculation-record',
+    version: '1.0.0',
+  });
+  const deterministicStateSchema = Object.freeze({
+    name: 'org.alfvenica.deterministic-calculation-state',
+    version: '1.0.0',
+  });
+
+  function deepFreeze(value) {
+    if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+    Object.values(value).forEach(deepFreeze);
+    return Object.freeze(value);
+  }
+
+  function canonicalSerialize(value) {
+    if (value === null) return 'null';
+    if (typeof value === 'boolean' || typeof value === 'string') return JSON.stringify(value);
+    if (typeof value === 'number') {
+      if (!Number.isFinite(value)) throw new TypeError('Canonical serialization requires finite numbers');
+      return JSON.stringify(value === 0 ? 0 : value);
+    }
+    if (Array.isArray(value)) return `[${value.map(canonicalSerialize).join(',')}]`;
+    if (typeof value !== 'object') throw new TypeError(`Canonical serialization does not support ${typeof value}`);
+    const members = Object.keys(value).sort().map(key => {
+      if (typeof value[key] === 'undefined') throw new TypeError(`Canonical serialization does not support undefined at ${key}`);
+      return `${JSON.stringify(key)}:${canonicalSerialize(value[key])}`;
+    });
+    return `{${members.join(',')}}`;
+  }
+
+  function finiteInputValue(key, value) {
+    if (!Number.isFinite(value)) throw new TypeError(`Canonical input ${key} must be finite`);
+    return value === 0 ? 0 : value;
+  }
+
+  function jsonNumber(value) {
+    if (Number.isFinite(value)) return { value: value === 0 ? 0 : value, specialValue: null };
+    if (value === Infinity) return { value: null, specialValue: 'POSITIVE_INFINITY' };
+    if (value === -Infinity) return { value: null, specialValue: 'NEGATIVE_INFINITY' };
+    return { value: null, specialValue: 'NOT_A_NUMBER' };
+  }
+
+  function canonicalUnit(quantity) {
+    const definition = Units.canonicalQuantities[quantity];
+    if (!definition) throw new RangeError(`Unknown canonical quantity family: ${quantity}`);
+    return definition;
+  }
+
+  function symbolRecord(symbol) {
+    return {
+      semanticId: symbol.id,
+      canonicalName: symbol.canonicalName,
+      renderedSymbol: {
+        unicode: symbol.unicode,
+        plainText: symbol.plainText,
+        latex: symbol.latex,
+      },
+      definition: symbol.definition,
+      quantityType: symbol.quantityType,
+      canonicalSiUnit: symbol.canonicalSiUnit,
+      productionUnit: symbol.productionUnit,
+      acceptedDisplayUnits: [...symbol.acceptedDisplayUnits],
+      species: symbol.species,
+      indexMeaning: [...symbol.indexMeaning],
+      relation: symbol.relation,
+      relationUnicode: symbol.relationUnicode,
+      conventionNotes: [...symbol.conventionNotes],
+      scope: symbol.scope,
+      reviewStatus: symbol.reviewStatus,
+    };
+  }
+
+  function formulaSymbolRecords(formula) {
+    return Symbols.formulaSymbols(formula).map(({ symbol, use }) => ({
+      ...symbolRecord(symbol),
+      formulaRole: {
+        roles: [...use.roles],
+        inputKeys: [...use.inputKeys],
+        outputIndexes: [...use.outputIndexes],
+        localLabels: [...use.localLabels],
+      },
+    }));
+  }
+
+  function relevantNotationIds(formulaSymbols) {
+    const ids = new Set(formulaSymbols.map(symbol => symbol.semanticId));
+    return Symbols.notationSections
+      .filter(section => section.symbolIds.some(id => ids.has(id)))
+      .map(section => section.id);
+  }
+
+  function constantsRecord() {
+    return {
+      revision: Meta.constantsRevision,
+      source: { label: Meta.constantsSourceLabel, url: Meta.constantsSourceUrl },
+      values: { ...P.constants },
+      note: 'Values are copied from the loaded production physics core; inclusion is provenance, not uncertainty propagation or scientific validation.',
+    };
+  }
+
+  function deterministicState(formula, canonicalInputs) {
+    if (!formula || typeof formula.id !== 'string') throw new TypeError('A formula with a stable ID is required');
+    const inputs = formula.inputs.map(input => ({
+      key: input.key,
+      semanticId: input.semanticId,
+      quantity: input.quantity,
+      value: finiteInputValue(input.key, canonicalInputs[input.key]),
+      unit: canonicalUnit(input.quantity).unit,
+    })).sort((first, second) => first.key.localeCompare(second.key));
+    return deepFreeze({
+      schema: { ...deterministicStateSchema },
+      applicationVersion: Meta.version,
+      physicsCoreSha256: Meta.physicsCoreSha256,
+      formula: {
+        id: formula.id,
+        equationLatex: formula.latex,
+      },
+      constants: { ...P.constants },
+      canonicalInputs: inputs,
+    });
+  }
+
+  function displayInputRecord(input, canonicalValue, unitSystemId, suppliedDisplay) {
+    const definition = Units.definition(unitSystemId, input.quantity);
+    const calculatedDisplayValue = Units.toDisplay(unitSystemId, input.quantity, canonicalValue);
+    let enteredValue = null;
+    let displayValue = calculatedDisplayValue;
+    if (suppliedDisplay && typeof suppliedDisplay === 'object') {
+      if (Object.hasOwn(suppliedDisplay, 'enteredValue')) enteredValue = String(suppliedDisplay.enteredValue);
+      if (Number.isFinite(suppliedDisplay.value)) displayValue = suppliedDisplay.value;
+    } else if (typeof suppliedDisplay !== 'undefined') {
+      enteredValue = String(suppliedDisplay);
+      const numeric = Number(suppliedDisplay);
+      if (Number.isFinite(numeric)) displayValue = numeric;
+    }
+    if (enteredValue === null) enteredValue = String(displayValue);
+    return { enteredValue, value: displayValue, unit: definition.unit };
+  }
+
+  function inputRecord(input, canonicalValue, unitSystemId, suppliedDisplay) {
+    const symbol = Symbols.get(input.semanticId);
+    if (!symbol) throw new Error(`${input.key}: unknown semantic symbol ID ${input.semanticId}`);
+    const canonical = canonicalUnit(input.quantity);
+    return {
+      key: input.key,
+      semanticId: input.semanticId,
+      renderedSymbol: { unicode: symbol.unicode, plainText: symbol.plainText, latex: symbol.latex },
+      physicalName: symbol.canonicalName,
+      quantity: input.quantity,
+      localRole: input.label,
+      species: symbol.species,
+      display: displayInputRecord(input, canonicalValue, unitSystemId, suppliedDisplay),
+      internal: {
+        value: finiteInputValue(input.key, canonicalValue),
+        unit: canonical.unit,
+        meaning: canonical.meaning,
+        calculationBoundary: true,
+      },
+      canonicalSiUnit: symbol.canonicalSiUnit,
+      conventionNotes: [...symbol.conventionNotes],
+    };
+  }
+
+  function outputRecord(result, index, unitSystemId) {
+    if (result.quantity === 'text') {
+      return {
+        key: `categorical-output-${index + 1}`,
+        outputIndex: index,
+        kind: 'categorical',
+        semanticId: null,
+        label: result.label,
+        value: String(result.value),
+        measurementSemantics: false,
+      };
+    }
+    if (!result.semanticId) throw new Error(`Numeric output ${index} has no semantic symbol ID`);
+    const symbol = Symbols.get(result.semanticId);
+    if (!symbol) throw new Error(`Numeric output ${index} has unknown semantic symbol ID ${result.semanticId}`);
+    const canonical = canonicalUnit(result.quantity);
+    const displayDefinition = Units.outputDefinition(unitSystemId, result.quantity, result.value);
+    const internalNumber = jsonNumber(result.value);
+    const displayNumber = jsonNumber(result.value * displayDefinition.factor);
+    return {
+      key: result.semanticId,
+      outputIndex: index,
+      kind: 'numeric',
+      semanticId: result.semanticId,
+      renderedSymbol: { unicode: symbol.unicode, plainText: symbol.plainText, latex: symbol.latex },
+      physicalName: symbol.canonicalName,
+      localLabel: result.label,
+      quantity: result.quantity,
+      internal: { ...internalNumber, unit: canonical.unit, meaning: canonical.meaning },
+      display: { ...displayNumber, unit: displayDefinition.unit },
+      canonicalSiUnit: symbol.canonicalSiUnit,
+    };
+  }
+
+  function compatibilityRecord(formula, canonicalInputs) {
+    const massRatioInput = formula.inputs.find(input => input.semanticId === 'ion-to-proton-mass-ratio');
+    if (!massRatioInput) return { legacyFields: {} };
+    const symbol = Symbols.get('ion-to-proton-mass-ratio');
+    return {
+      legacyFields: {
+        ion_mass_number: {
+          value: canonicalInputs[massRatioInput.key],
+          semanticId: symbol.id,
+          canonicalName: symbol.canonicalName,
+          relation: symbol.relation,
+          legacyAlias: true,
+          deprecatedTerminology: true,
+          note: 'Compatibility field only. This value is the dimensionless ion-to-proton mass ratio, not mass number A.',
+        },
+      },
+    };
+  }
+
+  function normalizedTimestamp(value) {
+    const date = value instanceof Date ? value : new Date(typeof value === 'undefined' ? Date.now() : value);
+    if (!Number.isFinite(date.getTime())) throw new TypeError('Export timestamp must be a valid date');
+    return date.toISOString();
+  }
+
+  function createRecord({ formula, canonicalInputs, unitSystemId = 'space', displayInputs = {}, exportedAt } = {}) {
+    if (!formula || typeof formula.id !== 'string') throw new TypeError('A formula with a stable ID is required');
+    if (!canonicalInputs || typeof canonicalInputs !== 'object') throw new TypeError('Canonical input values are required');
+    if (!Units.hasSystem(unitSystemId)) throw new RangeError(`Unknown unit display system: ${unitSystemId}`);
+    const timestamp = normalizedTimestamp(exportedAt);
+    const internalInputs = Object.fromEntries(formula.inputs.map(input => [input.key, finiteInputValue(input.key, canonicalInputs[input.key])]));
+    const results = formula.calculate(internalInputs);
+    const warnings = Guardrails.evaluate(formula, internalInputs, results);
+    const diagnostics = Guardrails.diagnostics(formula, internalInputs, results);
+    const reviewPending = Guardrails.reviewPendingFor(formula.id);
+    const formulaSymbols = formulaSymbolRecords(formula);
+    const scientificState = deterministicState(formula, internalInputs);
+    const unitSystem = Units.systems[unitSystemId];
+    const record = {
+      schema: { ...schema },
+      exportedAt: timestamp,
+      application: {
+        name: Meta.applicationName,
+        version: Meta.version,
+        releaseDate: Meta.releaseDate,
+        repositoryUrl: Meta.repositoryUrl,
+        build: {
+          kind: Meta.buildKind,
+          sourceCommit: Meta.sourceCommit,
+          sourceCommitStatus: Meta.sourceCommitStatus,
+          note: 'No source commit is claimed unless a verified commit is embedded by the build process.',
+        },
+        physicsCore: {
+          baseline: Meta.physicsCoreBaseline,
+          sha256: Meta.physicsCoreSha256,
+          baselineUrl: Meta.physicsBaselineUrl,
+          evidenceClass: 'P_PROVENANCE',
+          note: 'The core hash identifies code provenance; it is not evidence of scientific correctness.',
+        },
+      },
+      calculation: {
+        calculator: {
+          id: formula.id,
+          title: formula.name,
+          category: formula.category,
+          description: formula.description,
+        },
+        formula: {
+          id: formula.id,
+          equation: { html: formula.equation, latex: formula.latex },
+          assumptions: [...formula.assumptions],
+          modelScopeNote: formula.note || null,
+          references: formula.references.map(reference => ({ ...reference })),
+          semanticMetadataReviewStatus: formula.symbolReviewStatus,
+          equationSymbolIds: [...formula.equationSymbolIds],
+        },
+        inputs: formula.inputs.map(input => inputRecord(input, internalInputs[input.key], unitSystemId, displayInputs[input.key])),
+        outputs: results.map((result, index) => outputRecord(result, index, unitSystemId)),
+        symbols: formulaSymbols,
+        conventions: {
+          calculationBoundary: 'Calculations use the internal values and units recorded for each input; display values are presentation-boundary conversions.',
+          temperatureBoundary: 'Temperature inputs are stored as energy-equivalent k_B T in eV; canonical thermodynamic SI temperature is kelvin.',
+          frequencyBoundary: 'Cyclic frequency f in Hz and angular frequency omega/Omega in rad s^-1 are distinct quantities, not display aliases.',
+          unitConvention: 'Canonical/internal calculation boundary with display-only unit conversion.',
+          notationSectionIds: relevantNotationIds(formulaSymbols),
+          ionMassConvention: formula.inputs.some(input => input.semanticId === 'ion-to-proton-mass-ratio') ? {
+            semanticId: 'ion-to-proton-mass-ratio',
+            relation: Symbols.get('ion-to-proton-mass-ratio').relation,
+            dimensionless: true,
+          } : null,
+        },
+        displaySystem: {
+          id: unitSystem.id,
+          label: unitSystem.label,
+          coherentSystem: unitSystem.coherentSystem,
+          shortDescription: unitSystem.shortDescription,
+          limitations: [...unitSystem.limitations],
+        },
+        constants: constantsRecord(),
+        applicability: {
+          activeWarnings: warnings.map(warning => ({ ...warning, conditionEvaluated: { ...warning.conditionEvaluated } })),
+          diagnostics: diagnostics.map(diagnostic => ({ ...diagnostic })),
+          reviewPending: reviewPending.map(definition => ({
+            id: definition.id,
+            condition: definition.condition,
+            rationale: definition.rationale,
+            provenance: definition.provenance,
+            reviewStatus: definition.reviewStatus,
+            activeUserWarning: false,
+          })),
+          informationalOnly: true,
+          numericalResultsModified: false,
+        },
+        evidence: {
+          exportRecordClass: 'P_PROVENANCE',
+          warningEvidenceClasses: [...new Set(warnings.map(warning => warning.evidenceClass).filter(Boolean))],
+          availableTaxonomyIds: Object.keys(Validation.validationClasses),
+          statement: 'Export and provenance checks do not establish scientific correctness; scientific validation evidence is maintained separately.',
+        },
+        uncertainty: {
+          propagationImplemented: false,
+          statement: 'No calculator-output uncertainty propagation is claimed by this record.',
+        },
+      },
+      reproduction: {
+        deterministicState: scientificState,
+        canonicalSerialization: canonicalSerialize(scientificState),
+        hash: null,
+        hashAlgorithm: null,
+        hashStatus: 'NOT_GENERATED_CANONICAL_SERIALIZATION_PROVIDED',
+        excludedFields: ['exportedAt', 'displayInputs', 'displayOutputs', 'displaySystem', 'outputs', 'warnings', 'diagnostics'],
+        normalization: 'Object keys are lexicographically sorted, array order is preserved, and finite numeric negative zero is normalized to zero.',
+        note: 'This state identity is reproducibility metadata, not scientific validation.',
+      },
+      compatibility: compatibilityRecord(formula, internalInputs),
+    };
+    return deepFreeze(record);
+  }
+
+  function serializeRecord(record) {
+    return `${JSON.stringify(record, null, 2)}\n`;
+  }
+
+  function filename(formulaId, exportedAt) {
+    const timestamp = normalizedTimestamp(exportedAt).replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    const safeId = String(formulaId).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '');
+    if (!safeId) throw new TypeError('A filename-safe formula ID is required');
+    return `alfvenica-${safeId}-${timestamp}.json`;
+  }
+
+  return Object.freeze({
+    schema,
+    deterministicStateSchema,
+    canonicalSerialize,
+    deterministicState,
+    createRecord,
+    serializeRecord,
+    filename,
+  });
+}));
+
+  </script>
+  <script>
 /* Dependency-free search and ranking for the Alfvenica formula registry. */
 (function initSearch(root, factory) {
   const api = factory();
@@ -3286,9 +3673,10 @@ button{color:inherit}
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
+  const Exporter = window.AlfvenicaReproducibleExport;
   const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Exporter || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
@@ -3791,6 +4179,27 @@ button{color:inherit}
       return `${stripHtml(r.label)}: ${f.value}${f.unit ? ` ${f.unit}` : ''}`;
     })];
     copyText(lines.join('\n'), 'Values copied');
+  }
+  function downloadCalculationRecord() {
+    const formula = activeFormula();
+    const exportedAt = new Date();
+    const displayInputs = Object.fromEntries([...$('inputGrid').querySelectorAll('[data-key]')].map(input => [input.dataset.key, {
+      enteredValue: input.value,
+      value: Number(input.value),
+    }]));
+    try {
+      const record = Exporter.createRecord({
+        formula,
+        canonicalInputs: currentValues(formula),
+        unitSystemId: state.unitSystem,
+        displayInputs,
+        exportedAt,
+      });
+      downloadTextFile(Exporter.filename(formula.id, exportedAt), Exporter.serializeRecord(record), 'application/json;charset=utf-8');
+      showToast('Reproducible record downloaded');
+    } catch (error) {
+      showToast(error.message || 'Calculation record unavailable');
+    }
   }
   function copyLatex() { copyText(activeFormula().latex, 'LaTeX copied'); }
   function copyCitation() { copyText(Meta.citation, 'Citation copied'); }
@@ -4354,6 +4763,7 @@ button{color:inherit}
     $('applyPreset').addEventListener('click', applyPreset);
     $('copyResults').addEventListener('click', copyResults);
     $('copyLatex').addEventListener('click', copyLatex);
+    document.querySelector('[data-download-calculation-record]').addEventListener('click', downloadCalculationRecord);
     $('copyCitation').addEventListener('click', copyCitation);
     $('copyBibtex').addEventListener('click', copyBibtex);
     $('brandButton').addEventListener('click', () => setView('calculator'));
@@ -4481,9 +4891,11 @@ button{color:inherit}
                   <div class="result-actions">
                     <button id="copyResults" class="text-button" type="button">Copy values</button>
                     <button id="copyLatex" class="text-button" type="button">Copy LaTeX</button>
+                    <button class="text-button" type="button" data-download-calculation-record>Download record</button>
                   </div>
                 </div>
                 <dl id="resultList" class="result-list"></dl>
+                <p class="reproducible-record-note">JSON record includes canonical inputs and outputs, formula provenance, display units, and active applicability warnings.</p>
               </section>
             </div>
 

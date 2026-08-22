@@ -58,6 +58,7 @@
   <script src="plot-registry.js" defer></script>
   <script src="formula-insights.js" defer></script>
   <script src="validation.js" defer></script>
+  <script src="reproducible-export.js" defer></script>
   <script src="search.js" defer></script>
   <script src="app.js" defer></script>
 </head>
@@ -161,9 +162,11 @@
                   <div class="result-actions">
                     <button id="copyResults" class="text-button" type="button">Copy values</button>
                     <button id="copyLatex" class="text-button" type="button">Copy LaTeX</button>
+                    <button class="text-button" type="button" data-download-calculation-record>Download record</button>
                   </div>
                 </div>
                 <dl id="resultList" class="result-list"></dl>
+                <p class="reproducible-record-note">JSON record includes canonical inputs and outputs, formula provenance, display units, and active applicability warnings.</p>
               </section>
             </div>
 

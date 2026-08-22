@@ -5,7 +5,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'unit-registry.js', 'symbol-registry.js', 'formula-registry.js', 'domain-guardrails.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js'];
+const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'unit-registry.js', 'symbol-registry.js', 'formula-registry.js', 'domain-guardrails.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'reproducible-export.js', 'search.js', 'app.js'];
 for (const file of requiredFiles) assert.ok(fs.existsSync(path.join(root, file)), `Missing local asset: ${file}`);
 const Meta = require(path.join(root, 'release-metadata.js'));
 const packageMetadata = require(path.join(root, 'package.json'));
@@ -39,6 +39,9 @@ assert.match(appSource, /renderSymbolsAndDefinitions\(formula\);\s*calculate\(\)
 assert.match(appSource, /function renderNotation\(\)/, 'Notation & Conventions renderer missing');
 assert.match(appSource, /const Units = window\.PlasmaUnitRegistry/, 'Unit registry is not loaded by the UI');
 assert.match(appSource, /const Guardrails = window\.PlasmaDomainGuardrails/, 'Domain guardrail registry is not loaded by the UI');
+assert.match(appSource, /const Exporter = window\.AlfvenicaReproducibleExport/, 'Reproducible export module is not loaded by the UI');
+assert.match(appSource, /Exporter\.createRecord\(\{[\s\S]*canonicalInputs: currentValues\(formula\)[\s\S]*unitSystemId: state\.unitSystem/, 'Calculator export does not capture canonical state and selected unit mode');
+assert.match(appSource, /Exporter\.filename\(formula\.id, exportedAt\)/, 'Calculator export filename is not formula/timestamp specific');
 assert.match(appSource, /Guardrails\.evaluate\(formula, values, results\)/, 'Structured calculator guardrails are not evaluated');
 assert.match(appSource, /Search\.findSymbolMatches\(Symbols, input\.value\)/, 'Canonical glossary search is not wired to the notation view');
 assert.match(appSource, /ion_mass_number:\s*PlotRegistry\.stateSemanticIds\.mu/, 'Legacy plot-export key is not associated with the canonical mass-ratio semantic ID');
@@ -69,6 +72,8 @@ assert.match(html, /data-symbol-glossary-body/, 'Complete symbol glossary has no
 assert.match(html, /CGS-oriented \(mixed\)/, 'Mixed CGS selector is not qualified');
 assert.match(html, /data-unit-system-guide/, 'Generated unit-system guidance has no UI target');
 assert.match(html, /data-calculation-warnings[^>]+aria-live="polite"/, 'Accessible calculation warning container missing');
+assert.match(html, /data-download-calculation-record[^>]*>Download record<\/button>/, 'Reproducible calculation-record download is missing');
+assert.match(html, /JSON record includes canonical inputs and outputs, formula provenance, display units, and active applicability warnings\./, 'Calculation-record scope is not explained in the UI');
 assert.match(html, /data-plot-mass-ratio-label/, 'Plot mass-ratio name is not registry-driven');
 assert.match(html, /data-plot-mass-ratio-relation/, 'Plot mass-ratio relation is not registry-driven');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
@@ -89,10 +94,25 @@ assert.doesNotMatch(readme, /is a validated, unit-explicit/i, 'README retains an
 assert.match(readme, /6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, 2\s+`E_DOMAIN`, and 22 `F_REGRESSION`/, 'README evidence inventory is inaccurate');
 assert.equal(packageMetadata.scripts['test:reference'], 'node tests/reference.test.js', 'Reference test script missing');
 assert.equal(packageMetadata.scripts['generate:reference'], 'node tests/reference/generate-reference-benchmarks.js', 'Reference generator script missing');
+assert.equal(packageMetadata.scripts['test:export'], 'node tests/export.test.js', 'Export/provenance test script missing');
 const formulaAudit = fs.readFileSync(path.join(root, 'FORMULA_AUDIT.md'), 'utf8');
 for (const validationClass of ['A_REFERENCE','B_IDENTITY','C_UNIT','D_PROPERTY','E_DOMAIN','F_REGRESSION','P_PROVENANCE']) {
   assert.ok(formulaAudit.includes(validationClass), `Formula audit omits ${validationClass}`);
 }
+assert.match(formulaAudit, /org\.alfvenica\.reproducible-calculation-record/, 'Formula audit omits reproducible-record schema');
+assert.match(formulaAudit, /source commit is explicitly unavailable/, 'Formula audit fabricates or omits source-commit limitation');
+assert.match(readme, /Reproducible calculation records/, 'README omits calculation-record documentation');
+assert.match(readme, /does not establish scientific\s+correctness/, 'README overstates export provenance');
+assert.equal(Meta.applicationName, 'Alfvenica', 'Application provenance name missing');
+assert.equal(Meta.constantsRevision, 'NIST CODATA 2022', 'Constants revision metadata missing');
+assert.equal(Meta.sourceCommit, null, 'An unverified source commit is exposed');
+assert.equal(Meta.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED', 'Unavailable source commit is not explicit');
+const decisionLog = fs.readFileSync(path.join(root, 'SCIENTIFIC_DECISION_LOG.md'), 'utf8');
+for (let index = 1; index <= 10; index += 1) assert.match(decisionLog, new RegExp(`SD-${String(index).padStart(2, '0')}`), `Scientific decision SD-${index} missing`);
+for (const field of ['Calculator/formula ID', 'Production functions', 'Current implementation', 'Current reference metadata', 'Why quarantined', 'Decision required', 'Would a scientific change alter results?', 'Affected surfaces', 'Source needed', 'Priority', 'Recommended action']) {
+  assert.ok(decisionLog.includes(field), `Scientific decision log omits ${field}`);
+}
+assert.match(decisionLog, /No entry in this log changes a formula, coefficient, warning threshold,/, 'Decision dossier does not preserve scientific quarantine');
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
 assert.match(citationCff, new RegExp(`date-released: ${Meta.releaseDate}`), 'CITATION.cff date mismatch');
