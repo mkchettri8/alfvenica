@@ -6,8 +6,11 @@
 - **Release date:** 2026-08-22
 - **Immutable source tag:** `v1.1.0`
 - **Preparation branch:** `v1.1.0-paper-hardening`
-- **Status:** the release-candidate audit passed; v1.1.0 is released and tagged,
-  while archival through Zenodo and its DOI remain pending
+- **Status:** the release-candidate audit passed; v1.1.0 is released, tagged,
+  and archived through Zenodo
+- **Zenodo record:** https://zenodo.org/records/22061119
+- **Version-specific DOI:** `10.5281/zenodo.22061119`
+- **All-versions DOI:** `10.5281/zenodo.22061118`
 - **Source commit in browser/export metadata:** unavailable/not embedded; no
   self-referential commit hash is fabricated; the `v1.1.0` tag establishes
   immutable released-source provenance
@@ -56,9 +59,9 @@ retained. Timestamp and display presentation remain outside deterministic state.
 ## Release artifacts and tests
 
 - Standalone build: regenerated from source; SHA-256
-  `6b3b7b01f3535cd1e584e5bcddcde77adf3554c7159c2e3fe49ced26841b8f82`
-- Citation metadata: `CITATION.cff` identifies v1.1.0 and its 2026-08-22 release
-  date; no DOI is claimed before archival
+  `39f904050f0627dddccc790232ee64303b655e4800e72ec91519f24b80642022`
+- Citation metadata: `CITATION.cff` identifies v1.1.0, its 2026-08-22 release
+  date, and version-specific DOI `10.5281/zenodo.22061119`
 - License: MIT, unchanged
 - Repository hygiene: the tracked-file audit found no release-blocking secrets,
   machine-local paths, or scratch artifacts; `.codex/paper-hardening/` remains
@@ -81,5 +84,6 @@ retained. Timestamp and display presentation remain outside deterministic state.
   cryptographic state fingerprint.
 
 The release-candidate audit recorded above passed before finalization. The
-`v1.1.0` tag now establishes the released source state. No Zenodo archive or DOI
-has yet been created.
+Zenodo archive corresponds to the immutable `v1.1.0` Git tag and is identified
+by version-specific DOI `10.5281/zenodo.22061119`; the all-versions DOI is
+`10.5281/zenodo.22061118`.

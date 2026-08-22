@@ -53,6 +53,10 @@ assert.equal(packageMetadata.version, Meta.version);
 assert.equal(Meta.releaseStatus, 'RELEASED');
 assert.equal(Meta.releaseDate, '2026-08-22');
 assert.equal(Meta.releaseTag, 'v1.1.0');
+assert.equal(Meta.versionDoi, '10.5281/zenodo.22061119');
+assert.equal(Meta.versionDoiUrl, 'https://doi.org/10.5281/zenodo.22061119');
+assert.equal(Meta.zenodoRecordUrl, 'https://zenodo.org/records/22061119');
+assert.equal(Meta.conceptDoi, '10.5281/zenodo.22061118');
 assert.equal(Meta.validationDate, '2026-08-22');
 assert.equal(Meta.sourceCommit, null, 'Released metadata fabricates a source commit');
 assert.equal(Meta.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED');
@@ -67,7 +71,7 @@ assert.match(citation, /^version: 1\.1\.0$/m);
 assert.match(citation, /repository-code: "https:\/\/github\.com\/mkchettri8\/alfvenica"/);
 assert.match(citation, /^url: "https:\/\/alfvenica\.org\/"$/m);
 assert.match(citation, /^date-released: 2026-08-22$/m);
-assert.doesNotMatch(citation, /^doi:/mi, 'CFF claims an unassigned archival DOI');
+assert.match(citation, /^doi: "10\.5281\/zenodo\.22061119"$/m);
 assert.match(fs.readFileSync(path.join(root, 'LICENSE'), 'utf8'), /^MIT License/);
 
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
@@ -76,13 +80,18 @@ const readiness = fs.readFileSync(path.join(root, 'RELEASE_READINESS.md'), 'utf8
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 assert.match(readme, /Current version:\*\* 1\.1\.0 \(released 2026-08-22/);
 assert.ok(readme.replace(/[\r\n*]+/g, ' ').replace(/\s+/g, ' ').includes(Meta.citation));
+assert.match(readme, /Archived release: \[https:\/\/zenodo\.org\/records\/22061119\]/);
 assert.match(readme, /no institutional endorsement is claimed/i);
 assert.match(readme, /killing a\s+mutation demonstrates sensitivity/i);
 assert.match(changelog, /^## 1\.1\.0 — 2026-08-22$/m);
 assert.match(changelog, /`v1\.1\.0` tag establishes immutable source provenance/);
+assert.match(changelog, /Zenodo DOI: https:\/\/doi\.org\/10\.5281\/zenodo\.22061119/);
 assert.match(readiness, /Release:\*\* Alfvenica v1\.1\.0/);
 assert.match(readiness, /release-candidate audit passed/);
 assert.match(readiness, /`v1\.1\.0` tag.*released-source provenance/s);
+assert.match(readiness, /Zenodo record:\*\* https:\/\/zenodo\.org\/records\/22061119/);
+assert.match(readiness, /Version-specific DOI:\*\* `10\.5281\/zenodo\.22061119`/);
+assert.match(readiness, /All-versions DOI:\*\* `10\.5281\/zenodo\.22061118`/);
 for (const currentFile of ['release-metadata.js','package.json','index.html','README.md','CITATION.cff','RELEASE_READINESS.md']) {
   assert.doesNotMatch(fs.readFileSync(path.join(root, currentFile), 'utf8'), /Version 1\.0\.1|Current version:\*\* 1\.0\.1|version["': ]+1\.0\.1/i, `${currentFile}: stale current-version wording`);
 }
@@ -99,6 +108,7 @@ assert.doesNotMatch(html, /DOI pending/i, 'Current public UI still shows DOI-pen
 assert.doesNotMatch(html, /release candidate/i, 'Current UI still describes v1.1.0 as a release candidate');
 assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v1.1.0 tag is pending');
 assert.match(html, /Alfvenica · Developed and maintained by <a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a><br>Version 1\.1\.0 · Released 22 August 2026 · Immutable source tag <a href="https:\/\/github\.com\/mkchettri8\/alfvenica\/releases\/tag\/v1\.1\.0">v1\.1\.0<\/a>/);
+assert.match(html, /Archived on Zenodo · DOI: <a href="https:\/\/doi\.org\/10\.5281\/zenodo\.22061119">10\.5281\/zenodo\.22061119<\/a>/);
 assert.match(html, /<footer class="site-footer">\s*<span>Alfvenica · Developed and maintained by <a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a><\/span>\s*<\/footer>/);
 assert.match(fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8'), new RegExp(`<lastmod>${Meta.validationDate}<\\/lastmod>`));
 

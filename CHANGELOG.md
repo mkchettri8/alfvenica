@@ -29,8 +29,9 @@ All notable changes to Alfvenica are recorded here.
   `|E_parallel/E_perp|=|k_parallel k_perp|rho_s^2`; this is the only deliberate
   numerical-physics change since v1.0.1.
 
-The `v1.1.0` tag establishes immutable source provenance. An archival Zenodo DOI
-has not yet been assigned.
+The `v1.1.0` tag establishes immutable source provenance.
+
+Zenodo DOI: https://doi.org/10.5281/zenodo.22061119
 
 ## 1.0.1 — 2026-08-10
 

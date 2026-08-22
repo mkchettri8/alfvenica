@@ -5,7 +5,7 @@
 Every calculator also exposes a generated **Symbols & Definitions** table, and the application includes a searchable **Notation & Conventions** view. Both are resolved from `symbol-registry.js`; documentation and UI code do not maintain independent symbol definitions.
 
 - **Live site:** [alfvenica.org](https://alfvenica.org/)
-- **Current version:** 1.1.0 (released 2026-08-22; archival DOI pending)
+- **Current version:** 1.1.0 (released 2026-08-22; [Zenodo DOI](https://doi.org/10.5281/zenodo.22061119))
 - **Creator and maintainer:** [Mani K Chettri](https://mkchettri.in/) ([ORCID](https://orcid.org/0009-0000-1368-9263))
 
 Alfvenica runs entirely in the browser. It needs no server-side code, account,
@@ -179,12 +179,14 @@ Scientific corrections, independent benchmarks, documentation improvements, and 
 ## Citation
 
 GitHub displays a **Cite this repository** panel from `CITATION.cff`. The current
-metadata identifies Alfvenica v1.1.0, released 2026-08-22. A Zenodo DOI will be
-added only after archival; no DOI has yet been assigned or implied.
+metadata identifies Alfvenica v1.1.0, released 2026-08-22 and archived on
+Zenodo.
 
 Suggested citation:
 
-> Chettri, M. K. (2026). *Alfvenica: Interactive Space Plasma Toolkit* (Version 1.1.0) [Computer software]. https://alfvenica.org/
+> Chettri, M. K. (2026). *Alfvenica: Interactive Space Plasma Toolkit* (Version 1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22061119
+
+Archived release: [https://zenodo.org/records/22061119](https://zenodo.org/records/22061119)
 
 ## Licence
 

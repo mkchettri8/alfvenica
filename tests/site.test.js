@@ -138,6 +138,7 @@ assert.doesNotMatch(decisionLog, /\*\*Status:\*\* `OPEN`/, 'A scientific decisio
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
 assert.match(citationCff, /^date-released: 2026-08-22$/m, 'CITATION.cff release date mismatch');
+assert.match(citationCff, /^doi: "10\.5281\/zenodo\.22061119"$/m, 'CITATION.cff version DOI mismatch');
 assert.equal(packageMetadata.version, Meta.version, 'package.json version mismatch');
 assert.match(fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8'), new RegExp(`## ${Meta.version.replace(/\./g, '\\.')}`), 'Changelog version missing');
 const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
@@ -149,9 +150,10 @@ assert.equal(jsonLd.dateModified, Meta.validationDate, 'JSON-LD audit date misma
 const identityMatch = html.match(/<aside class="about-identity"[^>]*>([\s\S]*?)<\/aside>/);
 assert.ok(identityMatch, 'Understated project identity presentation missing');
 const identityHtml = identityMatch[1];
-assert.equal(plainText(identityHtml), 'Alfvenica · Developed and maintained by Mani K Chettri Version 1.1.0 · Released 22 August 2026 · Immutable source tag v1.1.0', 'About identity/release text differs from the approved wording');
+assert.equal(plainText(identityHtml), 'Alfvenica · Developed and maintained by Mani K Chettri Version 1.1.0 · Released 22 August 2026 · Immutable source tag v1.1.0 Archived on Zenodo · DOI: 10.5281/zenodo.22061119', 'About identity/release text differs from the approved wording');
 assert.match(identityHtml, /<a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a>/, 'Maintainer website link missing or incorrect');
 assert.match(identityHtml, /<a href="https:\/\/github\.com\/mkchettri8\/alfvenica\/releases\/tag\/v1\.1\.0">v1\.1\.0<\/a>/, 'Immutable source-tag link missing or incorrect');
+assert.match(identityHtml, /<a href="https:\/\/doi\.org\/10\.5281\/zenodo\.22061119">10\.5281\/zenodo\.22061119<\/a>/, 'Zenodo DOI link missing or incorrect');
 const footerMatch = html.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/);
 assert.ok(footerMatch, 'Global footer missing');
 assert.equal(plainText(footerMatch[1]), 'Alfvenica · Developed and maintained by Mani K Chettri', 'Global footer differs from the approved authorship line');

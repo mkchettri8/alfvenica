@@ -27,11 +27,15 @@
     plotMetricCount: 28,
     htmlIdCount: 100,
     repositoryUrl: 'https://github.com/mkchettri8/alfvenica',
+    versionDoi: '10.5281/zenodo.22061119',
+    versionDoiUrl: 'https://doi.org/10.5281/zenodo.22061119',
+    zenodoRecordUrl: 'https://zenodo.org/records/22061119',
+    conceptDoi: '10.5281/zenodo.22061118',
     physicsBaselineUrl: 'https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9',
     ciUrl: 'https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml',
     formulaAuditUrl: 'https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md',
     scientificIssueUrl: 'https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml',
-    citation: 'Chettri, M. K. (2026). Alfvenica: Interactive Space Plasma Toolkit (Version 1.1.0) [Computer software]. https://alfvenica.org/',
-    bibtex: '@software{chettri_alfvenica_2026,\n  author  = {Chettri, Mani K},\n  title   = {Alfvenica: Interactive Space Plasma Toolkit},\n  version = {1.1.0},\n  year    = {2026},\n  url     = {https://alfvenica.org/}\n}',
+    citation: 'Chettri, M. K. (2026). Alfvenica: Interactive Space Plasma Toolkit (Version 1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22061119',
+    bibtex: '@software{chettri_alfvenica_2026,\n  author    = {Chettri, Mani K},\n  title     = {Alfvenica: Interactive Space Plasma Toolkit},\n  version   = {1.1.0},\n  year      = {2026},\n  publisher = {Zenodo},\n  doi       = {10.5281/zenodo.22061119},\n  url       = {https://doi.org/10.5281/zenodo.22061119}\n}',
   });
 }));
