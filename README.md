@@ -28,15 +28,17 @@ Reduced models and empirical contours are labelled explicitly. Alfvenica is a tr
 - `index.html` — semantic page structure and public metadata
 - `styles.css` — restrained light interface with optional dark mode
 - `plasma-physics.js` — canonical SI physics functions
+- `unit-registry.js` — canonical display-unit families, conversion factors, selector descriptions, and adaptive output units
 - `symbol-registry.js` — canonical semantic symbol IDs, names, representations, definitions, units, species/index meanings, aliases, and convention-review status
 - `formula-registry.js` — formulas, semantic symbol uses and local roles, inputs, outputs, assumptions, keywords, and references
+- `domain-guardrails.js` — structured applicability warnings and review-pending domain metadata
 - `plot-registry.js` — plot metrics, hierarchies, sweep variables, and defaults
 - `formula-insights.js` — physical significance, interpretation, uses, and related calculators
 - `validation.js` — semantically classified validation records with evidence basis, source provenance, and tolerance rationale
 - `search.js` — dependency-free accent- and notation-aware search across calculators and canonical symbols
 - `release-metadata.js` — citation, version, validation, and physics-core provenance
-- `app.js` — search interaction, conversion, presets, rendering, plotting, export, and navigation
-- `tests/` — physics, plots, and static-site integrity checks
+- `app.js` — search interaction, unit-registry delegation, presets, rendering, plotting, export, and navigation
+- `tests/` — independent unit anchors, domain-warning behaviour, physics, plots, and static-site integrity checks
 - `FORMULA_AUDIT.md` — scientific scope and limitations audit
 - `CITATION.cff` — machine-readable citation metadata
 
@@ -58,9 +60,9 @@ npm run build:standalone
 ```
 
 The validation taxonomy uses `A_REFERENCE`, `B_IDENTITY`, `C_UNIT`,
-`D_PROPERTY`, `E_DOMAIN`, `F_REGRESSION`, and `P_PROVENANCE`. The current 38
-in-browser records comprise 6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, and 22
-`F_REGRESSION` records. The independent anchors are generated without importing
+`D_PROPERTY`, `E_DOMAIN`, `F_REGRESSION`, and `P_PROVENANCE`. The current 40
+in-browser records comprise 6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, 2
+`E_DOMAIN`, and 22 `F_REGRESSION` records. The independent anchors are generated without importing
 the production physics implementation and are frozen with source, constants,
 full-precision expected values, source comparisons, CODATA uncertainties,
 method, and separate zero-ULP software comparison criteria in
@@ -73,6 +75,21 @@ and the public
 [test workflow](https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml).
 
 The public name and relation for μ are registry-owned as the ion-to-proton mass ratio. The existing plot-export field `ion_mass_number` remains a legacy compatibility key in this development batch; it is associated internally with the canonical semantic ID and is not the public scientific term.
+
+The unit layer enumerates all 19 current conversion families across Space, SI
+display, and CGS-oriented display modes. The latter is explicitly a mixed
+convenience mode, not a complete Gaussian/esu/emu implementation: electrical
+resistivity and conductivity remain in SI, temperatures remain energy-equivalent
+eV, and angular frequencies remain in rad/s. Exact SI-prefix conversions and the
+independent eV/K anchor are exercised separately from round trips, while all 165
+frozen default numerical outputs remain exact regression controls.
+
+Runtime domain records currently warn without changing results when a computed
+Coulomb logarithm is non-positive or when the classical Alfvén speed reaches or
+exceeds `c`. The KAW ordering ratio is exposed without assigning a numerical
+meaning to `<<`; its warning threshold and all automated Hellinger fit-domain
+checks remain review-pending until the necessary primary-source decisions are
+complete.
 
 ## Deployment
 

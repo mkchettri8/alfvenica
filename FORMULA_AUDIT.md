@@ -50,6 +50,57 @@ review labels remain conservative: review-pending or quarantined descriptions
 do not promote formula validity or resolve the scientific decisions listed
 below. This notation layer does not alter production numerical calculations.
 
+## Unit and display boundary
+
+`unit-registry.js` is the single application source for the 19 current display
+conversion families. Calculator inputs and production outputs remain at their
+existing canonical boundary; switching among Space, SI display, and
+CGS-oriented display changes presentation only. The temperature boundary is
+energy-equivalent eV (`k_B T`), with the SI display converting to kelvin. Cyclic
+frequency in Hz and angular frequency in rad/s are separate semantic families;
+the selector never treats them as aliases or hides a factor of `2π`.
+
+The CGS-oriented selector is explicitly mixed and is not a complete coherent
+Gaussian, esu, or emu implementation. Density, fields, mechanical quantities,
+current density, and flux retain the established display conversions, while
+electrical resistivity remains Ω m and conductivity remains S m⁻¹. Temperature
+remains eV and angular frequency remains rad s⁻¹. No electromagnetic CGS physics
+implementation has been introduced.
+
+The dedicated unit suite independently declares every system/family factor,
+tests exact prefix conversions directly rather than relying only on round trips,
+anchors eV/K to the existing independent `C_UNIT` benchmark, exercises adaptive
+Hz/kHz/MHz/GHz, time, and Space-length presentation, and verifies display-entry
+equivalence around all calculator defaults. The frozen 165-output canonical
+baseline remains exactly unchanged.
+
+## Runtime applicability guardrails
+
+`domain-guardrails.js` owns frozen warning definitions and deterministic records
+with stable warning ID, severity, calculator ID, evaluated comparison, message,
+rationale, provenance, review status, warning type, and evidence class. The UI
+renders these records after calculation and never clamps, replaces, or otherwise
+changes an input or result.
+
+Two logically unambiguous guards are active:
+
+- `coulomb-log-nonpositive` is `INVALID` when a computed electron-ion or ion-ion
+  Coulomb logarithm is at or below zero. This is only the positive-logarithm
+  applicability boundary needed by the associated weak-coupling collision
+  expressions; it does not select a new Coulomb-log convention or cutoff.
+- `nonrelativistic-alfven-at-or-above-c` is `INVALID` when an explicitly
+  classical Alfvén-speed calculation reaches or exceeds `c`. The classical
+  result remains visible and unchanged, with direction to inspect the separate
+  relativistic calculator. No subluminal caution threshold is asserted.
+
+Both guards have `E_DOMAIN` records based on a logical domain boundary. The
+reduced KAW calculator exposes the computed `ω/Ω_ci` ordering ratio but assigns
+no numerical pass/fail meaning to `<<`; the exact warning threshold remains
+`REVIEW_PENDING`. Automated Hellinger fit-domain warnings also remain
+`REVIEW_PENDING` until each coefficient set, beta interval, contour condition,
+and primary-source applicability statement is verified together. Neither
+pending item is displayed as a solved warning or promoted to `E_DOMAIN`.
+
 ## Important limitations
 
 - Single-ion formulas do not represent a general multi-ion composition.
@@ -83,9 +134,9 @@ Every in-browser validation record has exactly one semantic class:
 - **`P_PROVENANCE` — provenance, tamper, or hash verification:** an artifact
   identity check, explicitly not evidence of scientific correctness.
 
-The 38 current in-browser records comprise **6 `A_REFERENCE`**, **9
-`B_IDENTITY`**, **1 `C_UNIT`**, and **22 `F_REGRESSION`** checks. There are no
-record-level `D_PROPERTY`, `E_DOMAIN`, or `P_PROVENANCE` claims. Each record
+The 40 current in-browser records comprise **6 `A_REFERENCE`**, **9
+`B_IDENTITY`**, **1 `C_UNIT`**, **2 `E_DOMAIN`**, and **22 `F_REGRESSION`**
+checks. There are no record-level `D_PROPERTY` or `P_PROVENANCE` claims. Each record
 carries an evidence-basis identifier, source/provenance note, tolerance
 rationale, and—only for independently anchored records—a stable benchmark ID.
 
@@ -117,8 +168,10 @@ The proton gyrofrequency, thermal-speed, gyroradius, and Alfvén-speed fixed
 targets remain `F_REGRESSION`: their source precision, convention, or lineage is
 not sufficient for promotion in this batch. The two Hellinger point checks
 repeat production coefficients in their expected expressions, and the positive
-solar-wind Coulomb-log example exercises no applicability boundary; all remain
-conservatively `F_REGRESSION`.
+solar-wind Coulomb-log example exercises no applicability boundary; those checks
+remain conservatively `F_REGRESSION`. The two separate `E_DOMAIN` records
+exercise only the non-positive Coulomb-log warning and the classical `v_A >= c`
+causal-limit warning described above.
 
 The Node plot suite contains seven `D_PROPERTY` scaling checks alongside
 `F_REGRESSION` execution and registry checks. Search and static-site checks are

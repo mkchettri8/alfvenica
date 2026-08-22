@@ -9,7 +9,7 @@ const started = process.hrtime.bigint();
 const root = path.resolve(__dirname, '..');
 const corpusPath = path.join(__dirname, 'mutation', 'mutations.json');
 const referencePath = path.join(__dirname, 'reference', 'benchmarks.json');
-const moduleFiles = ['plasma-physics.js', 'formula-registry.js', 'validation.js', 'plot-registry.js'];
+const moduleFiles = ['plasma-physics.js', 'formula-registry.js', 'domain-guardrails.js', 'validation.js', 'plot-registry.js'];
 const protectedFiles = [...moduleFiles, 'tests/reference/benchmarks.json'];
 const baselineBytes = Object.fromEntries(protectedFiles.map(file => [file, fs.readFileSync(path.join(root, file))]));
 const sourceText = Object.fromEntries(moduleFiles.map(file => [file, baselineBytes[file].toString('utf8')]));
@@ -95,7 +95,7 @@ function restoreGlobal(name, previous) {
 }
 
 function withMutantModules(mutantDirectory, callback) {
-  const names = ['PlasmaPhysics', 'PlasmaFormulaRegistry', 'PlasmaValidation', 'PlasmaPlotRegistry'];
+  const names = ['PlasmaPhysics', 'PlasmaFormulaRegistry', 'PlasmaDomainGuardrails', 'PlasmaValidation', 'PlasmaPlotRegistry'];
   const previous = Object.fromEntries(names.map(name => [name, { exists: Object.hasOwn(global, name), value: global[name] }]));
   try {
     for (const name of names) delete global[name];
@@ -103,6 +103,8 @@ function withMutantModules(mutantDirectory, callback) {
     global.PlasmaPhysics = P;
     const Registry = require(path.join(mutantDirectory, 'formula-registry.js'));
     global.PlasmaFormulaRegistry = Registry;
+    const Guardrails = require(path.join(mutantDirectory, 'domain-guardrails.js'));
+    global.PlasmaDomainGuardrails = Guardrails;
     const Validation = require(path.join(mutantDirectory, 'validation.js'));
     const Plots = require(path.join(mutantDirectory, 'plot-registry.js'));
     return callback({ P, Registry, Validation, Plots });

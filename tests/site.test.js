@@ -5,11 +5,13 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'symbol-registry.js', 'formula-registry.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js'];
+const requiredFiles = ['styles.css', 'release-metadata.js', 'plasma-physics.js', 'unit-registry.js', 'symbol-registry.js', 'formula-registry.js', 'domain-guardrails.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'search.js', 'app.js'];
 for (const file of requiredFiles) assert.ok(fs.existsSync(path.join(root, file)), `Missing local asset: ${file}`);
 const Meta = require(path.join(root, 'release-metadata.js'));
 const packageMetadata = require(path.join(root, 'package.json'));
 const manifestMetadata = JSON.parse(fs.readFileSync(path.join(root, 'site.webmanifest'), 'utf8'));
+const P = require(path.join(root, 'plasma-physics.js'));
+global.PlasmaPhysics = P;
 
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'HTML IDs must be unique');
@@ -20,7 +22,8 @@ const literalLookups = [...appSource.matchAll(/\$\('([^']+)'\)/g)].map(match => 
 for (const id of literalLookups) assert.ok(ids.includes(id), `app.js references missing HTML ID: ${id}`);
 
 assert.ok(ids.includes('environmentBar'), 'Environment preset container missing');
-assert.ok(appSource.includes("if (canonical === 0) return { value: '0', unit: 's' };"), 'Zero-time formatting guard missing');
+const Units = require(path.join(root, 'unit-registry.js'));
+assert.deepEqual(Units.outputDefinition('space','time',0), {unit:'s',factor:1}, 'Zero-time formatting guard missing');
 assert.match(appSource, /function presetChangesForFormula\(/, 'Preset compatibility mapping missing');
 assert.match(appSource, /No preset values apply to this calculator/, 'Preset no-op guard missing');
 assert.match(appSource, /hellingerFormulaIds\.has\(formula\.id\).*input\.key === 'beta'/s, 'Hellinger beta preset derivation missing');
@@ -34,6 +37,9 @@ assert.match(appSource, /function renderSymbolsAndDefinitions\(formula\)/, 'Gene
 assert.match(appSource, /Symbols\.formulaSymbols\(formula\)/, 'Per-calculator definitions do not resolve through canonical semantic IDs');
 assert.match(appSource, /renderSymbolsAndDefinitions\(formula\);\s*calculate\(\);/, 'Every rendered calculator must render its semantic definitions');
 assert.match(appSource, /function renderNotation\(\)/, 'Notation & Conventions renderer missing');
+assert.match(appSource, /const Units = window\.PlasmaUnitRegistry/, 'Unit registry is not loaded by the UI');
+assert.match(appSource, /const Guardrails = window\.PlasmaDomainGuardrails/, 'Domain guardrail registry is not loaded by the UI');
+assert.match(appSource, /Guardrails\.evaluate\(formula, values, results\)/, 'Structured calculator guardrails are not evaluated');
 assert.match(appSource, /Search\.findSymbolMatches\(Symbols, input\.value\)/, 'Canonical glossary search is not wired to the notation view');
 assert.match(appSource, /ion_mass_number:\s*PlotRegistry\.stateSemanticIds\.mu/, 'Legacy plot-export key is not associated with the canonical mass-ratio semantic ID');
 assert.match(appSource, /\[Object\.keys\(legacyPlotStateMetadataSemanticIds\)\[0\]\]:values\.mu/, 'Legacy ion_mass_number key is no longer emitted by plot metadata');
@@ -60,6 +66,9 @@ assert.match(html, /data-view-section="notation"[^>]+aria-label="Notation and co
 assert.match(html, /data-notation-sections/, 'Generated canonical convention sections have no UI target');
 assert.match(html, /data-symbol-glossary-search/, 'Searchable symbol glossary control missing');
 assert.match(html, /data-symbol-glossary-body/, 'Complete symbol glossary has no UI target');
+assert.match(html, /CGS-oriented \(mixed\)/, 'Mixed CGS selector is not qualified');
+assert.match(html, /data-unit-system-guide/, 'Generated unit-system guidance has no UI target');
+assert.match(html, /data-calculation-warnings[^>]+aria-live="polite"/, 'Accessible calculation warning container missing');
 assert.match(html, /data-plot-mass-ratio-label/, 'Plot mass-ratio name is not registry-driven');
 assert.match(html, /data-plot-mass-ratio-relation/, 'Plot mass-ratio relation is not registry-driven');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
@@ -77,7 +86,7 @@ assert.ok(plainText(html).includes(Meta.citation), 'Website citation differs fro
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 assert.ok(plainText(readme).includes(Meta.citation), 'README citation differs from release metadata');
 assert.doesNotMatch(readme, /is a validated, unit-explicit/i, 'README retains an unqualified validated claim');
-assert.match(readme, /6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, and 22\s+`F_REGRESSION`/, 'README evidence inventory is inaccurate');
+assert.match(readme, /6 `A_REFERENCE`, 9 `B_IDENTITY`, 1 `C_UNIT`, 2\s+`E_DOMAIN`, and 22 `F_REGRESSION`/, 'README evidence inventory is inaccurate');
 assert.equal(packageMetadata.scripts['test:reference'], 'node tests/reference.test.js', 'Reference test script missing');
 assert.equal(packageMetadata.scripts['generate:reference'], 'node tests/reference/generate-reference-benchmarks.js', 'Reference generator script missing');
 const formulaAudit = fs.readFileSync(path.join(root, 'FORMULA_AUDIT.md'), 'utf8');
@@ -117,10 +126,10 @@ assert.match(workflow, /actions\/checkout@v5/, 'Checkout action is not on the No
 assert.match(workflow, /actions\/setup-node@v5/, 'Setup-node action is not on the Node-24 runtime');
 assert.match(workflow, /node-version: 24/, 'CI is not testing Node.js 24');
 
-const P = require(path.join(root, 'plasma-physics.js'));
-global.PlasmaPhysics = P;
 const Registry = require(path.join(root, 'formula-registry.js'));
 global.PlasmaFormulaRegistry = Registry;
+const Guardrails = require(path.join(root, 'domain-guardrails.js'));
+global.PlasmaDomainGuardrails = Guardrails;
 const PlotRegistry = require(path.join(root, 'plot-registry.js'));
 const Insights = require(path.join(root, 'formula-insights.js'));
 const Validation = require(path.join(root, 'validation.js'));

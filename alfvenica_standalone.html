@@ -163,6 +163,21 @@ button{color:inherit}
 .number-input{min-width:0;width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px 0 0 6px;padding:.62rem .65rem;outline:none;font-family:'DM Sans',sans-serif;font-variant-numeric:tabular-nums}
 .input-unit{display:flex;align-items:center;background:var(--surface-soft);color:var(--muted);border:1px solid var(--border);border-left:0;border-radius:0 6px 6px 0;padding:0 .55rem;font-size:.72rem;white-space:nowrap}
 .calculation-error{margin-top:14px;border-left:3px solid var(--danger);padding:.7rem .85rem;background:color-mix(in srgb,var(--danger) 6%,var(--surface));color:var(--danger);font-size:.82rem}
+.calculation-warnings{border-top:1px solid var(--border);padding:18px 0}
+.calculation-warnings>div{display:grid;gap:10px}
+.calculation-warning,.calculation-domain-note{border:1px solid var(--border);border-left:4px solid var(--danger);border-radius:7px;padding:12px 14px;background:color-mix(in srgb,var(--danger) 5%,var(--surface));font-size:.79rem}
+.calculation-warning-caution{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,var(--surface))}
+.calculation-domain-note{border-left-color:var(--accent);background:var(--surface-soft)}
+.warning-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.warning-heading strong{color:var(--danger);font-size:.77rem;text-transform:uppercase;letter-spacing:.04em}
+.calculation-domain-note .warning-heading strong,.calculation-warning-caution .warning-heading strong{color:var(--accent-deep)}
+.warning-heading span{color:var(--muted);font-size:.65rem;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;text-align:right}
+.calculation-warning p,.calculation-domain-note p{margin:.35rem 0 0;color:var(--text)}
+.warning-observed{display:block;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:.35rem}
+.calculation-warning details{margin-top:.5rem;color:var(--muted)}
+.calculation-warning summary{cursor:pointer;color:var(--accent-deep);font-weight:600}
+.calculation-warning details p{color:var(--muted);font-size:.74rem;line-height:1.55}
+.diagnostic-relation{font-family:Georgia,'Times New Roman',serif;color:var(--primary);font-weight:600;margin-right:.35rem}
 .result-list{margin:0;border-top:1px solid var(--border)}
 .result-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,auto);gap:16px;padding:.72rem 0;border-bottom:1px solid var(--border-soft);align-items:baseline}
 .result-row dt{color:var(--muted);font-size:.82rem}
@@ -266,6 +281,17 @@ button{color:inherit}
 .notation-symbol-card p{color:var(--muted);font-size:.72rem;line-height:1.48;margin:.35rem 0 0}
 .notation-symbol-card .notation-symbol-meta{color:var(--text);font-weight:600}
 .notation-symbol-card .notation-symbol-note{font-size:.68rem}
+.unit-system-guide{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px;margin-top:20px;box-shadow:var(--shadow)}
+.unit-system-guide-heading h2{font-family:var(--serif);color:var(--primary);font-size:1.3rem;margin:.15rem 0 .35rem}
+.unit-system-guide-heading>p:not(.eyebrow){color:var(--muted);font-size:.82rem;margin:0;max-width:850px}
+.unit-system-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.unit-system-card{border:1px solid var(--border-soft);border-radius:7px;padding:14px;background:var(--surface-soft)}
+.unit-system-card[data-current-unit-system="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.unit-system-card h3{color:var(--primary);font-size:.86rem;margin:0 0 .35rem}
+.unit-system-card p,.unit-system-card li{color:var(--muted);font-size:.72rem;line-height:1.5}
+.unit-system-card p{margin:0}
+.unit-system-card ul{margin:.6rem 0 0;padding-left:1.05rem}
+.unit-system-card li+li{margin-top:.25rem}
 .symbol-glossary{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px;margin-top:20px;box-shadow:var(--shadow)}
 .glossary-heading{align-items:end}
 .glossary-search-label{display:block;min-width:300px;color:var(--primary);font-size:.72rem;font-weight:600}
@@ -285,12 +311,13 @@ button{color:inherit}
   .calculator-shell{grid-template-columns:1fr}.formula-browser{display:grid;grid-template-columns:280px 1fr}.browser-sticky{border-bottom:0;border-right:1px solid var(--border-soft)}.formula-list{max-height:300px}
   .category-nav,.desktop-category-label{display:none}.mobile-category-label,.category-select{display:block}.category-select{width:100%;margin-top:6px}.calculation-grid{grid-template-columns:1fr}.interpretation-grid,.notes-grid{grid-template-columns:1fr}
   .notation-symbol-grid{grid-template-columns:1fr}
+  .unit-system-grid{grid-template-columns:1fr}
 }
 @media(max-width:680px){
   .formula-detail{scroll-margin-top:110px}
   .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
   .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.integrity-grid{grid-template-columns:1fr}.validation-summary,.validation-group summary{align-items:flex-start;flex-direction:column;gap:4px}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
-  .symbol-definitions-heading,.glossary-heading{display:block}.symbol-definitions-status{text-align:left}.glossary-search-label{min-width:0;margin-top:14px}.symbol-table{display:block;min-width:0}.symbol-table thead{display:none}.symbol-table tbody,.symbol-table tr,.symbol-table td{display:block;width:100%!important}.symbol-table tr{padding:11px 12px;border-bottom:1px solid var(--border)}.symbol-table tr:last-child{border-bottom:0}.symbol-table td{padding:3px 0;border:0}.symbol-table td+td{margin-top:5px}.symbol-glyph>span,.symbol-glyph>small{display:inline}.symbol-glyph>small{margin-left:7px}.symbol-glossary,.notation-section{padding:18px 15px}.glossary-table-wrap{max-height:none}
+  .symbol-definitions-heading,.glossary-heading{display:block}.symbol-definitions-status{text-align:left}.glossary-search-label{min-width:0;margin-top:14px}.symbol-table{display:block;min-width:0}.symbol-table thead{display:none}.symbol-table tbody,.symbol-table tr,.symbol-table td{display:block;width:100%!important}.symbol-table tr{padding:11px 12px;border-bottom:1px solid var(--border)}.symbol-table tr:last-child{border-bottom:0}.symbol-table td{padding:3px 0;border:0}.symbol-table td+td{margin-top:5px}.symbol-glyph>span,.symbol-glyph>small{display:inline}.symbol-glyph>small{margin-left:7px}.symbol-glossary,.notation-section,.unit-system-guide{padding:18px 15px}.glossary-table-wrap{max-height:none}.warning-heading{align-items:flex-start;flex-direction:column;gap:2px}.warning-heading span{text-align:left}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
@@ -862,6 +889,177 @@ button{color:inherit}
     fluidMirrorCriterion,
     hellingerThreshold,
     plasmaState,
+  });
+}));
+
+  </script>
+  <script>
+/* Alfvenica display-unit registry. Canonical calculator values remain unchanged. */
+(function initUnitRegistry(root, factory) {
+  const api = factory(root.PlasmaPhysics);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.PlasmaUnitRegistry = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildUnitRegistry(P) {
+  'use strict';
+  if (!P) throw new Error('PlasmaPhysics is required');
+
+  function deepFreeze(value) {
+    if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+    Object.values(value).forEach(deepFreeze);
+    return Object.freeze(value);
+  }
+
+  const quantityFamilies = Object.freeze([
+    'density',
+    'magneticField',
+    'temperature',
+    'speed',
+    'length',
+    'electricField',
+    'pressure',
+    'energyDensity',
+    'frequency',
+    'angularFrequency',
+    'wavenumber',
+    'time',
+    'angle',
+    'dimensionless',
+    'resistivity',
+    'conductivity',
+    'magneticDiffusivity',
+    'currentDensity',
+    'flux',
+  ]);
+
+  const canonicalQuantities = deepFreeze({
+    density: { unit: 'm⁻³', meaning: 'number density' },
+    magneticField: { unit: 'T', meaning: 'magnetic-field magnitude' },
+    temperature: { unit: 'eV', meaning: 'energy-equivalent temperature k_B T' },
+    speed: { unit: 'm s⁻¹', meaning: 'speed or velocity component' },
+    length: { unit: 'm', meaning: 'length' },
+    electricField: { unit: 'V m⁻¹', meaning: 'electric-field magnitude or component' },
+    pressure: { unit: 'Pa', meaning: 'pressure' },
+    energyDensity: { unit: 'J m⁻³', meaning: 'energy density' },
+    frequency: { unit: 'Hz', meaning: 'cyclic frequency f', frequencyBasis: 'cyclic' },
+    angularFrequency: { unit: 'rad s⁻¹', meaning: 'angular frequency ω or Ω', frequencyBasis: 'angular' },
+    wavenumber: { unit: 'm⁻¹', meaning: 'angular wavenumber' },
+    time: { unit: 's', meaning: 'time or duration' },
+    angle: { unit: 'rad', meaning: 'plane angle' },
+    dimensionless: { unit: '', meaning: 'dimensionless quantity' },
+    resistivity: { unit: 'Ω m', meaning: 'electrical resistivity in SI' },
+    conductivity: { unit: 'S m⁻¹', meaning: 'electrical conductivity in SI' },
+    magneticDiffusivity: { unit: 'm² s⁻¹', meaning: 'magnetic diffusivity' },
+    currentDensity: { unit: 'A m⁻²', meaning: 'current density' },
+    flux: { unit: 'W m⁻²', meaning: 'energy flux' },
+  });
+
+  function D(unit, factor, extra = {}) {
+    return { unit, factor, ...extra };
+  }
+
+  const systems = deepFreeze({
+    space: {
+      id: 'space',
+      label: 'Space',
+      shortDescription: 'Space-physics display units; calculator values remain at the canonical calculation boundary.',
+      limitations: ['Temperature is displayed as energy-equivalent eV.', 'Angular frequency remains rad s⁻¹ and is distinct from cyclic Hz.', 'Angles are displayed in degrees.'],
+      coherentSystem: false,
+      quantities: {
+        density: D('cm⁻³', 1e-6), magneticField: D('nT', 1e9), temperature: D('eV', 1),
+        speed: D('km s⁻¹', 1e-3), length: D('km', 1e-3), electricField: D('mV m⁻¹', 1e3),
+        pressure: D('nPa', 1e9), energyDensity: D('nJ m⁻³', 1e9), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
+        angularFrequency: D('rad s⁻¹', 1, { frequencyBasis: 'angular' }), wavenumber: D('km⁻¹', 1e3), time: D('s', 1),
+        angle: D('deg', 180 / Math.PI), dimensionless: D('', 1), resistivity: D('Ω m', 1),
+        conductivity: D('S m⁻¹', 1), magneticDiffusivity: D('km² s⁻¹', 1e-6),
+        currentDensity: D('nA m⁻²', 1e9), flux: D('mW m⁻²', 1e3),
+      },
+    },
+    si: {
+      id: 'si',
+      label: 'SI display',
+      shortDescription: 'SI-oriented display units around the existing canonical calculator boundary.',
+      limitations: ['Calculator temperatures are stored as energy-equivalent eV and displayed here in kelvin.', 'Angles are displayed in degrees.', 'Angular frequency remains rad s⁻¹ and is distinct from cyclic Hz.'],
+      coherentSystem: false,
+      quantities: {
+        density: D('m⁻³', 1), magneticField: D('T', 1), temperature: D('K', P.constants.electronVolt / P.constants.boltzmannConstant),
+        speed: D('m s⁻¹', 1), length: D('m', 1), electricField: D('V m⁻¹', 1),
+        pressure: D('Pa', 1), energyDensity: D('J m⁻³', 1), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
+        angularFrequency: D('rad s⁻¹', 1, { frequencyBasis: 'angular' }), wavenumber: D('m⁻¹', 1), time: D('s', 1),
+        angle: D('deg', 180 / Math.PI), dimensionless: D('', 1), resistivity: D('Ω m', 1),
+        conductivity: D('S m⁻¹', 1), magneticDiffusivity: D('m² s⁻¹', 1),
+        currentDensity: D('A m⁻²', 1), flux: D('W m⁻²', 1),
+      },
+    },
+    cgs: {
+      id: 'cgs',
+      label: 'CGS-oriented (mixed)',
+      shortDescription: 'A display-oriented CGS convenience mode, not a complete coherent Gaussian, esu, or emu implementation.',
+      limitations: ['Electrical resistivity remains Ω m and conductivity remains S m⁻¹.', 'Temperature remains energy-equivalent eV.', 'Angular frequency remains rad s⁻¹ and is distinct from cyclic Hz.'],
+      coherentSystem: false,
+      quantities: {
+        density: D('cm⁻³', 1e-6), magneticField: D('G', 1e4), temperature: D('eV', 1),
+        speed: D('cm s⁻¹', 1e2), length: D('cm', 1e2), electricField: D('statV cm⁻¹', 3.33564095198152e-5),
+        pressure: D('dyn cm⁻²', 10), energyDensity: D('erg cm⁻³', 10), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
+        angularFrequency: D('rad s⁻¹', 1, { frequencyBasis: 'angular' }), wavenumber: D('cm⁻¹', 1e-2), time: D('s', 1),
+        angle: D('deg', 180 / Math.PI), dimensionless: D('', 1), resistivity: D('Ω m', 1, { retainedSystem: 'SI' }),
+        conductivity: D('S m⁻¹', 1, { retainedSystem: 'SI' }), magneticDiffusivity: D('cm² s⁻¹', 1e4),
+        currentDensity: D('statA cm⁻²', 299792.458), flux: D('erg cm⁻² s⁻¹', 1e3),
+      },
+    },
+  });
+
+  const systemIds = Object.freeze(Object.keys(systems));
+
+  function hasSystem(systemId) { return Object.hasOwn(systems, systemId); }
+  function definition(systemId, quantity) {
+    if (!hasSystem(systemId)) throw new RangeError(`Unknown unit display system: ${systemId}`);
+    if (!quantityFamilies.includes(quantity)) throw new RangeError(`Unknown unit quantity family: ${quantity}`);
+    return systems[systemId].quantities[quantity];
+  }
+  function toDisplay(systemId, quantity, canonicalValue) {
+    return canonicalValue * definition(systemId, quantity).factor;
+  }
+  function toCanonical(systemId, quantity, displayValue) {
+    return displayValue / definition(systemId, quantity).factor;
+  }
+
+  function outputDefinition(systemId, quantity, canonicalValue) {
+    if (quantity === 'frequency') {
+      const magnitude = Math.abs(canonicalValue);
+      if (magnitude >= 1e9) return Object.freeze({ unit: 'GHz', factor: 1e-9, frequencyBasis: 'cyclic' });
+      if (magnitude >= 1e6) return Object.freeze({ unit: 'MHz', factor: 1e-6, frequencyBasis: 'cyclic' });
+      if (magnitude >= 1e3) return Object.freeze({ unit: 'kHz', factor: 1e-3, frequencyBasis: 'cyclic' });
+      return Object.freeze({ unit: 'Hz', factor: 1, frequencyBasis: 'cyclic' });
+    }
+    if (quantity === 'time') {
+      if (canonicalValue === 0) return Object.freeze({ unit: 's', factor: 1 });
+      const magnitude = Math.abs(canonicalValue);
+      if (magnitude < 1e-6) return Object.freeze({ unit: 'ns', factor: 1e9 });
+      if (magnitude < 1e-3) return Object.freeze({ unit: 'μs', factor: 1e6 });
+      if (magnitude < 1) return Object.freeze({ unit: 'ms', factor: 1e3 });
+      if (magnitude >= 86400) return Object.freeze({ unit: 'days', factor: 1 / 86400 });
+      if (magnitude >= 3600) return Object.freeze({ unit: 'h', factor: 1 / 3600 });
+      return Object.freeze({ unit: 's', factor: 1 });
+    }
+    if (systemId === 'space' && quantity === 'length') {
+      const magnitude = Math.abs(canonicalValue);
+      if (magnitude >= 1000) return Object.freeze({ unit: 'km', factor: 1e-3 });
+      if (magnitude >= 0.01) return Object.freeze({ unit: 'm', factor: 1 });
+      return Object.freeze({ unit: 'cm', factor: 1e2 });
+    }
+    return definition(systemId, quantity);
+  }
+
+  return Object.freeze({
+    quantityFamilies,
+    canonicalQuantities,
+    systems,
+    systemIds,
+    hasSystem,
+    definition,
+    toDisplay,
+    toCanonical,
+    outputDefinition,
   });
 }));
 
@@ -1881,6 +2079,173 @@ button{color:inherit}
 
   </script>
   <script>
+/* Alfvenica structured applicability warnings. This module never alters calculations. */
+(function initDomainGuardrails(root, factory) {
+  const api = factory(root.PlasmaPhysics);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.PlasmaDomainGuardrails = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildDomainGuardrails(P) {
+  'use strict';
+  if (!P) throw new Error('PlasmaPhysics is required');
+
+  function deepFreeze(value) {
+    if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+    Object.values(value).forEach(deepFreeze);
+    return Object.freeze(value);
+  }
+
+  const severities = deepFreeze({
+    INVALID: { id: 'INVALID', label: 'Invalid / outside applicability' },
+    CAUTION: { id: 'CAUTION', label: 'Caution / model regime concern' },
+    REVIEW_PENDING: { id: 'REVIEW_PENDING', label: 'Scientific review pending' },
+  });
+
+  const warningTypes = deepFreeze({
+    APPLICABILITY: { id: 'APPLICABILITY', label: 'Applicability' },
+    NUMERICAL: { id: 'NUMERICAL', label: 'Numerical' },
+    PHYSICAL_MODEL: { id: 'PHYSICAL_MODEL', label: 'Physical-model scope' },
+  });
+
+  const definitions = deepFreeze({
+    'coulomb-log-nonpositive': {
+      id: 'coulomb-log-nonpositive',
+      severity: 'INVALID',
+      formulaIds: ['coulomb-log-ei', 'coulomb-log-ii'],
+      condition: 'computed ln Λ <= 0',
+      message: 'The computed Coulomb logarithm is non-positive and is outside the weak-coupling collision/transport applicability of this expression.',
+      rationale: 'The associated implemented collision-frequency expressions require a positive Coulomb logarithm; a non-positive logarithm cannot be used as their weak-coupling factor.',
+      provenance: 'Logical applicability boundary of the implemented logarithm and the positive-ln Λ requirement enforced by the collision-frequency functions.',
+      reviewStatus: 'CONFIRMED_LOGICAL_BOUNDARY',
+      warningType: 'APPLICABILITY',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
+    },
+    'nonrelativistic-alfven-at-or-above-c': {
+      id: 'nonrelativistic-alfven-at-or-above-c',
+      severity: 'INVALID',
+      formulaIds: ['alfven-speed', 'magnetosonic-speeds', 'mach-numbers', 'kaw-dispersion'],
+      condition: 'computed classical v_A >= c',
+      message: 'The classical Alfvén speed reaches or exceeds c, so this nonrelativistic expression is outside its intended physical regime. Inspect the relativistic Alfvén-speed calculator instead.',
+      rationale: 'The classical MHD expression is nonrelativistic, while c is the causal limiting speed. The result is reported unchanged and is not clamped or replaced.',
+      provenance: 'Unambiguous relativistic speed-limit boundary applied to the explicitly classical/nonrelativistic Alfvén expression.',
+      reviewStatus: 'CONFIRMED_LOGICAL_BOUNDARY',
+      warningType: 'PHYSICAL_MODEL',
+      evidenceClass: 'E_DOMAIN',
+      active: true,
+    },
+    'kaw-low-frequency-ordering-review-pending': {
+      id: 'kaw-low-frequency-ordering-review-pending',
+      severity: 'REVIEW_PENDING',
+      formulaIds: ['kaw-dispersion'],
+      condition: 'ω << Ω_ci',
+      message: 'A source-justified numerical warning threshold for the reduced model low-frequency ordering remains under review.',
+      rationale: 'The accepted repository sources state a low-frequency reduced-model ordering but do not establish a numerical cutoff for the asymptotic symbol <<.',
+      provenance: 'Reduced-model assumption already documented in the formula registry; numerical cutoff requires equation-level source review.',
+      reviewStatus: 'REVIEW_PENDING',
+      warningType: 'PHYSICAL_MODEL',
+      evidenceClass: null,
+      active: false,
+    },
+    'hellinger-fit-domain-review-pending': {
+      id: 'hellinger-fit-domain-review-pending',
+      severity: 'REVIEW_PENDING',
+      formulaIds: ['hellinger-proton-cyclotron', 'hellinger-mirror', 'hellinger-parallel-firehose', 'hellinger-oblique-firehose'],
+      condition: 'coefficient-specific beta domain and contour conditions verified from the primary source',
+      message: 'Automated Hellinger fit-domain warnings remain pending primary-source verification.',
+      rationale: 'The exact coefficient set, beta range, growth-rate contour, and ancillary model conditions must be verified together before enforcing a domain.',
+      provenance: 'Hellinger et al. (2006) scientific decision queue; source-level verification not completed.',
+      reviewStatus: 'REVIEW_PENDING',
+      warningType: 'PHYSICAL_MODEL',
+      evidenceClass: null,
+      active: false,
+    },
+  });
+
+  const classicalAlfvenFormulaIds = new Set(definitions['nonrelativistic-alfven-at-or-above-c'].formulaIds);
+
+  function resultValue(results, semanticIds) {
+    const result = results.find(item => semanticIds.has(item.semanticId));
+    return result && typeof result.value === 'number' ? result.value : null;
+  }
+
+  function warningRecord(definition, formulaId, evaluatedCondition) {
+    return deepFreeze({
+      id: definition.id,
+      severity: definition.severity,
+      formulaId,
+      condition: definition.condition,
+      conditionEvaluated: evaluatedCondition,
+      message: definition.message,
+      rationale: definition.rationale,
+      provenance: definition.provenance,
+      reviewStatus: definition.reviewStatus,
+      warningType: definition.warningType,
+      evidenceClass: definition.evidenceClass,
+    });
+  }
+
+  function evaluate(formula, values, results) {
+    if (!formula || typeof formula.id !== 'string') throw new TypeError('A formula with a stable ID is required');
+    if (!values || typeof values !== 'object') throw new TypeError('Canonical input values are required');
+    if (!Array.isArray(results)) throw new TypeError('Calculator results are required');
+    const warnings = [];
+
+    if (definitions['coulomb-log-nonpositive'].formulaIds.includes(formula.id)) {
+      const actual = resultValue(results, new Set(['electron-ion-coulomb-logarithm', 'ion-ion-coulomb-logarithm']));
+      if (actual !== null && actual <= 0) {
+        warnings.push(warningRecord(definitions['coulomb-log-nonpositive'], formula.id, {
+          quantity: 'ln Λ', operator: '<=', threshold: 0, actual, result: true,
+        }));
+      }
+    }
+
+    if (classicalAlfvenFormulaIds.has(formula.id)) {
+      let actual = resultValue(results, new Set(['alfven-speed']));
+      if (actual === null && Number.isFinite(values.B) && Number.isFinite(values.ni) && Number.isFinite(values.mu)) {
+        actual = P.alfvenSpeed(values.B, values.ni, values.mu);
+      }
+      if (actual !== null && actual >= P.constants.speedOfLight) {
+        warnings.push(warningRecord(definitions['nonrelativistic-alfven-at-or-above-c'], formula.id, {
+          quantity: 'v_A', operator: '>=', threshold: P.constants.speedOfLight, thresholdUnit: 'm s⁻¹', actual, result: true,
+        }));
+      }
+    }
+
+    return Object.freeze(warnings);
+  }
+
+  function diagnostics(formula, values, results) {
+    if (!formula || typeof formula.id !== 'string') throw new TypeError('A formula with a stable ID is required');
+    if (!values || typeof values !== 'object') throw new TypeError('Canonical input values are required');
+    if (!Array.isArray(results)) throw new TypeError('Calculator results are required');
+    if (formula.id !== 'kaw-dispersion') return Object.freeze([]);
+    const omega = resultValue(results, new Set(['kaw-angular-frequency']));
+    if (omega === null || !Number.isFinite(values.B) || !Number.isFinite(values.Z) || !Number.isFinite(values.mu)) return Object.freeze([]);
+    const omegaCi = P.ionGyroAngular(values.B, values.Z, values.mu);
+    if (!(omegaCi > 0)) return Object.freeze([]);
+    return deepFreeze([{
+      id: 'kaw-frequency-ordering-ratio',
+      formulaId: formula.id,
+      quantity: 'ω/Ω_ci',
+      value: omega / omegaCi,
+      numerator: omega,
+      denominator: omegaCi,
+      denominatorUnit: 'rad s⁻¹',
+      interpretation: 'Low-frequency ordering metric only; no numerical pass/fail threshold is assigned to <<.',
+      reviewStatus: 'REVIEW_PENDING_NUMERICAL_THRESHOLD',
+      warningId: null,
+    }]);
+  }
+
+  function reviewPendingFor(formulaId) {
+    return Object.freeze(Object.values(definitions).filter(definition => !definition.active && definition.formulaIds.includes(formulaId)));
+  }
+
+  return Object.freeze({ severities, warningTypes, definitions, evaluate, diagnostics, reviewPendingFor });
+}));
+
+  </script>
+  <script>
 /* Alfvenica plotting registry. All stored state values are canonical SI, except temperature in eV. */
 (function initPlotRegistry(root, factory) {
   const registry = factory(root.PlasmaPhysics);
@@ -2528,12 +2893,13 @@ button{color:inherit}
   <script>
 /* Alfvenica classified validation-evidence suite. */
 (function initValidation(root, factory) {
-  const api = factory(root.PlasmaPhysics, root.PlasmaFormulaRegistry);
+  const api = factory(root.PlasmaPhysics, root.PlasmaFormulaRegistry, root.PlasmaDomainGuardrails);
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.PlasmaValidation = api;
-}(typeof globalThis !== 'undefined' ? globalThis : this, function buildValidation(P, Registry) {
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildValidation(P, Registry, Guardrails) {
   'use strict';
   if (!P) throw new Error('PlasmaPhysics is required');
+  if (!Guardrails) throw new Error('PlasmaDomainGuardrails is required');
 
   const validationClasses = Object.freeze({
     A_REFERENCE: Object.freeze({
@@ -2577,6 +2943,7 @@ button{color:inherit}
     EXTERNAL_INDEPENDENT: Object.freeze({ id: 'EXTERNAL_INDEPENDENT', label: 'independent external result' }),
     PUBLISHED_TARGET_UNVERIFIED: Object.freeze({ id: 'PUBLISHED_TARGET_UNVERIFIED', label: 'cited fixed target; independent lineage pending' }),
     ANALYTICAL_RELATION: Object.freeze({ id: 'ANALYTICAL_RELATION', label: 'analytical relation or limiting case' }),
+    LOGICAL_DOMAIN_BOUNDARY: Object.freeze({ id: 'LOGICAL_DOMAIN_BOUNDARY', label: 'logically unambiguous physical or applicability boundary' }),
     INTERNAL_DERIVATION: Object.freeze({ id: 'INTERNAL_DERIVATION', label: 'production-path restatement or shared constants' }),
     NOMINAL_EXAMPLE: Object.freeze({ id: 'NOMINAL_EXAMPLE', label: 'nominal positive example' }),
     EXECUTION_SMOKE: Object.freeze({ id: 'EXECUTION_SMOKE', label: 'execution-only smoke result' }),
@@ -2695,6 +3062,20 @@ button{color:inherit}
     const h=P.hellingerThreshold(1,0.43,0.42,-0.0004);
     out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+
+    const coulombFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='coulomb-log-ei');
+    if (coulombFormula) {
+      const values={ne:1e20,Te:1e-6,Ti:1e-6,Z:1,mu:1};
+      const warnings=Guardrails.evaluate(coulombFormula,values,coulombFormula.calculate(values));
+      out.push(test('Coulomb-log non-positive applicability guardrail', warnings.some(warning=>warning.id==='coulomb-log-nonpositive')?1:0, 1, 0, 'Logical domain boundary: the implemented collision expressions require positive ln Lambda, so a computed value at or below zero cannot serve as their weak-coupling logarithmic factor.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
+    }
+    const alfvenFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='alfven-speed');
+    if (alfvenFormula) {
+      const niGuard=1e6,muGuard=1;
+      const values={B:2*P.constants.speedOfLight*Math.sqrt(P.constants.vacuumPermeability*niGuard*muGuard*P.constants.protonMass),ni:niGuard,mu:muGuard};
+      const warnings=Guardrails.evaluate(alfvenFormula,values,alfvenFormula.calculate(values));
+      out.push(test('Nonrelativistic Alfvén speed causal-limit guardrail', warnings.some(warning=>warning.id==='nonrelativistic-alfven-at-or-above-c')?1:0, 1, 0, 'Logical physical boundary: an explicitly classical nonrelativistic speed expression is outside its intended regime when its computed value reaches or exceeds the causal limiting speed c.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
+    }
 
     if (Registry && Registry.formulas) {
       let smokePass = 0;
@@ -2900,12 +3281,14 @@ button{color:inherit}
   const Meta = window.AlfvenicaRelease;
   const Registry = window.PlasmaFormulaRegistry;
   const Symbols = window.PlasmaSymbolRegistry;
+  const Units = window.PlasmaUnitRegistry;
+  const Guardrails = window.PlasmaDomainGuardrails;
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
   const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Meta || !Registry || !Symbols || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
@@ -2920,10 +3303,11 @@ button{color:inherit}
     'hellinger-oblique-firehose',
   ]);
 
+  const storedUnitSystem = storage.get('alfvenica-units', 'space');
   const state = {
     view: 'calculator',
     theme: storage.get('alfvenica-theme', 'light'),
-    unitSystem: storage.get('alfvenica-units', 'space'),
+    unitSystem: Units.hasSystem(storedUnitSystem) ? storedUnitSystem : 'space',
     category: 'All formulas',
     search: '',
     searchMatches: [],
@@ -2931,39 +3315,11 @@ button{color:inherit}
     formulaId: '',
     values: new Map(),
     lastResults: [],
+    lastWarnings: [],
+    lastDomainDiagnostics: [],
     plotValues: { ...PlotRegistry.defaultState },
     plotSweep: { variable:'ni', min:0.1e6, max:100e6, spacing:'log', family:'length', outputs:['lambdaDe','de','di'], yScale:'log' },
     plotCache: { hierarchy:{}, sweep:null },
-  };
-
-  const unitSystems = {
-    space: {
-      density: ['cm⁻³', 1e-6], magneticField: ['nT', 1e9], temperature: ['eV', 1],
-      speed: ['km s⁻¹', 1e-3], length: ['km', 1e-3], electricField: ['mV m⁻¹', 1e3],
-      pressure: ['nPa', 1e9], energyDensity: ['nJ m⁻³', 1e9], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['km⁻¹', 1e3], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['km² s⁻¹', 1e-6],
-      currentDensity: ['nA m⁻²', 1e9], flux: ['mW m⁻²', 1e3],
-    },
-    si: {
-      density: ['m⁻³', 1], magneticField: ['T', 1], temperature: ['K', P.constants.electronVolt / P.constants.boltzmannConstant],
-      speed: ['m s⁻¹', 1], length: ['m', 1], electricField: ['V m⁻¹', 1],
-      pressure: ['Pa', 1], energyDensity: ['J m⁻³', 1], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['m⁻¹', 1], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['m² s⁻¹', 1],
-      currentDensity: ['A m⁻²', 1], flux: ['W m⁻²', 1],
-    },
-    cgs: {
-      density: ['cm⁻³', 1e-6], magneticField: ['G', 1e4], temperature: ['eV', 1],
-      speed: ['cm s⁻¹', 1e2], length: ['cm', 1e2], electricField: ['statV cm⁻¹', 3.33564095198152e-5],
-      pressure: ['dyn cm⁻²', 10], energyDensity: ['erg cm⁻³', 10], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['cm⁻¹', 1e-2], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['cm² s⁻¹', 1e4],
-      currentDensity: ['statA cm⁻²', 299792.458], flux: ['erg cm⁻² s⁻¹', 1e3],
-    },
   };
 
   const presets = [
@@ -2996,10 +3352,10 @@ button{color:inherit}
   }
   function formulaById(id) { return Registry.formulas.find(f => f.id === id); }
   function activeFormula() { return formulaById(state.formulaId) || Registry.formulas[0]; }
-  function quantityDef(quantity) { return unitSystems[state.unitSystem][quantity] || ['', 1]; }
-  function toDisplay(quantity, canonical) { return canonical * quantityDef(quantity)[1]; }
-  function toCanonical(quantity, displayed) { return displayed / quantityDef(quantity)[1]; }
-  function unitLabel(quantity) { return quantityDef(quantity)[0]; }
+  function quantityDef(quantity) { return Units.definition(state.unitSystem, quantity); }
+  function toDisplay(quantity, canonical) { return Units.toDisplay(state.unitSystem, quantity, canonical); }
+  function toCanonical(quantity, displayed) { return Units.toCanonical(state.unitSystem, quantity, displayed); }
+  function unitLabel(quantity) { return quantityDef(quantity).unit; }
 
   function formatNumber(value, sig = 5) {
     if (!Number.isFinite(value)) return value === Infinity ? '∞' : '—';
@@ -3023,32 +3379,8 @@ button{color:inherit}
     }
     if (!Number.isFinite(canonical)) return { value: canonical === Infinity ? '∞' : '—', unit: unitLabel(quantity) };
 
-    // Readable adaptive units for the most common space-physics outputs.
-    if (state.unitSystem === 'space' && quantity === 'length') {
-      const a = Math.abs(canonical);
-      if (a >= 1000) return { value: formatNumber(canonical / 1000), unit: 'km' };
-      if (a >= 0.01) return { value: formatNumber(canonical), unit: 'm' };
-      return { value: formatNumber(canonical * 100), unit: 'cm' };
-    }
-    if (quantity === 'frequency') {
-      const a = Math.abs(canonical);
-      if (a >= 1e9) return { value: formatNumber(canonical / 1e9), unit: 'GHz' };
-      if (a >= 1e6) return { value: formatNumber(canonical / 1e6), unit: 'MHz' };
-      if (a >= 1e3) return { value: formatNumber(canonical / 1e3), unit: 'kHz' };
-      return { value: formatNumber(canonical), unit: 'Hz' };
-    }
-    if (quantity === 'time') {
-      if (canonical === 0) return { value: '0', unit: 's' };
-      const a = Math.abs(canonical);
-      if (a < 1e-6) return { value: formatNumber(canonical * 1e9), unit: 'ns' };
-      if (a < 1e-3) return { value: formatNumber(canonical * 1e6), unit: 'μs' };
-      if (a < 1) return { value: formatNumber(canonical * 1e3), unit: 'ms' };
-      if (a >= 86400) return { value: formatNumber(canonical / 86400), unit: 'days' };
-      if (a >= 3600) return { value: formatNumber(canonical / 3600), unit: 'h' };
-      return { value: formatNumber(canonical), unit: 's' };
-    }
-    const [unit, factor] = quantityDef(quantity);
-    return { value: formatNumber(canonical * factor), unit };
+    const display = Units.outputDefinition(state.unitSystem, quantity, canonical);
+    return { value: formatNumber(canonical * display.factor), unit: display.unit };
   }
 
   function currentValues(formula) {
@@ -3287,6 +3619,16 @@ button{color:inherit}
     container.innerHTML = Symbols.notationSections.map(section => `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(section.title)}</h2><p>${escapeXml(section.summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`).join('');
   }
 
+  function renderUnitSystemGuide() {
+    const container = document.querySelector('[data-unit-system-guide]');
+    if (!container) throw new Error('Unit-system guide container is missing');
+    container.innerHTML = Units.systemIds.map(systemId => {
+      const system = Units.systems[systemId];
+      const selected = systemId === state.unitSystem ? ' data-current-unit-system="true"' : '';
+      return `<article class="unit-system-card"${selected}><h3>${escapeXml(system.label)}</h3><p>${escapeXml(system.shortDescription)}</p><ul>${system.limitations.map(limitation => `<li>${escapeXml(limitation)}</li>`).join('')}</ul></article>`;
+    }).join('');
+  }
+
   function glossaryRow(symbol) {
     const notes = symbolConventionNotes(symbol);
     return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
@@ -3304,6 +3646,7 @@ button{color:inherit}
 
   function renderNotation() {
     renderNotationSections();
+    renderUnitSystemGuide();
     renderSymbolGlossary();
   }
 
@@ -3354,19 +3697,42 @@ button{color:inherit}
     calculate();
   }
 
+  function renderWarnings(warnings, diagnostics = []) {
+    const container = document.querySelector('[data-calculation-warnings]');
+    const list = document.querySelector('[data-calculation-warning-list]');
+    if (!container || !list) throw new Error('Calculation warning container is missing');
+    const warningHtml = warnings.map(warning => {
+      const severity = Guardrails.severities[warning.severity];
+      const observed = warning.conditionEvaluated && Number.isFinite(warning.conditionEvaluated.actual)
+        ? `<span class="warning-observed">Observed: ${escapeXml(formatNumber(warning.conditionEvaluated.actual, 6))}</span>`
+        : '';
+      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong><span>${escapeXml(warning.id)}</span></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p></details></article>`;
+    }).join('');
+    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong><span>${escapeXml(diagnostic.id)}</span></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
+    list.innerHTML = warningHtml + diagnosticHtml;
+    container.hidden = warnings.length === 0 && diagnostics.length === 0;
+  }
+
   function calculate() {
     const formula = activeFormula();
     try {
-      const results = formula.calculate(currentValues(formula));
+      const values = currentValues(formula);
+      const results = formula.calculate(values);
       state.lastResults = results;
+      state.lastWarnings = Guardrails.evaluate(formula, values, results);
+      state.lastDomainDiagnostics = Guardrails.diagnostics(formula, values, results);
       $('calculationError').hidden = true;
       $('resultList').innerHTML = results.map(result => {
         const formatted = formatQuantity(result.quantity, result.value);
         return `<div class="result-row"><dt>${result.label}</dt><dd>${result.symbol ? `<span class="result-symbol">${result.symbol}</span>` : ''}<span>${formatted.value}</span>${formatted.unit ? `<span class="result-unit">${formatted.unit}</span>` : ''}</dd></div>`;
       }).join('');
+      renderWarnings(state.lastWarnings, state.lastDomainDiagnostics);
     } catch (error) {
       state.lastResults = [];
+      state.lastWarnings = [];
+      state.lastDomainDiagnostics = [];
       $('resultList').innerHTML = '';
+      renderWarnings([]);
       $('calculationError').textContent = error.message || 'The supplied values are outside the calculator domain.';
       $('calculationError').hidden = false;
     }
@@ -3482,7 +3848,7 @@ button{color:inherit}
 
 
   function canonicalUnitLabel(quantity) {
-    return ({ density:'m⁻³', magneticField:'T', temperature:'eV', speed:'m s⁻¹', length:'m', frequency:'Hz', pressure:'Pa', dimensionless:'' })[quantity] || unitLabel(quantity);
+    return Units.canonicalQuantities[quantity] ? Units.canonicalQuantities[quantity].unit : unitLabel(quantity);
   }
 
   function plotStateSummary(values = state.plotValues) {
@@ -3643,7 +4009,7 @@ button{color:inherit}
 
   function hierarchyCsv(metrics, quantity) {
     const unit = unitLabel(quantity);
-    const factor = quantityDef(quantity)[1];
+    const factor = quantityDef(quantity).factor;
     const meta = plotStateMetadata();
     const headers = ['name','symbol','display_value','display_unit','canonical_si_value','canonical_si_unit',...Object.keys(meta)];
     const canonicalUnit = canonicalUnitLabel(quantity);
@@ -3982,7 +4348,7 @@ button{color:inherit}
     $('formulaSearch').addEventListener('focus', renderSearchSuggestions);
     $('formulaSearch').addEventListener('keydown', onSearchKeydown);
     $('categorySelect').addEventListener('change', e => { state.category = e.target.value; renderCategories(); renderFormulaList(); });
-    $('unitSystem').addEventListener('change', e => { state.unitSystem = e.target.value; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); });
+    $('unitSystem').addEventListener('change', e => { state.unitSystem = Units.hasSystem(e.target.value) ? e.target.value : 'space'; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); if (state.view === 'notation') renderNotation(); });
     $('themeToggle').addEventListener('click', () => { state.theme = state.theme === 'light' ? 'dark' : 'light'; storage.set('alfvenica-theme', state.theme); applyTheme(); if (state.view === 'plots') renderPlots(); });
     $('resetInputs').addEventListener('click', resetInputs);
     $('applyPreset').addEventListener('click', applyPreset);
@@ -4038,8 +4404,8 @@ button{color:inherit}
         <label class="control-label" for="unitSystem">Units</label>
         <select id="unitSystem" class="compact-select" aria-label="Unit system">
           <option value="space">Space</option>
-          <option value="si">SI</option>
-          <option value="cgs">CGS</option>
+          <option value="si">SI display</option>
+          <option value="cgs">CGS-oriented (mixed)</option>
         </select>
         <button id="themeToggle" class="text-button" type="button">Dark mode</button>
       </div>
@@ -4120,6 +4486,10 @@ button{color:inherit}
                 <dl id="resultList" class="result-list"></dl>
               </section>
             </div>
+
+            <section class="calculation-warnings" data-calculation-warnings aria-label="Calculation applicability warnings" aria-live="polite" hidden>
+              <div data-calculation-warning-list></div>
+            </section>
 
             <section class="symbol-definitions" data-symbol-definitions aria-label="Symbols and definitions">
               <div class="symbol-definitions-heading">
@@ -4304,7 +4674,7 @@ button{color:inherit}
         <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
         <div class="method-note">
           <h2>Interpretation</h2>
-          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
+          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; E_DOMAIN exercises a defensible implemented applicability boundary; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability beyond the specifically exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
       </div>
@@ -4318,6 +4688,14 @@ button{color:inherit}
           <p>Project-wide notation, units, species meanings, and convention notes are generated from the same canonical registry used by every calculator.</p>
         </header>
         <div class="notation-sections" data-notation-sections></div>
+        <section class="unit-system-guide" aria-label="Display unit systems">
+          <div class="unit-system-guide-heading">
+            <p class="eyebrow">Display boundary</p>
+            <h2>Unit-system selectors</h2>
+            <p>All selectors convert presentation around the same canonical calculator values. They do not select a different physics implementation.</p>
+          </div>
+          <div class="unit-system-grid" data-unit-system-guide></div>
+        </section>
         <section class="symbol-glossary" aria-label="Searchable symbol glossary">
           <div class="glossary-heading">
             <div>
@@ -4358,7 +4736,7 @@ button{color:inherit}
           </section>
           <section>
             <h2>Design, units, and privacy</h2>
-            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI, and CGS choices are interface conversions only. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
+            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
           </section>
           <section>
             <h2>Scientific basis and validation evidence</h2>

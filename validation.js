@@ -1,11 +1,12 @@
 /* Alfvenica classified validation-evidence suite. */
 (function initValidation(root, factory) {
-  const api = factory(root.PlasmaPhysics, root.PlasmaFormulaRegistry);
+  const api = factory(root.PlasmaPhysics, root.PlasmaFormulaRegistry, root.PlasmaDomainGuardrails);
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.PlasmaValidation = api;
-}(typeof globalThis !== 'undefined' ? globalThis : this, function buildValidation(P, Registry) {
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildValidation(P, Registry, Guardrails) {
   'use strict';
   if (!P) throw new Error('PlasmaPhysics is required');
+  if (!Guardrails) throw new Error('PlasmaDomainGuardrails is required');
 
   const validationClasses = Object.freeze({
     A_REFERENCE: Object.freeze({
@@ -49,6 +50,7 @@
     EXTERNAL_INDEPENDENT: Object.freeze({ id: 'EXTERNAL_INDEPENDENT', label: 'independent external result' }),
     PUBLISHED_TARGET_UNVERIFIED: Object.freeze({ id: 'PUBLISHED_TARGET_UNVERIFIED', label: 'cited fixed target; independent lineage pending' }),
     ANALYTICAL_RELATION: Object.freeze({ id: 'ANALYTICAL_RELATION', label: 'analytical relation or limiting case' }),
+    LOGICAL_DOMAIN_BOUNDARY: Object.freeze({ id: 'LOGICAL_DOMAIN_BOUNDARY', label: 'logically unambiguous physical or applicability boundary' }),
     INTERNAL_DERIVATION: Object.freeze({ id: 'INTERNAL_DERIVATION', label: 'production-path restatement or shared constants' }),
     NOMINAL_EXAMPLE: Object.freeze({ id: 'NOMINAL_EXAMPLE', label: 'nominal positive example' }),
     EXECUTION_SMOKE: Object.freeze({ id: 'EXECUTION_SMOKE', label: 'execution-only smoke result' }),
@@ -167,6 +169,20 @@
     const h=P.hellingerThreshold(1,0.43,0.42,-0.0004);
     out.push(test('Hellinger proton-cyclotron fit at beta=1', h, 1+0.43/(1.0004**0.42), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
     out.push(test('Hellinger mirror fit at beta=1', P.hellingerThreshold(1,0.77,0.76,-0.016), 1+0.77/(1.016**0.76), 1e-13, 'Inline expected expression repeats the production coefficients; Hellinger et al. (2006) verification remains pending.', 'F_REGRESSION', 'INTERNAL_DERIVATION', rationale.internal));
+
+    const coulombFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='coulomb-log-ei');
+    if (coulombFormula) {
+      const values={ne:1e20,Te:1e-6,Ti:1e-6,Z:1,mu:1};
+      const warnings=Guardrails.evaluate(coulombFormula,values,coulombFormula.calculate(values));
+      out.push(test('Coulomb-log non-positive applicability guardrail', warnings.some(warning=>warning.id==='coulomb-log-nonpositive')?1:0, 1, 0, 'Logical domain boundary: the implemented collision expressions require positive ln Lambda, so a computed value at or below zero cannot serve as their weak-coupling logarithmic factor.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
+    }
+    const alfvenFormula=Registry&&Registry.formulas&&Registry.formulas.find(formula=>formula.id==='alfven-speed');
+    if (alfvenFormula) {
+      const niGuard=1e6,muGuard=1;
+      const values={B:2*P.constants.speedOfLight*Math.sqrt(P.constants.vacuumPermeability*niGuard*muGuard*P.constants.protonMass),ni:niGuard,mu:muGuard};
+      const warnings=Guardrails.evaluate(alfvenFormula,values,alfvenFormula.calculate(values));
+      out.push(test('Nonrelativistic Alfvén speed causal-limit guardrail', warnings.some(warning=>warning.id==='nonrelativistic-alfven-at-or-above-c')?1:0, 1, 0, 'Logical physical boundary: an explicitly classical nonrelativistic speed expression is outside its intended regime when its computed value reaches or exceeds the causal limiting speed c.', 'E_DOMAIN', 'LOGICAL_DOMAIN_BOUNDARY', rationale.exact));
+    }
 
     if (Registry && Registry.formulas) {
       let smokePass = 0;

@@ -3,12 +3,14 @@
   const Meta = window.AlfvenicaRelease;
   const Registry = window.PlasmaFormulaRegistry;
   const Symbols = window.PlasmaSymbolRegistry;
+  const Units = window.PlasmaUnitRegistry;
+  const Guardrails = window.PlasmaDomainGuardrails;
   const PlotRegistry = window.PlasmaPlotRegistry;
   const Insights = window.PlasmaFormulaInsights;
   const Validation = window.PlasmaValidation;
   const Search = window.AlfvenicaSearch;
   const P = window.PlasmaPhysics;
-  if (!Meta || !Registry || !Symbols || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
+  if (!Meta || !Registry || !Symbols || !Units || !Guardrails || !PlotRegistry || !Insights || !Validation || !Search || !P) throw new Error('Alfvenica modules failed to load');
 
   const $ = id => document.getElementById(id);
   const storage = {
@@ -23,10 +25,11 @@
     'hellinger-oblique-firehose',
   ]);
 
+  const storedUnitSystem = storage.get('alfvenica-units', 'space');
   const state = {
     view: 'calculator',
     theme: storage.get('alfvenica-theme', 'light'),
-    unitSystem: storage.get('alfvenica-units', 'space'),
+    unitSystem: Units.hasSystem(storedUnitSystem) ? storedUnitSystem : 'space',
     category: 'All formulas',
     search: '',
     searchMatches: [],
@@ -34,39 +37,11 @@
     formulaId: '',
     values: new Map(),
     lastResults: [],
+    lastWarnings: [],
+    lastDomainDiagnostics: [],
     plotValues: { ...PlotRegistry.defaultState },
     plotSweep: { variable:'ni', min:0.1e6, max:100e6, spacing:'log', family:'length', outputs:['lambdaDe','de','di'], yScale:'log' },
     plotCache: { hierarchy:{}, sweep:null },
-  };
-
-  const unitSystems = {
-    space: {
-      density: ['cm⁻³', 1e-6], magneticField: ['nT', 1e9], temperature: ['eV', 1],
-      speed: ['km s⁻¹', 1e-3], length: ['km', 1e-3], electricField: ['mV m⁻¹', 1e3],
-      pressure: ['nPa', 1e9], energyDensity: ['nJ m⁻³', 1e9], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['km⁻¹', 1e3], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['km² s⁻¹', 1e-6],
-      currentDensity: ['nA m⁻²', 1e9], flux: ['mW m⁻²', 1e3],
-    },
-    si: {
-      density: ['m⁻³', 1], magneticField: ['T', 1], temperature: ['K', P.constants.electronVolt / P.constants.boltzmannConstant],
-      speed: ['m s⁻¹', 1], length: ['m', 1], electricField: ['V m⁻¹', 1],
-      pressure: ['Pa', 1], energyDensity: ['J m⁻³', 1], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['m⁻¹', 1], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['m² s⁻¹', 1],
-      currentDensity: ['A m⁻²', 1], flux: ['W m⁻²', 1],
-    },
-    cgs: {
-      density: ['cm⁻³', 1e-6], magneticField: ['G', 1e4], temperature: ['eV', 1],
-      speed: ['cm s⁻¹', 1e2], length: ['cm', 1e2], electricField: ['statV cm⁻¹', 3.33564095198152e-5],
-      pressure: ['dyn cm⁻²', 10], energyDensity: ['erg cm⁻³', 10], frequency: ['Hz', 1],
-      angularFrequency: ['rad s⁻¹', 1], wavenumber: ['cm⁻¹', 1e-2], time: ['s', 1],
-      angle: ['deg', 180 / Math.PI], dimensionless: ['', 1], resistivity: ['Ω m', 1],
-      conductivity: ['S m⁻¹', 1], magneticDiffusivity: ['cm² s⁻¹', 1e4],
-      currentDensity: ['statA cm⁻²', 299792.458], flux: ['erg cm⁻² s⁻¹', 1e3],
-    },
   };
 
   const presets = [
@@ -99,10 +74,10 @@
   }
   function formulaById(id) { return Registry.formulas.find(f => f.id === id); }
   function activeFormula() { return formulaById(state.formulaId) || Registry.formulas[0]; }
-  function quantityDef(quantity) { return unitSystems[state.unitSystem][quantity] || ['', 1]; }
-  function toDisplay(quantity, canonical) { return canonical * quantityDef(quantity)[1]; }
-  function toCanonical(quantity, displayed) { return displayed / quantityDef(quantity)[1]; }
-  function unitLabel(quantity) { return quantityDef(quantity)[0]; }
+  function quantityDef(quantity) { return Units.definition(state.unitSystem, quantity); }
+  function toDisplay(quantity, canonical) { return Units.toDisplay(state.unitSystem, quantity, canonical); }
+  function toCanonical(quantity, displayed) { return Units.toCanonical(state.unitSystem, quantity, displayed); }
+  function unitLabel(quantity) { return quantityDef(quantity).unit; }
 
   function formatNumber(value, sig = 5) {
     if (!Number.isFinite(value)) return value === Infinity ? '∞' : '—';
@@ -126,32 +101,8 @@
     }
     if (!Number.isFinite(canonical)) return { value: canonical === Infinity ? '∞' : '—', unit: unitLabel(quantity) };
 
-    // Readable adaptive units for the most common space-physics outputs.
-    if (state.unitSystem === 'space' && quantity === 'length') {
-      const a = Math.abs(canonical);
-      if (a >= 1000) return { value: formatNumber(canonical / 1000), unit: 'km' };
-      if (a >= 0.01) return { value: formatNumber(canonical), unit: 'm' };
-      return { value: formatNumber(canonical * 100), unit: 'cm' };
-    }
-    if (quantity === 'frequency') {
-      const a = Math.abs(canonical);
-      if (a >= 1e9) return { value: formatNumber(canonical / 1e9), unit: 'GHz' };
-      if (a >= 1e6) return { value: formatNumber(canonical / 1e6), unit: 'MHz' };
-      if (a >= 1e3) return { value: formatNumber(canonical / 1e3), unit: 'kHz' };
-      return { value: formatNumber(canonical), unit: 'Hz' };
-    }
-    if (quantity === 'time') {
-      if (canonical === 0) return { value: '0', unit: 's' };
-      const a = Math.abs(canonical);
-      if (a < 1e-6) return { value: formatNumber(canonical * 1e9), unit: 'ns' };
-      if (a < 1e-3) return { value: formatNumber(canonical * 1e6), unit: 'μs' };
-      if (a < 1) return { value: formatNumber(canonical * 1e3), unit: 'ms' };
-      if (a >= 86400) return { value: formatNumber(canonical / 86400), unit: 'days' };
-      if (a >= 3600) return { value: formatNumber(canonical / 3600), unit: 'h' };
-      return { value: formatNumber(canonical), unit: 's' };
-    }
-    const [unit, factor] = quantityDef(quantity);
-    return { value: formatNumber(canonical * factor), unit };
+    const display = Units.outputDefinition(state.unitSystem, quantity, canonical);
+    return { value: formatNumber(canonical * display.factor), unit: display.unit };
   }
 
   function currentValues(formula) {
@@ -390,6 +341,16 @@
     container.innerHTML = Symbols.notationSections.map(section => `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(section.title)}</h2><p>${escapeXml(section.summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`).join('');
   }
 
+  function renderUnitSystemGuide() {
+    const container = document.querySelector('[data-unit-system-guide]');
+    if (!container) throw new Error('Unit-system guide container is missing');
+    container.innerHTML = Units.systemIds.map(systemId => {
+      const system = Units.systems[systemId];
+      const selected = systemId === state.unitSystem ? ' data-current-unit-system="true"' : '';
+      return `<article class="unit-system-card"${selected}><h3>${escapeXml(system.label)}</h3><p>${escapeXml(system.shortDescription)}</p><ul>${system.limitations.map(limitation => `<li>${escapeXml(limitation)}</li>`).join('')}</ul></article>`;
+    }).join('');
+  }
+
   function glossaryRow(symbol) {
     const notes = symbolConventionNotes(symbol);
     return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
@@ -407,6 +368,7 @@
 
   function renderNotation() {
     renderNotationSections();
+    renderUnitSystemGuide();
     renderSymbolGlossary();
   }
 
@@ -457,19 +419,42 @@
     calculate();
   }
 
+  function renderWarnings(warnings, diagnostics = []) {
+    const container = document.querySelector('[data-calculation-warnings]');
+    const list = document.querySelector('[data-calculation-warning-list]');
+    if (!container || !list) throw new Error('Calculation warning container is missing');
+    const warningHtml = warnings.map(warning => {
+      const severity = Guardrails.severities[warning.severity];
+      const observed = warning.conditionEvaluated && Number.isFinite(warning.conditionEvaluated.actual)
+        ? `<span class="warning-observed">Observed: ${escapeXml(formatNumber(warning.conditionEvaluated.actual, 6))}</span>`
+        : '';
+      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong><span>${escapeXml(warning.id)}</span></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p></details></article>`;
+    }).join('');
+    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong><span>${escapeXml(diagnostic.id)}</span></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
+    list.innerHTML = warningHtml + diagnosticHtml;
+    container.hidden = warnings.length === 0 && diagnostics.length === 0;
+  }
+
   function calculate() {
     const formula = activeFormula();
     try {
-      const results = formula.calculate(currentValues(formula));
+      const values = currentValues(formula);
+      const results = formula.calculate(values);
       state.lastResults = results;
+      state.lastWarnings = Guardrails.evaluate(formula, values, results);
+      state.lastDomainDiagnostics = Guardrails.diagnostics(formula, values, results);
       $('calculationError').hidden = true;
       $('resultList').innerHTML = results.map(result => {
         const formatted = formatQuantity(result.quantity, result.value);
         return `<div class="result-row"><dt>${result.label}</dt><dd>${result.symbol ? `<span class="result-symbol">${result.symbol}</span>` : ''}<span>${formatted.value}</span>${formatted.unit ? `<span class="result-unit">${formatted.unit}</span>` : ''}</dd></div>`;
       }).join('');
+      renderWarnings(state.lastWarnings, state.lastDomainDiagnostics);
     } catch (error) {
       state.lastResults = [];
+      state.lastWarnings = [];
+      state.lastDomainDiagnostics = [];
       $('resultList').innerHTML = '';
+      renderWarnings([]);
       $('calculationError').textContent = error.message || 'The supplied values are outside the calculator domain.';
       $('calculationError').hidden = false;
     }
@@ -585,7 +570,7 @@
 
 
   function canonicalUnitLabel(quantity) {
-    return ({ density:'m⁻³', magneticField:'T', temperature:'eV', speed:'m s⁻¹', length:'m', frequency:'Hz', pressure:'Pa', dimensionless:'' })[quantity] || unitLabel(quantity);
+    return Units.canonicalQuantities[quantity] ? Units.canonicalQuantities[quantity].unit : unitLabel(quantity);
   }
 
   function plotStateSummary(values = state.plotValues) {
@@ -746,7 +731,7 @@
 
   function hierarchyCsv(metrics, quantity) {
     const unit = unitLabel(quantity);
-    const factor = quantityDef(quantity)[1];
+    const factor = quantityDef(quantity).factor;
     const meta = plotStateMetadata();
     const headers = ['name','symbol','display_value','display_unit','canonical_si_value','canonical_si_unit',...Object.keys(meta)];
     const canonicalUnit = canonicalUnitLabel(quantity);
@@ -1085,7 +1070,7 @@
     $('formulaSearch').addEventListener('focus', renderSearchSuggestions);
     $('formulaSearch').addEventListener('keydown', onSearchKeydown);
     $('categorySelect').addEventListener('change', e => { state.category = e.target.value; renderCategories(); renderFormulaList(); });
-    $('unitSystem').addEventListener('change', e => { state.unitSystem = e.target.value; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); });
+    $('unitSystem').addEventListener('change', e => { state.unitSystem = Units.hasSystem(e.target.value) ? e.target.value : 'space'; storage.set('alfvenica-units', state.unitSystem); renderFormula(); renderPlotStateInputs(); if (state.view === 'plots') renderPlots(); if (state.view === 'examples') renderExamples(); if (state.view === 'notation') renderNotation(); });
     $('themeToggle').addEventListener('click', () => { state.theme = state.theme === 'light' ? 'dark' : 'light'; storage.set('alfvenica-theme', state.theme); applyTheme(); if (state.view === 'plots') renderPlots(); });
     $('resetInputs').addEventListener('click', resetInputs);
     $('applyPreset').addEventListener('click', applyPreset);

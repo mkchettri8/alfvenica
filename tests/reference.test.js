@@ -169,6 +169,8 @@ const P = require(path.join(root, 'plasma-physics.js'));
 global.PlasmaPhysics = P;
 const Registry = require(path.join(root, 'formula-registry.js'));
 global.PlasmaFormulaRegistry = Registry;
+const Guardrails = require(path.join(root, 'domain-guardrails.js'));
+global.PlasmaDomainGuardrails = Guardrails;
 const Validation = require(path.join(root, 'validation.js'));
 assert.doesNotMatch(validationSourceCode, /propagatedRelativeStandardUncertainty|expandedRelativeUncertainty|legacyV101Target/, 'Validation pass/fail code must not consume reference uncertainty or legacy targets');
 assert.equal(Validation.positiveFiniteUlpDistance(1, 1), 0, 'Production ULP comparator rejects identical values');
@@ -228,7 +230,10 @@ for (const record of independentlyClassified) assert.doesNotMatch(record.name, q
 const quarantinedValidationRecords = validationRecords.filter(record => quarantinedPattern.test(record.name));
 assert.ok(quarantinedValidationRecords.length >= 6, 'Expected quarantined validation records are missing');
 for (const record of quarantinedValidationRecords) {
-  assert.equal(record.validationClass, 'F_REGRESSION', `${record.name}: quarantined record must remain F_REGRESSION`);
+  if (record.name === 'Coulomb-log non-positive applicability guardrail') {
+    assert.equal(record.validationClass, 'E_DOMAIN', `${record.name}: logically unambiguous boundary must be E_DOMAIN`);
+    assert.equal(record.evidenceBasis, 'LOGICAL_DOMAIN_BOUNDARY', `${record.name}: domain evidence basis mismatch`);
+  } else assert.equal(record.validationClass, 'F_REGRESSION', `${record.name}: quarantined record must remain F_REGRESSION`);
   assert.equal(record.benchmarkId, null, `${record.name}: quarantined record must not claim a benchmark ID`);
 }
 

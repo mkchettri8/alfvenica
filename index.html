@@ -51,8 +51,10 @@
   <link rel="stylesheet" href="styles.css">
   <script src="release-metadata.js" defer></script>
   <script src="plasma-physics.js" defer></script>
+  <script src="unit-registry.js" defer></script>
   <script src="symbol-registry.js" defer></script>
   <script src="formula-registry.js" defer></script>
+  <script src="domain-guardrails.js" defer></script>
   <script src="plot-registry.js" defer></script>
   <script src="formula-insights.js" defer></script>
   <script src="validation.js" defer></script>
@@ -82,8 +84,8 @@
         <label class="control-label" for="unitSystem">Units</label>
         <select id="unitSystem" class="compact-select" aria-label="Unit system">
           <option value="space">Space</option>
-          <option value="si">SI</option>
-          <option value="cgs">CGS</option>
+          <option value="si">SI display</option>
+          <option value="cgs">CGS-oriented (mixed)</option>
         </select>
         <button id="themeToggle" class="text-button" type="button">Dark mode</button>
       </div>
@@ -164,6 +166,10 @@
                 <dl id="resultList" class="result-list"></dl>
               </section>
             </div>
+
+            <section class="calculation-warnings" data-calculation-warnings aria-label="Calculation applicability warnings" aria-live="polite" hidden>
+              <div data-calculation-warning-list></div>
+            </section>
 
             <section class="symbol-definitions" data-symbol-definitions aria-label="Symbols and definitions">
               <div class="symbol-definitions-heading">
@@ -348,7 +354,7 @@
         <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
         <div class="method-note">
           <h2>Interpretation</h2>
-          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
+          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; E_DOMAIN exercises a defensible implemented applicability boundary; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability beyond the specifically exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
       </div>
@@ -362,6 +368,14 @@
           <p>Project-wide notation, units, species meanings, and convention notes are generated from the same canonical registry used by every calculator.</p>
         </header>
         <div class="notation-sections" data-notation-sections></div>
+        <section class="unit-system-guide" aria-label="Display unit systems">
+          <div class="unit-system-guide-heading">
+            <p class="eyebrow">Display boundary</p>
+            <h2>Unit-system selectors</h2>
+            <p>All selectors convert presentation around the same canonical calculator values. They do not select a different physics implementation.</p>
+          </div>
+          <div class="unit-system-grid" data-unit-system-guide></div>
+        </section>
         <section class="symbol-glossary" aria-label="Searchable symbol glossary">
           <div class="glossary-heading">
             <div>
@@ -402,7 +416,7 @@
           </section>
           <section>
             <h2>Design, units, and privacy</h2>
-            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI, and CGS choices are interface conversions only. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
+            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
           </section>
           <section>
             <h2>Scientific basis and validation evidence</h2>
