@@ -121,8 +121,8 @@ for (const [formulaIndex, item] of Registry.formulas.entries()) {
       assert.ok(Symbols.has(exported.semanticId), `${item.id}/${outputIndex}: unknown output semantic ID`);
       assert.equal(exported.physicalName, Symbols.get(output.semanticId).canonicalName, `${item.id}/${outputIndex}: output name bypassed registry`);
       assert.ok(Object.is(decodedNumber(exported.internal), output.value), `${item.id}/${outputIndex}: canonical result changed`);
-      const expectedInternalUnit = output.unitSemantics === 'rate' ? Symbols.get(output.semanticId).productionUnit : Units.canonicalQuantities[output.quantity].unit;
-      const expectedDisplayUnit = output.displayUnit || Units.outputDefinition(systemId, output.quantity, output.value).unit;
+      const expectedInternalUnit = Units.canonicalQuantities[output.quantity].unit;
+      const expectedDisplayUnit = Units.outputDefinition(systemId, output.quantity, output.value).unit;
       assert.equal(exported.internal.unit, expectedInternalUnit, `${item.id}/${outputIndex}: canonical output unit mismatch`);
       assert.equal(exported.display.unit, expectedDisplayUnit, `${item.id}/${outputIndex}: displayed output unit mismatch`);
     }

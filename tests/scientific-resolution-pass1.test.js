@@ -60,6 +60,17 @@ for (const [identity, oldMetadata] of Object.entries(terminologyBefore)) {
   output.label = oldMetadata[0];
   output.symbol = oldMetadata[1];
 }
+for (const identity of [
+  'electron-hall-parameter:0','ion-hall-parameter:0','electron-ion-collision-frequency:0',
+  'ion-ion-collision-frequency:0','electron-mean-free-path:1','ion-mean-free-path:1','spitzer-transport:0',
+]) {
+  const parts = identity.split(':');
+  prior.calculators.find(item => item.formulaId === parts[0]).numericOutputs[Number(parts[1])].quantity = 'frequency';
+}
+prior.calculators.find(item => item.formulaId === 'lower-hybrid-frequency').numericOutputs[0].label = 'Frequency';
+prior.calculators.find(item => item.formulaId === 'alfvenicity').numericOutputs[6].label = 'Walén ratio';
+prior.calculators.find(item => item.formulaId === 'electron-hall-parameter').numericOutputs[1].label = 'Electron Hall parameter';
+prior.calculators.find(item => item.formulaId === 'ion-hall-parameter').numericOutputs[1].label = 'Ion Hall parameter';
 prior.calculators.find(item => item.formulaId === 'kaw-parallel-electric-field').numericOutputs[2].value = 0.003338240281574197;
 const priorBytes = JSON.stringify(prior, null, 2) + '\n';
 assert.equal(sha256(priorBytes), '348950dedaff6b66b907edeb775f2a2ae89632837c73e32e8ee01cd1b2fc1dee', 'Pre-pass numerical baseline reconstruction differs');
@@ -100,8 +111,7 @@ for (const item of [
   const result = calculator.calculate(item.values)[0];
   const productionValue = P[item.production](...calculator.inputs.map(input => item.values[input.key]));
   assert.equal(result.value, productionValue, item.id + ': numerical rate changed');
-  assert.equal(result.displayUnit, 's⁻¹');
-  assert.equal(result.unitSemantics, 'rate');
+  assert.equal(result.quantity, 'rate');
   assert.notEqual(result.value, productionValue / (2 * Math.PI), item.id + ': 2*pi conversion introduced');
 }
 for (const id of ['coulomb-log-ei','coulomb-log-ii']) {
@@ -167,15 +177,11 @@ const rateExport = Exporter.createRecord({formula:formula('electron-ion-collisio
 assert.equal(rateExport.calculation.outputs[0].internal.unit, 's^-1');
 assert.equal(rateExport.calculation.outputs[0].display.unit, 's⁻¹');
 
-for (const id of ['SD-07','SD-08','SD-09']) {
-  assert.match(logSection(id), /\*\*Status:\*\* \x60OPEN\x60/);
-  assert.match(logSection(id), /\*\*Priority:\*\* \x60IMPORTANT_BUT_DEFERRABLE\x60/);
-}
-for (const id of ['SD-01','SD-02','SD-03','SD-04','SD-05','SD-06','SD-10']) {
+for (const id of ['SD-01','SD-02','SD-03','SD-04','SD-05','SD-06','SD-07','SD-08','SD-09','SD-10']) {
   assert.doesNotMatch(logSection(id), /\*\*Status:\*\* \x60OPEN\x60/);
   assert.match(logSection(id), /\*\*Resolution date:\*\* \x602026-08-22\x60/);
 }
 assert.equal(Symbols.get('electron-ion-collision-frequency').canonicalSiUnit, 's^-1');
 assert.equal(Symbols.get('kaw-parallel-to-perpendicular-electric-field-ratio').reviewStatus, 'CONFIRMED_IMPLEMENTATION');
 
-console.log('Scientific Resolution Pass 1 checks passed: SD-01-SD-06 scope/source resolutions, one isolated SD-10 correction, 164/165 unchanged outputs, source-backed Hellinger domains, deterministic export identity, and SD-07/08/09 still open.');
+console.log('Scientific Resolution Pass 1 checks passed: SD-01-SD-06 scope/source resolutions, one isolated SD-10 correction, 164/165 unchanged outputs, source-backed Hellinger domains, and deterministic export identity remain intact.');

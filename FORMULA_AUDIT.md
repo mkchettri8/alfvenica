@@ -57,13 +57,15 @@ below. This notation layer does not alter production numerical calculations.
 
 ## Unit and display boundary
 
-`unit-registry.js` is the single application source for the 19 current display
+`unit-registry.js` is the single application source for the 20 current display
 conversion families. Calculator inputs and production outputs remain at their
 existing canonical boundary; switching among Space, SI display, and
 CGS-oriented display changes presentation only. The temperature boundary is
 energy-equivalent eV (`k_B T`), with the SI display converting to kelvin. Cyclic
-frequency in Hz and angular frequency in rad/s are separate semantic families;
-the selector never treats them as aliases or hides a factor of `2π`.
+characteristic reciprocal-time rate in s⁻¹, cyclic frequency in Hz, and angular
+frequency in rad/s are three separate semantic families. The `rate` family has
+factor one in every display mode and no automatic Hz-prefix scaling; the
+selector never treats these families as aliases or hides a factor of `2π`.
 
 The CGS-oriented selector is explicitly mixed and is not a complete coherent
 Gaussian, esu, or emu implementation. Density, fields, mechanical quantities,
@@ -157,8 +159,9 @@ explicitly deprecated compatibility field that is not mass number A.
 The export establishes what the loaded application evaluated and which
 provenance it could report. It does not establish that a formula is correct,
 extend a model beyond its assumptions, or replace the validation-evidence
-matrix. The remaining source-level decisions are enumerated in
-[`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md).
+matrix. The historical quarantine questions and explicit publication decisions
+for SD-01 through SD-10 are retained in
+[`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md); none remains open.
 
 ## Important limitations
 
@@ -169,11 +172,24 @@ matrix. The remaining source-level decisions are enumerated in
 - The resistive-transport tool evaluates
   `eta_coll=m_e nu_ei/(n_e e^2)` for a weakly coupled, fully ionized classical
   plasma; it is not an unqualified complete Spitzer/Braginskii tensor coefficient.
-- Hall parameters use supplied classical collision frequencies and are not anomalous-transport estimates.
+- Hall/magnetization parameters retain `chi=|Omega_c|/nu`, where `Omega_c` is
+  an angular-rate magnitude and `nu` a characteristic collision rate. No
+  cyclic-frequency conversion or factor of `2 pi` is applied; these are not
+  anomalous-transport estimates.
+- The lower-hybrid result is a cold, quasineutral, single-ion approximation
+  with magnetized electrons and ions and a finite electron-plasma-frequency
+  correction. It omits
+  ion thermal/kinetic and finite-Larmor-radius effects, asserts no numerical
+  applicability cutoff, and derives cyclic `f_LH` explicitly from angular
+  `omega_LH/(2 pi)`.
 - Shock compression is hydrodynamic and does not solve oblique MHD Rankine–Hugoniot relations.
 - Sweet–Parker estimates assume steady, two-dimensional, uniform-resistivity MHD.
 - Taylor mapping requires convection to dominate intrinsic propagation.
-- E/B and Walén diagnostics require correct frame, calibration, vector geometry, and uncertainty analysis for research use.
+- E/B diagnostics require correct frame, calibration, vector geometry, and
+  uncertainty analysis for research use. The scalar Alfvénicity calculator is
+  not a full vector Walén test: it supplies no de Hoffmann–Teller frame,
+  vector/component regression, propagation-direction inference, or pressure-
+  anisotropy correction.
 - KAW dispersion and parallel-field tools are reduced models. The dispersion
   is a low-frequency two-fluid approximation; the corrected parallel-field
   ratio is a warm/kinetic low-FLR `rho_s` relation, not a full kinetic or
@@ -299,7 +315,7 @@ Plot-specific automated tests cover registry integrity, finite default results, 
 - **Electron plasma frequency** — fpe = (2π)−1√(nee²/ε0me)
 - **Ion plasma frequency** — fpi = (2π)−1√(niZ²e²/ε0mi)
 - **Upper-hybrid frequency** — ωUH = √(ωpe² + Ωce²)
-- **Lower-hybrid frequency** — ωLH² = ΩciΩce/(1 + Ωce²/ωpe²)
+- **Cold-plasma lower-hybrid approximation** — ωLH² = ΩciΩce/(1 + Ωce²/ωpe²), fLH=ωLH/(2π)
 
 ### Kinetic scales
 
@@ -342,8 +358,8 @@ Plot-specific automated tests cover registry integrity, finite default results, 
 - **Cold magnetization parameter** — σ = B²/(μ0ρc²)
 - **Electron gyro-to-plasma ratio** — Ωce/ωpe
 - **Coulomb coupling parameter** — Γs = qs²/(4πε0akTs),   a=(3/4πn)1/3
-- **Electron Hall parameter** — χe = Ωce/νei
-- **Ion Hall parameter** — χi = Ωci/νii
+- **Electron Hall/magnetization parameter** — χe = |Ωce|/νei
+- **Ion Hall/magnetization parameter** — χi = |Ωci|/νii
 - **Knudsen number** — Kn = λmfp/L
 
 ### Collisions and transport

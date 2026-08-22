@@ -114,14 +114,20 @@ for (let index = 1; index <= 10; index += 1) assert.match(decisionLog, new RegEx
 for (const field of ['Calculator/formula ID', 'Production functions', 'Current implementation', 'Current reference metadata', 'Why quarantined', 'Decision required', 'Would a scientific change alter results?', 'Affected surfaces', 'Source needed', 'Priority', 'Recommended action']) {
   assert.ok(decisionLog.includes(field), `Scientific decision log omits ${field}`);
 }
-assert.match(decisionLog, /This pass changes\s+only the SD-10 production formula/, 'Decision dossier does not isolate the approved scientific change');
-for (const id of ['SD-07','SD-08','SD-09']) {
+assert.match(decisionLog, /Scientific Resolution Pass 1 changed only the SD-10 production formula/, 'Decision dossier does not isolate the approved scientific change');
+const pass2Statuses = {
+  'SD-07':'RESOLVED_SCOPE',
+  'SD-08':'RESOLVED_TERMINOLOGY',
+  'SD-09':'RESOLVED_SOURCE_SEMANTICS',
+};
+for (const [id,status] of Object.entries(pass2Statuses)) {
   const start = decisionLog.indexOf(`## ${id}`);
   const end = decisionLog.indexOf('\n## ', start + 1);
   const section = decisionLog.slice(start, end === -1 ? undefined : end);
-  assert.match(section, /\*\*Status:\*\* `OPEN`/, `${id}: open status changed`);
-  assert.match(section, /\*\*Priority:\*\* `IMPORTANT_BUT_DEFERRABLE`/, `${id}: priority changed`);
+  assert.ok(section.includes('**Status:** `' + status + '`'), `${id}: resolved status missing`);
+  assert.match(section, /\*\*Resolution date:\*\* `2026-08-22`/, `${id}: resolution date missing`);
 }
+assert.doesNotMatch(decisionLog, /\*\*Status:\*\* `OPEN`/, 'A scientific decision remains open');
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
 assert.match(citationCff, new RegExp(`date-released: ${Meta.releaseDate}`), 'CITATION.cff date mismatch');

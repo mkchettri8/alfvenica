@@ -19,28 +19,28 @@ const expected = Object.freeze({
   space: Object.freeze({
     density:['cm⁻³',1e-6], magneticField:['nT',1e9], temperature:['eV',1], speed:['km s⁻¹',1e-3],
     length:['km',1e-3], electricField:['mV m⁻¹',1e3], pressure:['nPa',1e9], energyDensity:['nJ m⁻³',1e9],
-    frequency:['Hz',1], angularFrequency:['rad s⁻¹',1], wavenumber:['km⁻¹',1e3], time:['s',1], angle:['deg',180/Math.PI],
+    rate:['s⁻¹',1], frequency:['Hz',1], angularFrequency:['rad s⁻¹',1], wavenumber:['km⁻¹',1e3], time:['s',1], angle:['deg',180/Math.PI],
     dimensionless:['',1], resistivity:['Ω m',1], conductivity:['S m⁻¹',1], magneticDiffusivity:['km² s⁻¹',1e-6],
     currentDensity:['nA m⁻²',1e9], flux:['mW m⁻²',1e3],
   }),
   si: Object.freeze({
     density:['m⁻³',1], magneticField:['T',1], temperature:['K',EV_TO_KELVIN], speed:['m s⁻¹',1], length:['m',1],
-    electricField:['V m⁻¹',1], pressure:['Pa',1], energyDensity:['J m⁻³',1], frequency:['Hz',1], angularFrequency:['rad s⁻¹',1],
+    electricField:['V m⁻¹',1], pressure:['Pa',1], energyDensity:['J m⁻³',1], rate:['s⁻¹',1], frequency:['Hz',1], angularFrequency:['rad s⁻¹',1],
     wavenumber:['m⁻¹',1], time:['s',1], angle:['deg',180/Math.PI], dimensionless:['',1], resistivity:['Ω m',1],
     conductivity:['S m⁻¹',1], magneticDiffusivity:['m² s⁻¹',1], currentDensity:['A m⁻²',1], flux:['W m⁻²',1],
   }),
   cgs: Object.freeze({
     density:['cm⁻³',1e-6], magneticField:['G',1e4], temperature:['eV',1], speed:['cm s⁻¹',1e2], length:['cm',1e2],
     electricField:['statV cm⁻¹',3.33564095198152e-5], pressure:['dyn cm⁻²',10], energyDensity:['erg cm⁻³',10],
-    frequency:['Hz',1], angularFrequency:['rad s⁻¹',1], wavenumber:['cm⁻¹',1e-2], time:['s',1], angle:['deg',180/Math.PI],
+    rate:['s⁻¹',1], frequency:['Hz',1], angularFrequency:['rad s⁻¹',1], wavenumber:['cm⁻¹',1e-2], time:['s',1], angle:['deg',180/Math.PI],
     dimensionless:['',1], resistivity:['Ω m',1], conductivity:['S m⁻¹',1], magneticDiffusivity:['cm² s⁻¹',1e4],
     currentDensity:['statA cm⁻²',299792.458], flux:['erg cm⁻² s⁻¹',1e3],
   }),
 });
 
 assert.deepEqual(Units.systemIds, ['space','si','cgs'], 'Display-system inventory changed');
-assert.equal(Units.quantityFamilies.length, 19, 'Current conversion-family inventory is not 19');
-assert.equal(new Set(Units.quantityFamilies).size, 19, 'Conversion-family IDs are not unique');
+assert.equal(Units.quantityFamilies.length, 20, 'Current conversion-family inventory is not 20');
+assert.equal(new Set(Units.quantityFamilies).size, 20, 'Conversion-family IDs are not unique');
 assert.deepEqual(Object.keys(expected.space), Units.quantityFamilies, 'Independent unit inventory does not cover every family');
 
 let baseDefinitionsChecked = 0;
@@ -58,7 +58,7 @@ for (const systemId of Units.systemIds) {
     baseDefinitionsChecked += 1;
   }
 }
-assert.equal(baseDefinitionsChecked, 57, 'Not all 19 families across three display systems were independently checked');
+assert.equal(baseDefinitionsChecked, 60, 'Not all 20 families across three display systems were independently checked');
 
 // Explicit high-risk anchors; exact SI prefixes have no fabricated uncertainty.
 assert.equal(Units.toDisplay('space','magneticField',1),1e9,'1 T must equal 1e9 nT');
@@ -82,13 +82,24 @@ assert.equal(Units.toCanonical('space','angle',180),Math.PI,'Degrees-to-radians 
 
 assert.equal(Units.canonicalQuantities.frequency.frequencyBasis,'cyclic','Cyclic-frequency semantics missing');
 assert.equal(Units.canonicalQuantities.angularFrequency.frequencyBasis,'angular','Angular-frequency semantics missing');
+assert.equal(Units.canonicalQuantities.rate.frequencyBasis,'rate','Characteristic-rate semantics missing');
 for (const systemId of Units.systemIds) {
+  const rate = Units.definition(systemId,'rate');
   const f = Units.definition(systemId,'frequency');
   const omega = Units.definition(systemId,'angularFrequency');
+  assert.equal(rate.frequencyBasis,'rate',`${systemId}: characteristic rate is not identified as a rate`);
+  assert.equal(rate.unit,'s⁻¹',`${systemId}: characteristic rate display unit drifted`);
+  assert.equal(rate.factor,1,`${systemId}: characteristic rate acquired a display conversion`);
   assert.equal(f.frequencyBasis,'cyclic',`${systemId}: Hz is not identified as cyclic frequency`);
   assert.equal(omega.frequencyBasis,'angular',`${systemId}: rad/s is not identified as angular frequency`);
   assert.notEqual(f.frequencyBasis,omega.frequencyBasis,`${systemId}: angular and cyclic frequency became aliases`);
+  assert.notEqual(rate.frequencyBasis,f.frequencyBasis,`${systemId}: characteristic rate became a cyclic-frequency alias`);
+  assert.notEqual(rate.frequencyBasis,omega.frequencyBasis,`${systemId}: characteristic rate became an angular-frequency alias`);
   assert.equal(omega.unit,'rad s⁻¹',`${systemId}: angular frequency was silently displayed as Hz`);
+  for (const value of [1,1e3,1e6,1e9]) {
+    const displayedRate = Units.outputDefinition(systemId,'rate',value);
+    assert.deepEqual(displayedRate,rate,`${systemId}: characteristic rate was automatically scaled as Hz`);
+  }
 }
 assert.throws(()=>Units.definition('space','not-a-quantity'),/Unknown unit quantity family/,'Unknown conversion families must fail closed');
 assert.throws(()=>Units.definition('not-a-system','length'),/Unknown unit display system/,'Unknown display systems must fail closed');

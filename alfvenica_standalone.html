@@ -926,6 +926,7 @@ button{color:inherit}
     'electricField',
     'pressure',
     'energyDensity',
+    'rate',
     'frequency',
     'angularFrequency',
     'wavenumber',
@@ -948,6 +949,7 @@ button{color:inherit}
     electricField: { unit: 'V m⁻¹', meaning: 'electric-field magnitude or component' },
     pressure: { unit: 'Pa', meaning: 'pressure' },
     energyDensity: { unit: 'J m⁻³', meaning: 'energy density' },
+    rate: { unit: 's^-1', meaning: 'characteristic reciprocal-time rate', frequencyBasis: 'rate' },
     frequency: { unit: 'Hz', meaning: 'cyclic frequency f', frequencyBasis: 'cyclic' },
     angularFrequency: { unit: 'rad s⁻¹', meaning: 'angular frequency ω or Ω', frequencyBasis: 'angular' },
     wavenumber: { unit: 'm⁻¹', meaning: 'angular wavenumber' },
@@ -970,12 +972,12 @@ button{color:inherit}
       id: 'space',
       label: 'Space',
       shortDescription: 'Space-physics display units; calculator values remain at the canonical calculation boundary.',
-      limitations: ['Temperature is displayed as energy-equivalent eV.', 'Angular frequency remains rad s⁻¹ and is distinct from cyclic Hz.', 'Angles are displayed in degrees.'],
+      limitations: ['Temperature is displayed as energy-equivalent eV.', 'Characteristic rates remain s⁻¹ and are distinct from cyclic Hz and angular rad s⁻¹.', 'Angles are displayed in degrees.'],
       coherentSystem: false,
       quantities: {
         density: D('cm⁻³', 1e-6), magneticField: D('nT', 1e9), temperature: D('eV', 1),
         speed: D('km s⁻¹', 1e-3), length: D('km', 1e-3), electricField: D('mV m⁻¹', 1e3),
-        pressure: D('nPa', 1e9), energyDensity: D('nJ m⁻³', 1e9), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
+        pressure: D('nPa', 1e9), energyDensity: D('nJ m⁻³', 1e9), rate: D('s⁻¹', 1, { frequencyBasis: 'rate' }), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
         angularFrequency: D('rad s⁻¹', 1, { frequencyBasis: 'angular' }), wavenumber: D('km⁻¹', 1e3), time: D('s', 1),
         angle: D('deg', 180 / Math.PI), dimensionless: D('', 1), resistivity: D('Ω m', 1),
         conductivity: D('S m⁻¹', 1), magneticDiffusivity: D('km² s⁻¹', 1e-6),
@@ -986,12 +988,12 @@ button{color:inherit}
       id: 'si',
       label: 'SI display',
       shortDescription: 'SI-oriented display units around the existing canonical calculator boundary.',
-      limitations: ['Calculator temperatures are stored as energy-equivalent eV and displayed here in kelvin.', 'Angles are displayed in degrees.', 'Angular frequency remains rad s⁻¹ and is distinct from cyclic Hz.'],
+      limitations: ['Calculator temperatures are stored as energy-equivalent eV and displayed here in kelvin.', 'Angles are displayed in degrees.', 'Characteristic rates remain s⁻¹ and are distinct from cyclic Hz and angular rad s⁻¹.'],
       coherentSystem: false,
       quantities: {
         density: D('m⁻³', 1), magneticField: D('T', 1), temperature: D('K', P.constants.electronVolt / P.constants.boltzmannConstant),
         speed: D('m s⁻¹', 1), length: D('m', 1), electricField: D('V m⁻¹', 1),
-        pressure: D('Pa', 1), energyDensity: D('J m⁻³', 1), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
+        pressure: D('Pa', 1), energyDensity: D('J m⁻³', 1), rate: D('s⁻¹', 1, { frequencyBasis: 'rate' }), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
         angularFrequency: D('rad s⁻¹', 1, { frequencyBasis: 'angular' }), wavenumber: D('m⁻¹', 1), time: D('s', 1),
         angle: D('deg', 180 / Math.PI), dimensionless: D('', 1), resistivity: D('Ω m', 1),
         conductivity: D('S m⁻¹', 1), magneticDiffusivity: D('m² s⁻¹', 1),
@@ -1002,12 +1004,12 @@ button{color:inherit}
       id: 'cgs',
       label: 'CGS-oriented (mixed)',
       shortDescription: 'A display-oriented CGS convenience mode, not a complete coherent Gaussian, esu, or emu implementation.',
-      limitations: ['Electrical resistivity remains Ω m and conductivity remains S m⁻¹.', 'Temperature remains energy-equivalent eV.', 'Angular frequency remains rad s⁻¹ and is distinct from cyclic Hz.'],
+      limitations: ['Electrical resistivity remains Ω m and conductivity remains S m⁻¹.', 'Temperature remains energy-equivalent eV.', 'Characteristic rates remain s⁻¹ and are distinct from cyclic Hz and angular rad s⁻¹.'],
       coherentSystem: false,
       quantities: {
         density: D('cm⁻³', 1e-6), magneticField: D('G', 1e4), temperature: D('eV', 1),
         speed: D('cm s⁻¹', 1e2), length: D('cm', 1e2), electricField: D('statV cm⁻¹', 3.33564095198152e-5),
-        pressure: D('dyn cm⁻²', 10), energyDensity: D('erg cm⁻³', 10), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
+        pressure: D('dyn cm⁻²', 10), energyDensity: D('erg cm⁻³', 10), rate: D('s⁻¹', 1, { frequencyBasis: 'rate' }), frequency: D('Hz', 1, { frequencyBasis: 'cyclic' }),
         angularFrequency: D('rad s⁻¹', 1, { frequencyBasis: 'angular' }), wavenumber: D('cm⁻¹', 1e-2), time: D('s', 1),
         angle: D('deg', 180 / Math.PI), dimensionless: D('', 1), resistivity: D('Ω m', 1, { retainedSystem: 'SI' }),
         conductivity: D('S m⁻¹', 1, { retainedSystem: 'SI' }), magneticDiffusivity: D('cm² s⁻¹', 1e4),
@@ -1114,6 +1116,7 @@ button{color:inherit}
     permeability: { canonicalSiUnit:'N A^-2', dimensionalStatus:'M L T^-2 I^-2', dimensionless:false, acceptedDisplayUnits:['N A^-2'] },
     permittivity: { canonicalSiUnit:'F m^-1', dimensionalStatus:'M^-1 L^-3 T^4 I^2', dimensionless:false, acceptedDisplayUnits:['F m^-1'] },
     pressure: { canonicalSiUnit:'Pa', dimensionalStatus:'M L^-1 T^-2', dimensionless:false, acceptedDisplayUnits:['Pa','nPa','dyn cm^-2'] },
+    rate: { canonicalSiUnit:'s^-1', dimensionalStatus:'T^-1', dimensionless:false, acceptedDisplayUnits:['s^-1'] },
     resistivity: { canonicalSiUnit:'ohm m', dimensionalStatus:'M L^3 T^-3 I^-2', dimensionless:false, acceptedDisplayUnits:['ohm m'] },
     speed: { canonicalSiUnit:'m s^-1', dimensionalStatus:'L T^-1', dimensionless:false, acceptedDisplayUnits:['m s^-1','km s^-1','cm s^-1'] },
     temperature: { canonicalSiUnit:'K', productionUnit:'eV', dimensionalStatus:'Theta', dimensionless:false, acceptedDisplayUnits:['K','eV'] },
@@ -1197,9 +1200,9 @@ button{color:inherit}
   D('ion-plasma-period','Ion plasma period','τ_pi','tau_pi','\\tau_{pi}','Period corresponding to the selected-ion plasma frequency.','time',{species:{subject:'selected-ion'}});
   D('upper-hybrid-frequency','Upper-hybrid frequency','f_UH','f_UH','f_{UH}','Cyclic frequency corresponding to the implemented upper-hybrid angular frequency.','frequency');
   D('upper-hybrid-angular-frequency','Upper-hybrid angular frequency','ω_UH','omega_UH','\\omega_{UH}','Angular frequency of the implemented cold-plasma upper-hybrid resonance.','angularFrequency');
-  D('lower-hybrid-frequency','Lower-hybrid frequency','f_LH','f_LH','f_{LH}','Cyclic frequency corresponding to the currently implemented lower-hybrid approximation.','frequency',quarantined);
-  D('lower-hybrid-angular-frequency','Lower-hybrid angular frequency','ω_LH','omega_LH','\\omega_{LH}','Angular frequency returned by the currently implemented cold-plasma lower-hybrid approximation.','angularFrequency',quarantined);
-  D('lower-hybrid-to-ion-cyclotron-frequency-ratio','Lower-hybrid to ion-cyclotron ratio','f_LH/f_ci','f_LH/f_ci','f_{LH}/f_{ci}','Ratio of the implemented lower-hybrid frequency to selected-ion cyclotron frequency.','dimensionless',quarantined);
+  D('lower-hybrid-frequency','Cold-plasma lower-hybrid cyclic frequency approximation','f_LH','f_LH','f_{LH}','Cyclic frequency derived as omega_LH/(2 pi) from the implemented cold-plasma lower-hybrid angular-rate approximation.','frequency',{conventionNotes:['Cold, quasineutral, single-ion scope with magnetized electrons and ions; thermal, kinetic, and finite-Larmor-radius corrections are omitted.']});
+  D('lower-hybrid-angular-frequency','Cold-plasma lower-hybrid angular-rate approximation','ω_LH','omega_LH','\\omega_{LH}','Angular rate returned by the cold-plasma lower-hybrid approximation with finite electron-plasma-frequency correction.','angularFrequency',{conventionNotes:['This is not presented as a completely general lower-hybrid resonance formula.']});
+  D('lower-hybrid-to-ion-cyclotron-frequency-ratio','Lower-hybrid to ion-cyclotron angular-rate ratio','f_LH/f_ci','f_LH/f_ci','f_{LH}/f_{ci}','Dimensionless ratio omega_LH/Omega_ci, equivalently f_LH/f_ci when both angular rates are converted consistently.','dimensionless');
   D('spacecraft-frame-frequency','Spacecraft-frame frequency','f_sc','f_sc','f_{sc}','Cyclic frequency measured in the spacecraft frame.','frequency');
   D('plasma-frame-frequency','Plasma-frame frequency','f_pl','f_pl','f_{pl}','Cyclic wave frequency in the modeled plasma frame.','frequency');
   D('convective-doppler-frequency','Convective Doppler contribution','f_D','f_D','f_D','Cyclic-frequency contribution from the implemented scalar k dot V mapping.','frequency',{scope:'derived'});
@@ -1244,10 +1247,10 @@ button{color:inherit}
   D('electromagnetic-e-over-b-speed','Electromagnetic E/B speed','v_EB','v_EB','v_{EB}','Speed magnitude formed from perpendicular electric and magnetic fluctuation magnitudes.','speed',{conventionNotes:['Interpretation depends on frame and polarization.']});
   D('observed-e-over-b-speed','Observed E/B speed','v_EB','v_EB_observed','v_{EB}','Observed electromagnetic E/B speed used by the KAW diagnostic.','speed',quarantined);
   D('kaw-parallel-phase-speed','Reduced dispersive-Alfvén parallel phase speed','v_ph,∥','v_ph_parallel','v_{ph,\\parallel}','Parallel phase speed returned by the reduced low-frequency two-fluid dispersive-Alfvén approximation or supplied to related diagnostics.','speed');
-  D('magnetic-fluctuation-velocity-equivalent','Magnetic fluctuation in velocity units','δb','delta_b','\\delta b','Signed magnetic fluctuation divided by the square root of vacuum permeability times the implemented mass density.','speed',quarantined);
-  D('signed-velocity-fluctuation','Signed velocity fluctuation','δv','delta_v','\\delta v','Signed scalar velocity fluctuation used by the reduced Alfvénicity diagnostics.','speed',quarantined);
-  D('elsasser-plus-amplitude','Elsasser plus amplitude','z+','z_plus','z^+','Scalar plus Elsasser amplitude returned by the current Alfvénicity implementation.','speed',quarantined);
-  D('elsasser-minus-amplitude','Elsasser minus amplitude','z−','z_minus','z^-','Scalar minus Elsasser amplitude returned by the current Alfvénicity implementation.','speed',quarantined);
+  D('magnetic-fluctuation-velocity-equivalent','Scalar magnetic fluctuation in velocity units','δb','delta_b','\\delta b','Signed scalar magnetic fluctuation divided by the square root of vacuum permeability times the implemented mass density.','speed',{conventionNotes:['This one-dimensional quantity does not supply vector direction or a de Hoffmann–Teller frame.']});
+  D('signed-velocity-fluctuation','Signed scalar velocity fluctuation','δv','delta_v','\\delta v','Signed one-dimensional velocity fluctuation used by the scalar Alfvénicity diagnostics.','speed');
+  D('elsasser-plus-amplitude','Scalar Elsasser plus amplitude','z+','z_plus','z^+','Scalar plus Elsasser amplitude delta_v+delta_b returned by the current one-dimensional implementation.','speed');
+  D('elsasser-minus-amplitude','Scalar Elsasser minus amplitude','z−','z_minus','z^-','Scalar minus Elsasser amplitude delta_v-delta_b returned by the current one-dimensional implementation.','speed');
   D('alfven-transit-time','Alfvén transit time','τ_A','tau_A','\\tau_A','Time for an Alfvénic disturbance to traverse the supplied system length.','time');
   D('inverse-alfven-transit-time','Inverse Alfvén transit time','1/τ_A','1/tau_A','1/\\tau_A','Reciprocal of the implemented Alfvén transit time.','frequency');
   D('advection-time','Advection time','τ_adv','tau_adv','\\tau_{adv}','System length divided by supplied bulk-flow speed.','time');
@@ -1291,12 +1294,12 @@ button{color:inherit}
   D('lundquist-number','Lundquist number','S','S_Lundquist','S','Ratio of Alfvénic induction to resistive diffusion in the implemented SI relation.','dimensionless',quarantined);
   D('magnetic-reynolds-number','Magnetic Reynolds number','R_m','R_m','R_m','Ratio of magnetic-field advection to resistive diffusion in the implemented SI relation.','dimensionless',quarantined);
   D('sweet-parker-normalized-rate','Sweet-Parker normalized rate','v_in/v_A','v_in/v_A','v_{in}/v_A','Inflow-to-Alfvén-speed ratio returned by the current Sweet-Parker estimate.','dimensionless',quarantined);
-  D('electron-hall-parameter','Electron Hall parameter','χ_e','chi_e','\\chi_e','Ratio of electron cyclotron angular frequency to the implemented electron-ion collision rate.','dimensionless',quarantined);
-  D('ion-hall-parameter','Ion Hall parameter','χ_i','chi_i','\\chi_i','Ratio of selected-ion cyclotron angular frequency to the implemented ion-ion collision rate.','dimensionless',quarantined);
-  D('alfven-ratio','Alfvén ratio','r_A','r_A','r_A','Ratio of scalar velocity-fluctuation energy to magnetic fluctuation energy in velocity units.','dimensionless',quarantined);
-  D('walen-ratio','Walén ratio','R_W','R_W','R_W','Scalar velocity fluctuation divided by magnetic fluctuation in velocity units in the current reduced implementation.','dimensionless',quarantined);
-  D('normalized-cross-helicity','Normalized cross helicity','σ_c','sigma_c','\\sigma_c','Scalar normalized cross-helicity diagnostic returned by the current implementation.','dimensionless',quarantined);
-  D('normalized-residual-energy','Normalized residual energy','σ_r','sigma_r','\\sigma_r','Scalar normalized residual-energy diagnostic returned by the current implementation.','dimensionless',quarantined);
+  D('electron-hall-parameter','Electron Hall/magnetization parameter','χ_e','chi_e','\\chi_e','Dimensionless ratio |Omega_ce|/nu_ei of electron cyclotron angular-rate magnitude to characteristic electron-ion collision rate.','dimensionless',{species:{subject:'electron'},conventionNotes:['Radians are dimensionless in SI; nu_ei is not converted to cyclic hertz and no factor of 2 pi is introduced.']});
+  D('ion-hall-parameter','Ion Hall/magnetization parameter','χ_i','chi_i','\\chi_i','Dimensionless ratio |Omega_ci|/nu_ii of selected-ion cyclotron angular-rate magnitude to characteristic ion-ion collision rate.','dimensionless',{species:{subject:'selected-ion'},conventionNotes:['Radians are dimensionless in SI; nu_ii is not converted to cyclic hertz and no factor of 2 pi is introduced.']});
+  D('alfven-ratio','Scalar Alfvén ratio','r_A','r_A','r_A','Ratio of signed scalar velocity-fluctuation energy to magnetic fluctuation energy in velocity units.','dimensionless',{conventionNotes:['This is a one-dimensional diagnostic, not a full vector Walén test.']});
+  D('walen-ratio','Scalar Alfvén-normalized velocity/magnetic ratio','R_W','R_W','R_W','Signed scalar ratio delta_v/delta_b in the current one-dimensional Alfvénicity implementation.','dimensionless',{aliases:['scalar Walen-like ratio'],conventionNotes:['No de Hoffmann–Teller frame, vector regression, propagation-direction inference, or pressure-anisotropy correction is performed.']});
+  D('normalized-cross-helicity','Scalar normalized cross helicity','σ_c','sigma_c','\\sigma_c','Normalized cross-helicity diagnostic formed from signed one-dimensional delta_v and delta_b values.','dimensionless');
+  D('normalized-residual-energy','Scalar normalized residual energy','σ_r','sigma_r','\\sigma_r','Normalized residual-energy diagnostic formed from signed one-dimensional delta_v and delta_b values.','dimensionless');
   D('fluid-firehose-criterion','Fluid firehose criterion value','β∥−β⊥','beta_parallel-beta_perpendicular','\\beta_\\parallel-\\beta_\\perp','Difference between parallel and perpendicular species beta in the implemented fluid criterion.','dimensionless',{scope:'formula-local',...pending});
   D('fluid-firehose-margin','Fluid firehose threshold margin','margin','firehose_margin','\\mathrm{margin}','Implemented fluid-firehose criterion value minus its current threshold.','dimensionless',{scope:'formula-local',...pending});
   D('fluid-mirror-criterion','Fluid mirror criterion value','C','mirror_criterion','C','Value of the current simplified fluid-mirror criterion.','dimensionless',{scope:'formula-local',...pending});
@@ -1305,8 +1308,8 @@ button{color:inherit}
   // Collision and transport identities resolved by SD-01 through SD-03.
   D('electron-ion-coulomb-logarithm','Electron-ion impact-parameter Coulomb logarithm','ln Λ_ei','ln Lambda_ei','\\ln\\Lambda_{ei}','Adopted impact-parameter estimate ln(lambda_D/b_min), with combined electron-ion Debye screening and b_min=max(b_90,b_quantum).','dimensionless',{species:{subject:'electron-ion'},conventionNotes:['This explicit estimate is not claimed identical to every regime-specific fitted NRL expression.']});
   D('ion-ion-coulomb-logarithm','Ion-ion impact-parameter Coulomb logarithm','ln Λ_ii','ln Lambda_ii','\\ln\\Lambda_{ii}','Adopted identical-ion impact-parameter estimate ln(lambda_Di/b_min), with b_min=max(b_90,b_quantum).','dimensionless',{species:{subject:'selected-ion'},conventionNotes:['This explicit estimate is not claimed identical to every regime-specific fitted NRL expression.']});
-  D('electron-ion-collision-frequency','Electron-ion characteristic Coulomb collision rate','ν_ei','nu_ei','\\nu_{ei}','Characteristic electron-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','frequency',{species:{subject:'electron-ion'},canonicalSiUnit:'s^-1',productionUnit:'s^-1',acceptedDisplayUnits:['s^-1'],conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
-  D('ion-ion-collision-frequency','Ion-ion characteristic Coulomb collision rate','ν_ii','nu_ii','\\nu_{ii}','Characteristic identical-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','frequency',{species:{subject:'selected-ion'},canonicalSiUnit:'s^-1',productionUnit:'s^-1',acceptedDisplayUnits:['s^-1'],conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
+  D('electron-ion-collision-frequency','Electron-ion characteristic Coulomb collision rate','ν_ei','nu_ei','\\nu_{ei}','Characteristic electron-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','rate',{species:{subject:'electron-ion'},conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
+  D('ion-ion-collision-frequency','Ion-ion characteristic Coulomb collision rate','ν_ii','nu_ii','\\nu_{ii}','Characteristic identical-ion Coulomb collision rate associated with the adopted NRL-style collision-time convention.','rate',{species:{subject:'selected-ion'},conventionNotes:['This is a rate in s^-1, not a cyclic oscillation frequency; no factor of 2 pi is introduced.']});
   D('electron-ion-collision-time','Electron-ion collision time','τ_ei','tau_ei','\\tau_{ei}','Reciprocal of the adopted characteristic electron-ion collision rate.','time',{species:{subject:'electron-ion'}});
   D('ion-ion-collision-time','Ion-ion collision time','τ_ii','tau_ii','\\tau_{ii}','Reciprocal of the adopted characteristic ion-ion collision rate.','time',{species:{subject:'selected-ion'}});
   D('electrical-resistivity','Electron-ion collisional resistivity','η_coll','eta_coll','\\eta_{coll}','Scalar resistive-transport quantity eta_coll=m_e nu_ei/(n_e e^2) evaluated from Alfvenica’s characteristic electron-ion collision rate.','resistivity',{conventionNotes:['This is not claimed to be a complete source-specific Spitzer or Braginskii transport coefficient.']});
@@ -1317,7 +1320,7 @@ button{color:inherit}
   D('taylor-convected-wavenumber','Taylor-mapped convected wavenumber','k','k_Taylor','k','Wavenumber obtained from the current frozen-flow frequency mapping.','wavenumber');
   D('perpendicular-electric-field-fluctuation','Perpendicular electric-field fluctuation','δE⊥','delta_E_perpendicular','\\delta E_\\perp','Signed perpendicular electric-field fluctuation supplied to an E/B diagnostic.','electricField');
   D('perpendicular-magnetic-field-fluctuation','Perpendicular magnetic-field fluctuation','δB⊥','delta_B_perpendicular','\\delta B_\\perp','Signed perpendicular magnetic-field fluctuation supplied to an E/B diagnostic.','magneticField');
-  D('signed-magnetic-field-fluctuation','Signed magnetic-field fluctuation','δB','delta_B','\\delta B','Signed scalar magnetic-field fluctuation used by the reduced Alfvénicity diagnostics.','magneticField',quarantined);
+  D('signed-magnetic-field-fluctuation','Signed scalar magnetic-field fluctuation','δB','delta_B','\\delta B','Signed one-dimensional magnetic-field fluctuation used by the scalar Alfvénicity diagnostics.','magneticField',{conventionNotes:['This scalar input does not provide vector direction or component regression.']});
   D('magnetic-field-jump','Magnetic-field jump','ΔB','Delta_B','\\Delta B','Magnetic-field change across the modeled one-dimensional sheet.','magneticField');
   D('current-density-estimate','Current-density estimate','J','J','J','One-dimensional current-density magnitude estimated from field jump and sheet thickness.','currentDensity');
   D('reconnection-electric-field','Reconnection electric field','E_rec','E_rec','E_{rec}','Electric-field magnitude returned by the implemented Sweet-Parker estimate.','electricField',quarantined);
@@ -1420,8 +1423,8 @@ button{color:inherit}
     },
     {
       id:'frequency',
-      title:'Cyclic and angular frequency',
-      summary:'Symbols beginning with f denote cyclic frequency in hertz. Symbols using omega or capital Omega denote angular frequency in radians per second. Collision nu quantities are characteristic rates in inverse seconds, not cyclic oscillation frequencies, and receive no 2 pi conversion.',
+      title:'Rates, cyclic frequency, and angular frequency',
+      summary:'Collision nu quantities are characteristic rates in inverse seconds. Symbols beginning with f denote cyclic frequency in hertz, while symbols using omega or capital Omega denote angular frequency in radians per second. These three semantic families remain distinct; collision rates receive no hertz scaling or 2 pi conversion.',
       symbolIds:['electron-cyclotron-frequency','electron-cyclotron-angular-frequency','electron-plasma-frequency','electron-plasma-angular-frequency','ion-cyclotron-frequency','ion-cyclotron-angular-frequency','electron-ion-collision-frequency','ion-ion-collision-frequency'],
     },
     {
@@ -1528,7 +1531,6 @@ button{color:inherit}
     protonDistribution: 'bi-Maxwellian',
     omegaPeOverOmegaCe: 100,
   });
-  const RATE_DISPLAY = Object.freeze({ displayUnit: 's⁻¹', unitSemantics: 'rate' });
 
   const I = (key, label, symbol, quantity, defaultValue, options = {}) => ({
     key, label, symbol, quantity, default: defaultValue, ...options,
@@ -1569,7 +1571,7 @@ button{color:inherit}
     entry('electron-plasma-frequency','Frequencies','Electron plasma frequency','f<sub>pe</sub> = (2π)<sup>−1</sup>√(n<sub>e</sub>e²/ε<sub>0</sub>m<sub>e</sub>)','f_{pe}=\\frac{1}{2\\pi}\\sqrt{n_e e^2/(\\epsilon_0m_e)}','Natural electrostatic oscillation frequency of electrons against a fixed ion background.',[common.ne()],x=>{const w=P.electronPlasmaAngular(x.ne);return[O('Frequency','fpe','frequency',w/PI2),O('Angular frequency','ωpe','angularFrequency',w),O('Period','τpe','time',PI2/w)];},{keywords:['langmuir','electron plasma']}),
     entry('ion-plasma-frequency','Frequencies','Ion plasma frequency','f<sub>pi</sub> = (2π)<sup>−1</sup>√(n<sub>i</sub>Z²e²/ε<sub>0</sub>m<sub>i</sub>)','f_{pi}=\\frac{1}{2\\pi}\\sqrt{n_iZ^2e^2/(\\epsilon_0m_i)}','Ion plasma frequency for a single ion species.',[common.ni(),common.Z(),common.mu()],x=>{const w=P.ionPlasmaAngular(x.ni,x.Z,x.mu);return[O('Frequency','fpi','frequency',w/PI2),O('Angular frequency','ωpi','angularFrequency',w),O('Period','τpi','time',PI2/w)];},{keywords:['ion plasma']}),
     entry('upper-hybrid-frequency','Frequencies','Upper-hybrid frequency','ω<sub>UH</sub> = √(ω<sub>pe</sub>² + Ω<sub>ce</sub>²)','\\omega_{UH}=\\sqrt{\\omega_{pe}^2+\\Omega_{ce}^2}','Cold-plasma upper-hybrid resonance.',[common.ne(),common.B()],x=>{const w=P.upperHybridAngular(x.B,x.ne);return[O('Frequency','fUH','frequency',w/PI2),O('Angular frequency','ωUH','angularFrequency',w)];},{assumptions:['Cold, homogeneous, magnetized electron plasma.'],keywords:['upper hybrid','resonance']}),
-    entry('lower-hybrid-frequency','Frequencies','Lower-hybrid frequency','ω<sub>LH</sub>² = Ω<sub>ci</sub>Ω<sub>ce</sub>/(1 + Ω<sub>ce</sub>²/ω<sub>pe</sub>²)','\\omega_{LH}^2=\\frac{\\Omega_{ci}\\Omega_{ce}}{1+\\Omega_{ce}^2/\\omega_{pe}^2}','Cold-plasma lower-hybrid frequency with finite electron-plasma-frequency correction.',[common.ne(),common.B(),common.Z(),common.mu()],x=>{const w=P.lowerHybridAngular(x.B,x.ne,x.Z,x.mu);return[O('Frequency','fLH','frequency',w/PI2),O('Angular frequency','ωLH','angularFrequency',w),O('Ratio to ion gyrofrequency','fLH/fci','dimensionless',w/P.ionGyroAngular(x.B,x.Z,x.mu))];},{assumptions:['Cold, magnetized, single-ion plasma.'],keywords:['lower hybrid']}),
+    entry('lower-hybrid-frequency','Frequencies','Cold-plasma lower-hybrid approximation','ω<sub>LH</sub>² = Ω<sub>ci</sub>Ω<sub>ce</sub>/(1 + Ω<sub>ce</sub>²/ω<sub>pe</sub>²)','\\omega_{LH}^2=\\frac{\\Omega_{ci}\\Omega_{ce}}{1+\\Omega_{ce}^2/\\omega_{pe}^2}','Cold-plasma lower-hybrid approximation with a finite electron-plasma-frequency correction.',[common.ne(),common.B(),common.Z(),common.mu()],x=>{const w=P.lowerHybridAngular(x.B,x.ne,x.Z,x.mu);return[O('Cyclic frequency','fLH','frequency',w/PI2),O('Angular frequency','ωLH','angularFrequency',w),O('Ratio to ion gyrofrequency','fLH/fci','dimensionless',w/P.ionGyroAngular(x.B,x.Z,x.mu))];},{assumptions:['Cold, quasineutral, single-ion plasma with magnetized electrons and ions.','The relation is formulated in angular rates; fLH is derived explicitly as ωLH/(2π).','Ion thermal/kinetic and finite-Larmor-radius corrections are omitted; this is not a completely general lower-hybrid resonance formula.'],note:'No numerical applicability cutoff is imposed.',keywords:['lower hybrid','approximation'],scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-07']}),
 
     // Kinetic scales
     entry('electron-debye-length','Kinetic scales','Electron Debye length','λ<sub>De</sub> = √(ε<sub>0</sub>kT<sub>e</sub>/n<sub>e</sub>e²)','\\lambda_{De}=\\sqrt{\\epsilon_0 kT_e/(n_e e^2)}','Electrostatic shielding scale associated with electrons.',[common.ne(),common.Te()],x=>[O('Debye length','λDe','length',P.electronDebyeLength(x.Te,x.ne))],{keywords:['shielding']}),
@@ -1608,18 +1610,18 @@ button{color:inherit}
     entry('magnetization-parameter','Dimensionless regimes','Cold magnetization parameter','σ = B²/(μ<sub>0</sub>ρc²)','\\sigma=B^2/(\\mu_0\\rho c^2)','Ratio of magnetic energy scale to ion rest-mass energy density.',[common.B(),common.ni(),common.mu()],x=>[O('Magnetization','σ','dimensionless',P.magnetizationSigma(x.B,x.ni,x.mu)),O('Relativistic Alfvén speed','vA,rel','speed',P.relativisticAlfvenSpeed(x.B,x.ni,x.mu))],{assumptions:['Cold rest-mass density; no thermal enthalpy.']}),
     entry('electron-magnetization-ratio','Dimensionless regimes','Electron gyro-to-plasma ratio','Ω<sub>ce</sub>/ω<sub>pe</sub>','\\Omega_{ce}/\\omega_{pe}','Compares electron magnetization and collective electrostatic response.',[common.B(),common.ne()],x=>{const oc=P.electronGyroAngular(x.B),op=P.electronPlasmaAngular(x.ne);return[O('Frequency ratio','Ωce/ωpe','dimensionless',oc/op),O('Inverse ratio','ωpe/Ωce','dimensionless',op/oc)];}),
     entry('plasma-coupling','Dimensionless regimes','Coulomb coupling parameter','Γ<sub>s</sub> = q<sub>s</sub>²/(4πε<sub>0</sub>akT<sub>s</sub>), &nbsp; a=(3/4πn)<sup>1/3</sup>','\\Gamma_s=q_s^2/(4\\pi\\epsilon_0akT_s)','Weak- versus strong-coupling diagnostic for a single species.',[I('ns','Species density','ns','density',n(5),{min:0}),I('Ts','Species temperature','Ts','temperature',10,{min:0}),I('q','Charge magnitude','|qs|/e','dimensionless',1,{min:0})],x=>{const g=P.plasmaCouplingParameter(x.ns,x.Ts,x.q);return[O('Coupling parameter','Γ','dimensionless',g),T('Regime',g<0.01?'Weakly coupled':g<1?'Moderately coupled':'Strongly coupled')];},{assumptions:['Classical one-component estimate.']}),
-    entry('electron-hall-parameter','Dimensionless regimes','Electron Hall parameter','χ<sub>e</sub> = Ω<sub>ce</sub>/ν<sub>ei</sub>','\\chi_e=\\Omega_{ce}/\\nu_{ei}','Electron magnetization relative to the adopted characteristic electron-ion collision rate.',[common.B(),common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),om=P.electronGyroAngular(x.B);return[O('Characteristic electron-ion collision rate','νei','frequency',nu,RATE_DISPLAY),O('Electron Hall parameter','χe','dimensionless',om/nu)];},{assumptions:['νei is a rate in s⁻¹; no cyclic-frequency conversion is applied.','The Hall collision/gyro convention remains under SD-09 source review.'],decisionIds:['SD-02','SD-09']}),
-    entry('ion-hall-parameter','Dimensionless regimes','Ion Hall parameter','χ<sub>i</sub> = Ω<sub>ci</sub>/ν<sub>ii</sub>','\\chi_i=\\Omega_{ci}/\\nu_{ii}','Ion magnetization relative to the adopted characteristic ion-ion collision rate.',[common.B(),common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda),om=P.ionGyroAngular(x.B,x.Z,x.mu);return[O('Characteristic ion-ion collision rate','νii','frequency',nu,RATE_DISPLAY),O('Ion Hall parameter','χi','dimensionless',om/nu)];},{assumptions:['νii is a rate in s⁻¹; no cyclic-frequency conversion is applied.','The Hall collision/gyro convention remains under SD-09 source review.'],decisionIds:['SD-02','SD-09']}),
+    entry('electron-hall-parameter','Dimensionless regimes','Electron Hall/magnetization parameter','χ<sub>e</sub> = |Ω<sub>ce</sub>|/ν<sub>ei</sub>','\\chi_e=|\\Omega_{ce}|/\\nu_{ei}','Electron Hall/magnetization parameter formed from the cyclotron angular-rate magnitude and adopted characteristic electron-ion collision rate.',[common.B(),common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),om=P.electronGyroAngular(x.B);return[O('Characteristic electron-ion collision rate','νei','rate',nu),O('Electron Hall/magnetization parameter','χe','dimensionless',om/nu)];},{assumptions:['Ωce is an angular-rate magnitude in rad s⁻¹ and νei is a characteristic rate in s⁻¹.','Radians are dimensionless in SI, so χe is dimensionless; neither rate is converted to cyclic Hz and no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SOURCE_SEMANTICS',decisionIds:['SD-02','SD-09']}),
+    entry('ion-hall-parameter','Dimensionless regimes','Ion Hall/magnetization parameter','χ<sub>i</sub> = |Ω<sub>ci</sub>|/ν<sub>ii</sub>','\\chi_i=|\\Omega_{ci}|/\\nu_{ii}','Ion Hall/magnetization parameter formed from the selected-ion cyclotron angular-rate magnitude and adopted characteristic ion-ion collision rate.',[common.B(),common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda),om=P.ionGyroAngular(x.B,x.Z,x.mu);return[O('Characteristic ion-ion collision rate','νii','rate',nu),O('Ion Hall/magnetization parameter','χi','dimensionless',om/nu)];},{assumptions:['Ωci is an angular-rate magnitude in rad s⁻¹ and νii is a characteristic rate in s⁻¹.','Radians are dimensionless in SI, so χi is dimensionless; neither rate is converted to cyclic Hz and no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SOURCE_SEMANTICS',decisionIds:['SD-02','SD-09']}),
     entry('knudsen-number','Dimensionless regimes','Knudsen number','Kn = λ<sub>mfp</sub>/L','Kn=\\lambda_{mfp}/L','Compares a collisional mean free path with a macroscopic system scale.',[I('mfp','Mean free path','λmfp','length',L(100000),{min:0}),I('Lsys','System scale','L','length',L(1000000),{min:0})],x=>{const kn=P.knudsenNumber(x.mfp,x.Lsys);return[O('Knudsen number','Kn','dimensionless',kn),T('Interpretation',kn<0.01?'Continuum-like':kn<0.1?'Weakly nonlocal':'Kinetic/nonlocal effects likely')];}),
 
     // Collisions and transport
     entry('coulomb-log-ei','Collisions and transport','Electron-ion impact-parameter Coulomb logarithm estimate','ln Λ = ln(λ<sub>D</sub>/b<sub>min</sub>), &nbsp; b<sub>min</sub>=max(b<sub>90</sub>,b<sub>quantum</sub>)','\\ln\\Lambda=\\ln(\\lambda_D/b_{min}),\\quad b_{min}=\\max(b_{90},b_{quantum})','Adopted impact-parameter Coulomb-logarithm estimate using the larger of the classical 90-degree and quantum-diffraction cutoffs.',[common.ne(),common.Te(),common.Ti(),common.Z(),common.mu()],x=>[O('Coulomb logarithm','lnΛei','dimensionless',P.coulombLogElectronIon(x.ne,x.Te,x.Ti,x.Z,x.mu))],{assumptions:['Fully ionized, weakly coupled plasma; screening is the combined electron-ion Debye length.','The relative thermal speed combines the electron and selected-ion thermal contributions; the reduced mass is used in the electron-ion impact parameters.'],note:'This explicit first-principles impact-parameter estimate is not claimed to equal every regime-specific fitted NRL expression.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-03']}),
     entry('coulomb-log-ii','Collisions and transport','Ion-ion impact-parameter Coulomb logarithm estimate','ln Λ<sub>ii</sub> = ln(λ<sub>Di</sub>/b<sub>min</sub>), &nbsp; b<sub>min</sub>=max(b<sub>90</sub>,b<sub>quantum</sub>)','\\ln\\Lambda_{ii}=\\ln(\\lambda_{Di}/b_{min}),\\quad b_{min}=\\max(b_{90},b_{quantum})','Adopted impact-parameter Coulomb-logarithm estimate for identical ions.',[common.ni(),common.Ti(),common.Z(),common.mu()],x=>[O('Coulomb logarithm','lnΛii','dimensionless',P.coulombLogIonIon(x.ni,x.Ti,x.Z,x.mu))],{assumptions:['Identical selected ions; weak coupling; screening is the ion Debye length.','The identical-ion relative thermal speed and reduced mass define the 90-degree and quantum impact parameters.'],note:'This explicit first-principles impact-parameter estimate is not claimed to equal every regime-specific fitted NRL expression.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-03']}),
-    entry('electron-ion-collision-frequency','Collisions and transport','Electron-ion characteristic Coulomb collision rate','ν<sub>ei</sub> = 4√(2π)n<sub>e</sub>Ze⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>e</sub><sup>1/2</sup>(kT<sub>e</sub>)<sup>3/2</sup>]','\\nu_{ei}=\\frac{4\\sqrt{2\\pi}n_eZe^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_e^{1/2}(kT_e)^{3/2}}','Characteristic electron-ion Coulomb collision rate in the adopted NRL-style collision-time convention.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>[O('Characteristic collision rate','νei','frequency',P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),RATE_DISPLAY),O('Collision time','τei','time',1/P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda))],{assumptions:['νei is a rate in s⁻¹, not a cyclic oscillation frequency; no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
-    entry('ion-ion-collision-frequency','Collisions and transport','Ion-ion characteristic Coulomb collision rate','ν<sub>ii</sub> = 4√π n<sub>i</sub>Z⁴e⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>i</sub><sup>1/2</sup>(kT<sub>i</sub>)<sup>3/2</sup>]','\\nu_{ii}=\\frac{4\\sqrt{\\pi}n_iZ^4e^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_i^{1/2}(kT_i)^{3/2}}','Characteristic identical-ion Coulomb collision rate in the adopted NRL-style collision-time convention.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>[O('Characteristic collision rate','νii','frequency',P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda),RATE_DISPLAY),O('Collision time','τii','time',1/P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda))],{assumptions:['νii is a rate in s⁻¹, not a cyclic oscillation frequency; no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
-    entry('electron-mean-free-path','Collisions and transport','Electron collisional mean free path','λ<sub>ei</sub> = v<sub>Te</sub>/ν<sub>ei</sub>','\\lambda_{ei}=v_{Te}/\\nu_{ei}','Electron mean free path using vTe = √(kTe/me) and the adopted characteristic electron-ion collision rate.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const vt=P.electronThermalSpeed(x.Te),nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda);return[O('Thermal speed','vTe','speed',vt),O('Characteristic collision rate','νei','frequency',nu,RATE_DISPLAY),O('Mean free path','λei','length',vt/nu)];},{scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
-    entry('ion-mean-free-path','Collisions and transport','Ion collisional mean free path','λ<sub>ii</sub> = v<sub>Ti</sub>/ν<sub>ii</sub>','\\lambda_{ii}=v_{Ti}/\\nu_{ii}','Ion mean free path using vTi = √(kTi/mi) and the adopted characteristic ion-ion collision rate.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const vt=P.ionThermalSpeed(x.Ti,x.mu),nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda);return[O('Thermal speed','vTi','speed',vt),O('Characteristic collision rate','νii','frequency',nu,RATE_DISPLAY),O('Mean free path','λii','length',vt/nu)];},{scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
-    entry('spitzer-transport','Collisions and transport','Classical electron-ion collisional resistive transport','η<sub>coll</sub> = m<sub>e</sub>ν<sub>ei</sub>/(n<sub>e</sub>e²), &nbsp; σ=1/η<sub>coll</sub>, &nbsp; η<sub>m</sub>=η<sub>coll</sub>/μ<sub>0</sub>','\\eta_{coll}=m_e\\nu_{ei}/(n_ee^2),\\quad \\sigma=1/\\eta_{coll},\\quad \\eta_m=\\eta_{coll}/\\mu_0','Classical electron-ion collisional resistive transport derived from Alfvenica’s defined characteristic electron-ion collision rate.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),eta=P.spitzerResistivity(x.ne,nu);return[O('Characteristic collision rate','νei','frequency',nu,RATE_DISPLAY),O('Collisional resistivity','ηcoll','resistivity',eta),O('Conductivity','σ','conductivity',1/eta),O('Magnetic diffusivity','ηm','magneticDiffusivity',eta/C.vacuumPermeability)];},{assumptions:['Classical fully ionized plasma; scalar, unmagnetized electron-ion collisional relation.','Source-specific Spitzer or Braginskii parallel and perpendicular transport can contain additional coefficients depending on collision-time convention and plasma assumptions.'],keywords:['spitzer','resistivity','collisional transport'],note:'No 0.51 or generalized-Z transport coefficient is inserted.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-01','SD-02']}),
+    entry('electron-ion-collision-frequency','Collisions and transport','Electron-ion characteristic Coulomb collision rate','ν<sub>ei</sub> = 4√(2π)n<sub>e</sub>Ze⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>e</sub><sup>1/2</sup>(kT<sub>e</sub>)<sup>3/2</sup>]','\\nu_{ei}=\\frac{4\\sqrt{2\\pi}n_eZe^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_e^{1/2}(kT_e)^{3/2}}','Characteristic electron-ion Coulomb collision rate in the adopted NRL-style collision-time convention.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>[O('Characteristic collision rate','νei','rate',P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda)),O('Collision time','τei','time',1/P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda))],{assumptions:['νei is a rate in s⁻¹, not a cyclic oscillation frequency; no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('ion-ion-collision-frequency','Collisions and transport','Ion-ion characteristic Coulomb collision rate','ν<sub>ii</sub> = 4√π n<sub>i</sub>Z⁴e⁴lnΛ/[3(4πε<sub>0</sub>)²m<sub>i</sub><sup>1/2</sup>(kT<sub>i</sub>)<sup>3/2</sup>]','\\nu_{ii}=\\frac{4\\sqrt{\\pi}n_iZ^4e^4\\ln\\Lambda}{3(4\\pi\\epsilon_0)^2m_i^{1/2}(kT_i)^{3/2}}','Characteristic identical-ion Coulomb collision rate in the adopted NRL-style collision-time convention.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>[O('Characteristic collision rate','νii','rate',P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda)),O('Collision time','τii','time',1/P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda))],{assumptions:['νii is a rate in s⁻¹, not a cyclic oscillation frequency; no factor of 2π is introduced.'],scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('electron-mean-free-path','Collisions and transport','Electron collisional mean free path','λ<sub>ei</sub> = v<sub>Te</sub>/ν<sub>ei</sub>','\\lambda_{ei}=v_{Te}/\\nu_{ei}','Electron mean free path using vTe = √(kTe/me) and the adopted characteristic electron-ion collision rate.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const vt=P.electronThermalSpeed(x.Te),nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda);return[O('Thermal speed','vTe','speed',vt),O('Characteristic collision rate','νei','rate',nu),O('Mean free path','λei','length',vt/nu)];},{scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('ion-mean-free-path','Collisions and transport','Ion collisional mean free path','λ<sub>ii</sub> = v<sub>Ti</sub>/ν<sub>ii</sub>','\\lambda_{ii}=v_{Ti}/\\nu_{ii}','Ion mean free path using vTi = √(kTi/mi) and the adopted characteristic ion-ion collision rate.',[common.ni(),common.Ti(),common.Z(),common.mu(),common.lnL()],x=>{const vt=P.ionThermalSpeed(x.Ti,x.mu),nu=P.ionIonCollisionFrequency(x.ni,x.Ti,x.Z,x.mu,x.lnLambda);return[O('Thermal speed','vTi','speed',vt),O('Characteristic collision rate','νii','rate',nu),O('Mean free path','λii','length',vt/nu)];},{scientificReviewStatus:'RESOLVED_SEMANTICS',decisionIds:['SD-02']}),
+    entry('spitzer-transport','Collisions and transport','Classical electron-ion collisional resistive transport','η<sub>coll</sub> = m<sub>e</sub>ν<sub>ei</sub>/(n<sub>e</sub>e²), &nbsp; σ=1/η<sub>coll</sub>, &nbsp; η<sub>m</sub>=η<sub>coll</sub>/μ<sub>0</sub>','\\eta_{coll}=m_e\\nu_{ei}/(n_ee^2),\\quad \\sigma=1/\\eta_{coll},\\quad \\eta_m=\\eta_{coll}/\\mu_0','Classical electron-ion collisional resistive transport derived from Alfvenica’s defined characteristic electron-ion collision rate.',[common.ne(),common.Te(),common.Z(),common.lnL()],x=>{const nu=P.electronIonCollisionFrequency(x.ne,x.Te,x.Z,x.lnLambda),eta=P.spitzerResistivity(x.ne,nu);return[O('Characteristic collision rate','νei','rate',nu),O('Collisional resistivity','ηcoll','resistivity',eta),O('Conductivity','σ','conductivity',1/eta),O('Magnetic diffusivity','ηm','magneticDiffusivity',eta/C.vacuumPermeability)];},{assumptions:['Classical fully ionized plasma; scalar, unmagnetized electron-ion collisional relation.','Source-specific Spitzer or Braginskii parallel and perpendicular transport can contain additional coefficients depending on collision-time convention and plasma assumptions.'],keywords:['spitzer','resistivity','collisional transport'],note:'No 0.51 or generalized-Z transport coefficient is inserted.',scientificReviewStatus:'RESOLVED_SCOPE',decisionIds:['SD-01','SD-02']}),
 
     // MHD and reconnection
     entry('shock-compression','MHD and reconnection','Adiabatic shock compression','r = [(γ+1)M²]/[(γ−1)M²+2]','r=\\frac{(\\gamma+1)M^2}{(\\gamma-1)M^2+2}','Hydrodynamic Rankine-Hugoniot density compression ratio.',[I('M','Upstream Mach number','M','dimensionless',3,{min:0}),I('gamma','Adiabatic index','γ','dimensionless',5/3,{min:1})],x=>[O('Compression ratio','r','dimensionless',P.shockCompressionRatio(x.M,x.gamma)),O('Strong-shock limit','r∞','dimensionless',(x.gamma+1)/(x.gamma-1))],{assumptions:['Plane, steady, adiabatic hydrodynamic shock; not a general oblique MHD shock solver.']}),
@@ -1635,7 +1637,7 @@ button{color:inherit}
     entry('eb-phase-speed','Spacecraft and turbulence','E/B phase-speed diagnostic','v<sub>EB</sub> = |δE<sub>⊥</sub>|/|δB<sub>⊥</sub>|','v_{EB}=|\\delta E_\\perp|/|\\delta B_\\perp|','Electromagnetic fluctuation ratio expressed as a speed.',[I('dE','Perpendicular electric fluctuation','δE⊥','electricField',ef(1),{signed:true}),I('dB','Perpendicular magnetic fluctuation','δB⊥','magneticField',B(1),{signed:true}),I('vA','Reference Alfvén speed','vA','speed',v(100),{min:0})],x=>{const s=P.phaseSpeedFromEoverB(x.dE,x.dB);return[O('E/B speed','vEB','speed',s),O('Normalized ratio','vEB/vA','dimensionless',s/x.vA)];},{assumptions:['Uses fluctuation magnitudes in SI units; interpretation depends on frame and wave polarization.']}),
     entry('current-sheet-crossing','Spacecraft and turbulence','Current-sheet crossing thickness','L ≈ |V<sub>n</sub>|Δt','L\\approx|V_n|\\Delta t','One-dimensional thickness estimate from crossing duration and normal speed.',[I('Vn','Normal crossing speed','Vn','speed',v(100),{signed:true}),I('dt','Crossing duration','Δt','time',1,{min:0})],x=>[O('Estimated thickness','L','length',P.currentSheetThickness(x.Vn,x.dt))],{assumptions:['Planar stationary structure; Vn is the relative normal speed.']}),
     entry('current-density-sheet','Spacecraft and turbulence','Current density from a field jump','J ≈ |ΔB|/(μ<sub>0</sub>L)','J\\approx|\\Delta B|/(\\mu_0L)','Order-of-magnitude current density for a one-dimensional field rotation or reversal.',[I('dB','Magnetic-field jump','ΔB','magneticField',B(10),{signed:true}),I('L','Sheet thickness','L','length',L(100),{min:0})],x=>[O('Current density','J','currentDensity',P.currentDensityFromFieldJump(x.dB,x.L))],{assumptions:['One-dimensional Ampère-law estimate; geometry and displacement current neglected.']}),
-    entry('alfvenicity','Spacecraft and turbulence','Scalar Alfvénicity diagnostics','δb = δB/√(μ<sub>0</sub>ρ), &nbsp; σ<sub>c</sub>=2δvδb/(δv²+δb²)','\\delta b=\\delta B/\\sqrt{\\mu_0\\rho},\\quad \\sigma_c=2\\delta v\\delta b/(\\delta v^2+\\delta b^2)','Scalar Walén, cross-helicity, residual-energy, and Elsasser diagnostics.',[I('dv','Signed velocity fluctuation','δv','speed',v(30),{signed:true}),I('dB','Signed magnetic fluctuation','δB','magneticField',B(3),{signed:true}),common.ni(),common.mu()],x=>{const a=P.alfvenicityDiagnostics(x.dv,x.dB,x.ni,x.mu);return[O('Magnetic fluctuation in velocity units','δb','speed',a.deltaBVelocity),O('Elsasser amplitude','z+','speed',a.zPlus),O('Elsasser amplitude','z−','speed',a.zMinus),O('Normalized cross helicity','σc','dimensionless',a.normalizedCrossHelicity),O('Normalized residual energy','σr','dimensionless',a.normalizedResidualEnergy),O('Alfvén ratio','rA','dimensionless',a.alfvenRatio),O('Walén ratio','RW','dimensionless',a.walenRatio)];},{assumptions:['Scalar aligned fluctuations; a full Walén test requires vectors, frame choice, and regression.']}),
+    entry('alfvenicity','Spacecraft and turbulence','Scalar Alfvénicity diagnostics','δb = δB/√(μ<sub>0</sub>ρ), &nbsp; σ<sub>c</sub>=2δvδb/(δv²+δb²)','\\delta b=\\delta B/\\sqrt{\\mu_0\\rho},\\quad \\sigma_c=2\\delta v\\delta b/(\\delta v^2+\\delta b^2)','Signed one-dimensional scalar Alfvénicity, cross-helicity, residual-energy, Elsasser, and Alfvén-normalized ratio diagnostics.',[I('dv','Signed velocity fluctuation','δv','speed',v(30),{signed:true}),I('dB','Signed magnetic fluctuation','δB','magneticField',B(3),{signed:true}),common.ni(),common.mu()],x=>{const a=P.alfvenicityDiagnostics(x.dv,x.dB,x.ni,x.mu);return[O('Magnetic fluctuation in velocity units','δb','speed',a.deltaBVelocity),O('Elsasser amplitude','z+','speed',a.zPlus),O('Elsasser amplitude','z−','speed',a.zMinus),O('Normalized cross helicity','σc','dimensionless',a.normalizedCrossHelicity),O('Normalized residual energy','σr','dimensionless',a.normalizedResidualEnergy),O('Alfvén ratio','rA','dimensionless',a.alfvenRatio),O('Scalar Alfvén-normalized velocity/magnetic ratio','RW','dimensionless',a.walenRatio)];},{assumptions:['Signed one-dimensional scalar fluctuations only; this calculator does not perform a full vector Walén test.','No de Hoffmann–Teller frame is determined, no vector/component regression is performed, and propagation direction is not inferred automatically.','Pressure-anisotropy corrections are omitted; this diagnostic does not replace spacecraft-specific Walén analysis.'],scientificReviewStatus:'RESOLVED_TERMINOLOGY',decisionIds:['SD-08']}),
 
     // Kinetic Alfvén waves
     entry('kaw-regime','Kinetic Alfvén waves','Kinetic versus inertial Alfvén regime','R = β<sub>e</sub>/(m<sub>e</sub>/m<sub>i</sub>)','R=\\beta_e/(m_e/m_i)','Classifies the electron-pressure versus electron-inertia regime using a deliberately broad transition band.',[common.ne(),common.Te(),common.B(),common.mu()],x=>{const be=P.speciesBeta(x.ne,x.Te,x.B),r=P.kawRegime(be,x.mu);return[O('Electron beta','βe','dimensionless',be),O('Regime ratio','R','dimensionless',r.ratio),T('Classification',r.label)];},{references:[REF.lysakLotko,REF.stasiewicz],assumptions:['Heuristic asymptotic classification: R<0.1 inertial, R>10 kinetic, otherwise transition.']}),
@@ -1694,7 +1696,7 @@ button{color:inherit}
       { ne:'electron-number-density', B:'magnetic-field-magnitude', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio' },
       ['lower-hybrid-frequency','lower-hybrid-angular-frequency','lower-hybrid-to-ion-cyclotron-frequency-ratio'],
       ['lower-hybrid-angular-frequency','ion-cyclotron-angular-frequency','electron-cyclotron-angular-frequency','electron-plasma-angular-frequency'],
-      'REVIEW_PENDING'
+      'REVIEWED_METADATA'
     ),
     'electron-debye-length': M(
       { ne:'electron-number-density', Te:'electron-temperature' },
@@ -1851,13 +1853,13 @@ button{color:inherit}
       { B:'magnetic-field-magnitude', ne:'electron-number-density', Te:'electron-temperature', Z:'ion-charge-state', lnLambda:'electron-ion-coulomb-logarithm' },
       ['electron-ion-collision-frequency','electron-hall-parameter'],
       ['electron-hall-parameter','electron-cyclotron-angular-frequency','electron-ion-collision-frequency'],
-      'REVIEW_PENDING'
+      'REVIEWED_METADATA'
     ),
     'ion-hall-parameter': M(
       { B:'magnetic-field-magnitude', ni:'ion-number-density', Ti:'ion-temperature', Z:'ion-charge-state', mu:'ion-to-proton-mass-ratio', lnLambda:'ion-ion-coulomb-logarithm' },
       ['ion-ion-collision-frequency','ion-hall-parameter'],
       ['ion-hall-parameter','ion-cyclotron-angular-frequency','ion-ion-collision-frequency'],
-      'REVIEW_PENDING'
+      'REVIEWED_METADATA'
     ),
     'knudsen-number': M(
       { mfp:'generic-mean-free-path', Lsys:'system-scale-length' },
@@ -1961,7 +1963,7 @@ button{color:inherit}
       { dv:'signed-velocity-fluctuation', dB:'signed-magnetic-field-fluctuation', ni:'ion-number-density', mu:'ion-to-proton-mass-ratio' },
       ['magnetic-fluctuation-velocity-equivalent','elsasser-plus-amplitude','elsasser-minus-amplitude','normalized-cross-helicity','normalized-residual-energy','alfven-ratio','walen-ratio'],
       ['magnetic-fluctuation-velocity-equivalent','signed-magnetic-field-fluctuation','vacuum-permeability','single-ion-mass-density','normalized-cross-helicity','signed-velocity-fluctuation'],
-      'REVIEW_PENDING'
+      'REVIEWED_METADATA'
     ),
     'kaw-regime': M(
       { ne:'electron-number-density', Te:'electron-temperature', B:'magnetic-field-magnitude', mu:'ion-to-proton-mass-ratio' },
@@ -2558,8 +2560,8 @@ button{color:inherit}
       ['electron-plasma-frequency', 'electron-gyrofrequency', 'electron-magnetization-ratio']
     ),
     'lower-hybrid-frequency': I(
-      'The lower-hybrid frequency couples magnetized electron motion to the slower ion response. It is a natural frequency for cross-field electrostatic dynamics, lower-hybrid drift activity, and several collisionless heating processes.',
-      'Its value usually lies well above Ωci and below electron characteristic frequencies. A spectral feature near fLH is suggestive only when polarization, propagation, gradients, and Doppler shifting are also checked.',
+      'This cold-plasma lower-hybrid approximation couples magnetized electron motion to the slower selected-ion response and retains the finite electron-plasma-frequency correction.',
+      'It assumes a cold, quasineutral, single-ion plasma with magnetized electrons and ions. Ion thermal/kinetic and finite-Larmor-radius corrections are omitted, so it is not a completely general lower-hybrid resonance formula. The calculation is angular-rate based and reports fLH only through ωLH/(2π).',
       ['Estimate the lower-hybrid wave band.', 'Normalize lower-hybrid drift and gradient-driven activity.', 'Compare ion and electron timescales in boundary layers.'],
       ['ion-gyrofrequency', 'electron-gyrofrequency', 'doppler-shift']
     ),
@@ -2748,14 +2750,14 @@ button{color:inherit}
       ['debye-sphere-population', 'coulomb-log-ei', 'species-pressure']
     ),
     'electron-hall-parameter': I(
-      'The electron Hall parameter compares electron gyro motion with electron-ion collisional scattering. It measures whether electrons complete many gyro-orbits before collisions randomize their motion.',
-      'χe much greater than one indicates magnetized electron transport; χe much less than one indicates collision-dominated motion. Transport remains tensorial and geometry dependent even when this ratio is large.',
+      'The electron Hall/magnetization parameter χe=|Ωce|/νei compares the electron cyclotron angular-rate magnitude with the adopted characteristic electron-ion collision rate.',
+      'Both quantities are reciprocal-time rates: Ωce is recorded in rad s⁻¹ and νei in s⁻¹. Radians are dimensionless in SI, so no cyclic-hertz conversion or factor of 2π is applied. Transport remains tensorial and geometry dependent even when this ratio is large.',
       ['Assess anisotropic electron conductivity and transport.', 'Compare gyro and collision timescales.', 'Classify collisional magnetization in laboratory or ionospheric plasma.'],
       ['electron-ion-collision-frequency', 'electron-gyrofrequency', 'spitzer-transport']
     ),
     'ion-hall-parameter': I(
-      'The ion Hall parameter compares ion gyromotion with ion-ion collisions. It indicates whether the selected ion species remains magnetized over a collisional scattering time.',
-      'χi much greater than one supports magnetized ion transport; χi below unity indicates that collisions interrupt gyro motion. Different ion species can occupy different regimes in the same plasma.',
+      'The ion Hall/magnetization parameter χi=|Ωci|/νii compares the selected-ion cyclotron angular-rate magnitude with the adopted characteristic ion-ion collision rate.',
+      'Both quantities are reciprocal-time rates: Ωci is recorded in rad s⁻¹ and νii in s⁻¹. Radians are dimensionless in SI, so no cyclic-hertz conversion or factor of 2π is applied. Different ion species can occupy different magnetization regimes in the same plasma.',
       ['Assess ion magnetization in partially collisional environments.', 'Compare collision and gyro timescales.', 'Support transport and drift ordering.'],
       ['ion-ion-collision-frequency', 'ion-gyrofrequency', 'ion-mean-free-path']
     ),
@@ -2877,9 +2879,9 @@ button{color:inherit}
       ['current-sheet-crossing', 'magnetic-pressure', 'diamagnetic-drift']
     ),
     'alfvenicity': I(
-      'Alfvénicity diagnostics compare velocity and magnetic fluctuations in common velocity units. Cross helicity measures propagation imbalance, residual energy compares kinetic and magnetic fluctuation energy, and Elsasser variables separate counterpropagating Alfvénic components.',
-      'Scalar values are illustrative only. A proper Walén or turbulence analysis uses vector fluctuations, consistent averaging, density treatment, propagation sign, regression, and uncertainty estimates.',
-      ['Characterize Alfvénic solar-wind intervals.', 'Measure imbalance and residual energy in turbulence.', 'Test reconnection exhausts with a Walén relation.'],
+      'These scalar Alfvénicity diagnostics compare signed one-dimensional velocity and magnetic fluctuations in common velocity units. They retain z+, z−, normalized cross helicity, normalized residual energy, the Alfvén ratio, and delta_v/delta_b.',
+      'This is not a complete vector Walén test: it does not determine a de Hoffmann–Teller frame, perform vector/component regression, infer propagation direction, or apply pressure-anisotropy corrections. It does not replace spacecraft-specific Walén analysis.',
+      ['Characterize scalar Alfvénic fluctuation intervals.', 'Measure one-dimensional imbalance and residual-energy diagnostics.', 'Screen intervals for later vector, frame-aware analysis.'],
       ['alfven-speed', 'eb-phase-speed', 'total-beta']
     ),
 
@@ -3383,10 +3385,7 @@ button{color:inherit}
     const symbol = Symbols.get(result.semanticId);
     if (!symbol) throw new Error(`Numeric output ${index} has unknown semantic symbol ID ${result.semanticId}`);
     const canonical = canonicalUnit(result.quantity);
-    const internalUnit = result.unitSemantics === 'rate' ? symbol.productionUnit : canonical.unit;
-    const displayDefinition = result.displayUnit
-      ? { factor: 1, unit: result.displayUnit }
-      : Units.outputDefinition(unitSystemId, result.quantity, result.value);
+    const displayDefinition = Units.outputDefinition(unitSystemId, result.quantity, result.value);
     const internalNumber = jsonNumber(result.value);
     const displayNumber = jsonNumber(result.value * displayDefinition.factor);
     return {
@@ -3398,7 +3397,7 @@ button{color:inherit}
       physicalName: symbol.canonicalName,
       localLabel: result.label,
       quantity: result.quantity,
-      internal: { ...internalNumber, unit: internalUnit, meaning: result.unitSemantics === 'rate' ? 'characteristic rate' : canonical.meaning },
+      internal: { ...internalNumber, unit: canonical.unit, meaning: canonical.meaning },
       display: { ...displayNumber, unit: displayDefinition.unit },
       canonicalSiUnit: symbol.canonicalSiUnit,
     };

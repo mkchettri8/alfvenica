@@ -110,9 +110,11 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Source basis:** Human review of the existing NRL-style convention and the
   dimensional semantics of a rate.
 - **Numerical consequence:** None; no factor of `2 pi` was introduced or
-  removed. SD-09 Hall-parameter science remains open.
+  removed. SD-09 Hall-parameter semantics were deferred at this stage and were
+  resolved without numerical change in Scientific Resolution Pass 2.
 - **Validation/domain consequence:** Rate-unit, unchanged-value, and no-`2 pi`
-  tests added; the global frequency/display architecture is otherwise unchanged.
+  tests were added; Pass 2 subsequently separated the dedicated factor-one
+  rate family from cyclic and angular frequency display families.
 
 ## SD-03 — Coulomb-logarithm convention
 
@@ -303,7 +305,8 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 
 ## SD-07 — Lower-hybrid approximation
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SCOPE`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `lower-hybrid-frequency`
 - **Production functions:** `lowerHybridAngular`, `ionGyroAngular`,
   `electronGyroAngular`, `electronPlasmaAngular`
@@ -329,9 +332,28 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `IMPORTANT_BUT_DEFERRABLE`
 - **Recommended action:** `VERIFY_SOURCE`
 
-## SD-08 — Scalar Walen anisotropy/sign convention
+### Resolution record
 
-- **Status:** `OPEN`
+- **Chosen action:** `DOCUMENT_SCOPE`.
+- **Final equation/terminology:** “Cold-plasma lower-hybrid approximation,”
+  with the retained angular-rate relation
+  `omega_LH^2=Omega_ci Omega_ce/[1+(Omega_ce/omega_pe)^2]` and cyclic output
+  defined explicitly by `f_LH=omega_LH/(2 pi)`.
+- **Source basis:** The project’s NRL Plasma Formulary cold-plasma lineage and
+  the source-controlled publication decision retain this finite-electron-
+  plasma-frequency correction without claiming a general resonance formula.
+- **Adopted scope:** Cold, quasineutral, single-ion plasma with magnetized
+  electrons and ions. Ion thermal/kinetic and finite-Larmor-radius corrections
+  are omitted. No
+  numerical applicability cutoff is asserted.
+- **Numerical consequence:** `NONE`.
+- **Remaining limitations:** Warm/kinetic, multi-ion, and finite-Larmor-radius
+  lower-hybrid treatments remain outside this calculator.
+
+## SD-08 — Scalar Walén anisotropy/sign convention
+
+- **Status:** `RESOLVED_TERMINOLOGY`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula ID:** `alfvenicity`
 - **Production functions:** `alfvenEquivalentVelocity`,
   `alfvenicityDiagnostics`
@@ -358,9 +380,29 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
 - **Priority:** `IMPORTANT_BUT_DEFERRABLE`
 - **Recommended action:** `CLARIFY_TERMINOLOGY`
 
+### Resolution record
+
+- **Chosen action:** `CLARIFY_TERMINOLOGY` and `DOCUMENT_SCOPE`.
+- **Final definition/terminology:** “Scalar Alfvénicity diagnostics.” The
+  retained signed one-dimensional definitions are
+  `delta_b=delta_B/sqrt(mu_0 rho)`, `z+=delta_v+delta_b`,
+  `z-=delta_v-delta_b`, the existing normalized cross helicity and residual
+  energy, `r_A`, and `delta_v/delta_b`. The last output is named the “Scalar
+  Alfvén-normalized velocity/magnetic ratio,” not an unqualified Walén ratio.
+- **Source basis:** The project’s NRL Plasma Formulary lineage and the
+  source-controlled publication decision support retaining these scalar
+  diagnostics while withholding a claim of a formal vector Walén test.
+- **Adopted scope:** No de Hoffmann–Teller frame, vector/component regression,
+  automatic propagation-direction inference, or pressure-anisotropy
+  correction is performed.
+- **Numerical consequence:** `NONE`.
+- **Remaining limitations:** Spacecraft-specific vector, frame, regression,
+  anisotropy, and uncertainty analysis remains outside this calculator.
+
 ## SD-09 — Hall collision/gyro convention
 
-- **Status:** `OPEN`
+- **Status:** `RESOLVED_SOURCE_SEMANTICS`
+- **Resolution date:** `2026-08-22`
 - **Calculator/formula IDs:** `electron-hall-parameter`, `ion-hall-parameter`
 - **Production functions:** `electronGyroAngular`, `ionGyroAngular`,
   `electronIonCollisionFrequency`, `ionIonCollisionFrequency`; division occurs
@@ -388,6 +430,25 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
   exact electron-ion and ion-ion collision-time conventions
 - **Priority:** `IMPORTANT_BUT_DEFERRABLE`
 - **Recommended action:** `VERIFY_SOURCE`
+
+### Resolution record
+
+- **Chosen action:** `CLARIFY_TERMINOLOGY` and `DOCUMENT_SCOPE`.
+- **Final definition/terminology:** Electron and ion “Hall/magnetization
+  parameter,” with the retained definitions `chi_e=|Omega_ce|/nu_ei` and
+  `chi_i=|Omega_ci|/nu_ii`.
+- **Source basis:** The project’s NRL Plasma Formulary collision-time/gyro-rate
+  lineage and the source-controlled decision identify `Omega_c` as an angular-
+  rate magnitude in `rad s^-1` and `nu` as a characteristic collision rate in
+  `s^-1`. Radians are dimensionless in SI, so each reciprocal-time ratio is
+  dimensionless.
+- **Unit-semantic consequence:** A dedicated factor-one `rate` family now
+  distinguishes collision rates in `s^-1` from cyclic frequency in `Hz` and
+  angular frequency in `rad s^-1`; it performs no automatic Hz-prefix scaling.
+- **Numerical consequence:** `NONE`; no factor of `2 pi` was introduced or
+  removed and no collision coefficient changed.
+- **Remaining limitations:** These classical characteristic-rate ratios are
+  not anomalous-transport models or complete tensor transport calculations.
 
 ## SD-10 — rho_s-only finite-beta KAW parallel-field model
 
@@ -446,9 +507,14 @@ and `DOCUMENTATION_ONLY`. Allowed recommended actions are `VERIFY_SOURCE`,
   SD-01 through SD-04 are terminology/model-scope resolutions; SD-05 and SD-06
   are source-verified fit/domain resolutions; SD-10 is the one approved
   numerical formula correction.
-- `IMPORTANT_BUT_DEFERRABLE` and still `OPEN`: SD-07 through SD-09.
-- `DOCUMENTATION_ONLY`: no open item currently.
+- **Resolved in Scientific Resolution Pass 2:** SD-07 by cold-plasma model
+  scope, SD-08 by scalar Alfvénicity terminology, and SD-09 by Hall/rate unit
+  semantics. All have numerical consequence `NONE`.
+- **Open decisions:** none. Every SD-01 through SD-10 item has an explicit
+  publication decision; this does not assert universal applicability for every
+  Alfvenica model.
 
-Historical questions above are retained as the audit trail. This pass changes
-only the SD-10 production formula and its one frozen default output; it adds
-source-backed Hellinger warnings without altering their valid fit results.
+Historical quarantine questions above are retained as the audit trail.
+Scientific Resolution Pass 1 changed only the SD-10 production formula and its
+one frozen default output. Scientific Resolution Pass 2 changes no numerical
+formula or frozen value.

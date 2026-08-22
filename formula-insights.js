@@ -52,8 +52,8 @@
       ['electron-plasma-frequency', 'electron-gyrofrequency', 'electron-magnetization-ratio']
     ),
     'lower-hybrid-frequency': I(
-      'The lower-hybrid frequency couples magnetized electron motion to the slower ion response. It is a natural frequency for cross-field electrostatic dynamics, lower-hybrid drift activity, and several collisionless heating processes.',
-      'Its value usually lies well above Ωci and below electron characteristic frequencies. A spectral feature near fLH is suggestive only when polarization, propagation, gradients, and Doppler shifting are also checked.',
+      'This cold-plasma lower-hybrid approximation couples magnetized electron motion to the slower selected-ion response and retains the finite electron-plasma-frequency correction.',
+      'It assumes a cold, quasineutral, single-ion plasma with magnetized electrons and ions. Ion thermal/kinetic and finite-Larmor-radius corrections are omitted, so it is not a completely general lower-hybrid resonance formula. The calculation is angular-rate based and reports fLH only through ωLH/(2π).',
       ['Estimate the lower-hybrid wave band.', 'Normalize lower-hybrid drift and gradient-driven activity.', 'Compare ion and electron timescales in boundary layers.'],
       ['ion-gyrofrequency', 'electron-gyrofrequency', 'doppler-shift']
     ),
@@ -242,14 +242,14 @@
       ['debye-sphere-population', 'coulomb-log-ei', 'species-pressure']
     ),
     'electron-hall-parameter': I(
-      'The electron Hall parameter compares electron gyro motion with electron-ion collisional scattering. It measures whether electrons complete many gyro-orbits before collisions randomize their motion.',
-      'χe much greater than one indicates magnetized electron transport; χe much less than one indicates collision-dominated motion. Transport remains tensorial and geometry dependent even when this ratio is large.',
+      'The electron Hall/magnetization parameter χe=|Ωce|/νei compares the electron cyclotron angular-rate magnitude with the adopted characteristic electron-ion collision rate.',
+      'Both quantities are reciprocal-time rates: Ωce is recorded in rad s⁻¹ and νei in s⁻¹. Radians are dimensionless in SI, so no cyclic-hertz conversion or factor of 2π is applied. Transport remains tensorial and geometry dependent even when this ratio is large.',
       ['Assess anisotropic electron conductivity and transport.', 'Compare gyro and collision timescales.', 'Classify collisional magnetization in laboratory or ionospheric plasma.'],
       ['electron-ion-collision-frequency', 'electron-gyrofrequency', 'spitzer-transport']
     ),
     'ion-hall-parameter': I(
-      'The ion Hall parameter compares ion gyromotion with ion-ion collisions. It indicates whether the selected ion species remains magnetized over a collisional scattering time.',
-      'χi much greater than one supports magnetized ion transport; χi below unity indicates that collisions interrupt gyro motion. Different ion species can occupy different regimes in the same plasma.',
+      'The ion Hall/magnetization parameter χi=|Ωci|/νii compares the selected-ion cyclotron angular-rate magnitude with the adopted characteristic ion-ion collision rate.',
+      'Both quantities are reciprocal-time rates: Ωci is recorded in rad s⁻¹ and νii in s⁻¹. Radians are dimensionless in SI, so no cyclic-hertz conversion or factor of 2π is applied. Different ion species can occupy different magnetization regimes in the same plasma.',
       ['Assess ion magnetization in partially collisional environments.', 'Compare collision and gyro timescales.', 'Support transport and drift ordering.'],
       ['ion-ion-collision-frequency', 'ion-gyrofrequency', 'ion-mean-free-path']
     ),
@@ -371,9 +371,9 @@
       ['current-sheet-crossing', 'magnetic-pressure', 'diamagnetic-drift']
     ),
     'alfvenicity': I(
-      'Alfvénicity diagnostics compare velocity and magnetic fluctuations in common velocity units. Cross helicity measures propagation imbalance, residual energy compares kinetic and magnetic fluctuation energy, and Elsasser variables separate counterpropagating Alfvénic components.',
-      'Scalar values are illustrative only. A proper Walén or turbulence analysis uses vector fluctuations, consistent averaging, density treatment, propagation sign, regression, and uncertainty estimates.',
-      ['Characterize Alfvénic solar-wind intervals.', 'Measure imbalance and residual energy in turbulence.', 'Test reconnection exhausts with a Walén relation.'],
+      'These scalar Alfvénicity diagnostics compare signed one-dimensional velocity and magnetic fluctuations in common velocity units. They retain z+, z−, normalized cross helicity, normalized residual energy, the Alfvén ratio, and delta_v/delta_b.',
+      'This is not a complete vector Walén test: it does not determine a de Hoffmann–Teller frame, perform vector/component regression, infer propagation direction, or apply pressure-anisotropy corrections. It does not replace spacecraft-specific Walén analysis.',
+      ['Characterize scalar Alfvénic fluctuation intervals.', 'Measure one-dimensional imbalance and residual-energy diagnostics.', 'Screen intervals for later vector, frame-aware analysis.'],
       ['alfven-speed', 'eb-phase-speed', 'total-beta']
     ),
 

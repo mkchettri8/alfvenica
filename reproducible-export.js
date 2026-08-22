@@ -198,10 +198,7 @@
     const symbol = Symbols.get(result.semanticId);
     if (!symbol) throw new Error(`Numeric output ${index} has unknown semantic symbol ID ${result.semanticId}`);
     const canonical = canonicalUnit(result.quantity);
-    const internalUnit = result.unitSemantics === 'rate' ? symbol.productionUnit : canonical.unit;
-    const displayDefinition = result.displayUnit
-      ? { factor: 1, unit: result.displayUnit }
-      : Units.outputDefinition(unitSystemId, result.quantity, result.value);
+    const displayDefinition = Units.outputDefinition(unitSystemId, result.quantity, result.value);
     const internalNumber = jsonNumber(result.value);
     const displayNumber = jsonNumber(result.value * displayDefinition.factor);
     return {
@@ -213,7 +210,7 @@
       physicalName: symbol.canonicalName,
       localLabel: result.label,
       quantity: result.quantity,
-      internal: { ...internalNumber, unit: internalUnit, meaning: result.unitSemantics === 'rate' ? 'characteristic rate' : canonical.meaning },
+      internal: { ...internalNumber, unit: canonical.unit, meaning: canonical.meaning },
       display: { ...displayNumber, unit: displayDefinition.unit },
       canonicalSiUnit: symbol.canonicalSiUnit,
     };

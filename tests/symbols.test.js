@@ -138,7 +138,7 @@ assert.equal(inputUses, 240, 'Calculator input-use inventory changed');
 assert.equal(numericOutputUses, 165, 'Calculator output-use inventory changed');
 assert.equal(inputUses + numericOutputUses, 405, 'Not all 405 calculator symbol uses were migrated');
 assert.equal(textOutputs, 10, 'Categorical-output inventory changed');
-assert.equal(pendingFormulaIds.length, 16, 'Review-pending formula inventory changed');
+assert.equal(pendingFormulaIds.length, 12, 'Review-pending formula inventory changed');
 assert.throws(() => Symbols.formulaSymbols({ id:'unknown-ui-formula', symbolUses:[{ semanticId:'not-a-real-symbol' }] }), /unknown semantic symbol ID/, 'Unknown UI semantic IDs must fail closed');
 
 for (const [key, semanticId] of Object.entries(Plots.stateSemanticIds)) {
@@ -222,7 +222,7 @@ for (const formula of Formulas.formulas) {
 assert.equal(compared, 165, 'Not all numerical outputs were compared');
 
 for (const id of [
-  'lower-hybrid-angular-frequency','electron-hall-parameter','walen-ratio','kaw-regime-ratio',
+  'kaw-regime-ratio',
   'hellinger-mirror-threshold-anisotropy','hellinger-oblique-firehose-threshold-anisotropy',
 ]) assert.equal(Symbols.get(id).reviewStatus, 'QUARANTINED_SCIENCE', id + ': quarantined science was promoted');
 

@@ -78,14 +78,17 @@ and the public
 
 The public name and relation for μ are registry-owned as the ion-to-proton mass ratio. The existing plot-export field `ion_mass_number` remains a legacy compatibility key in this development batch; it is associated internally with the canonical semantic ID and is not the public scientific term.
 
-The unit layer enumerates all 19 current conversion families across Space, SI
+The unit layer enumerates all 20 current conversion families across Space, SI
 display, and CGS-oriented display modes. The latter is explicitly a mixed
 convenience mode, not a complete Gaussian/esu/emu implementation: electrical
 resistivity and conductivity remain in SI, temperatures remain energy-equivalent
-eV, and angular frequencies remain in rad/s. Exact SI-prefix conversions and the
-independent eV/K anchor are exercised separately from round trips. Scientific
-Resolution Pass 1 deliberately changes one SD-10 default output; the other
-164/165 frozen numerical outputs remain identical to the preceding artifact.
+eV, and angular frequencies remain in rad/s. Characteristic collision rates use
+their own factor-one `rate` family in `s^-1`; they are neither cyclic frequencies
+in Hz nor angular frequencies in rad/s and receive no adaptive Hz-prefix scaling.
+Exact SI-prefix conversions and the independent eV/K anchor are exercised
+separately from round trips. Scientific Resolution Pass 2 changes no numerical
+formula: all 165 current frozen numerical outputs remain unchanged from commit
+`03e30f8`.
 
 Runtime domain records currently warn without changing results when a computed
 Coulomb logarithm is non-positive or when the classical Alfvén speed reaches or
@@ -105,7 +108,13 @@ Alfven equation is unchanged and retains the qualitative low-frequency
 ordering. SD-10 is the sole numerical correction: the reduced low-FLR KAW
 polarization estimate is now `|E_parallel/E_perp|=|k_parallel k_perp|rho_s^2`;
 it is not claimed as a full kinetic or all-scale relation. SD-07, SD-08, and
-SD-09 remain open in [`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md).
+SD-09 are now resolved without numerical change: the lower-hybrid calculator is
+scoped as a cold-plasma approximation, the Alfvénicity calculator is explicitly
+one-dimensional and not a formal vector Walén test, and Hall/magnetization
+parameters retain `chi=|Omega_c|/nu` with no factor of `2 pi`. All SD-01 through
+SD-10 decisions now have explicit publication resolutions in
+[`SCIENTIFIC_DECISION_LOG.md`](SCIENTIFIC_DECISION_LOG.md); this closure does not
+assert universal model validity.
 
 ## Reproducible calculation records
 

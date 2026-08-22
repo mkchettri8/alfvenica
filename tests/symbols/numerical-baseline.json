@@ -30,6 +30,19 @@
       "ion-mean-free-path:1",
       "spitzer-transport:0",
       "spitzer-transport:1"
+    ],
+    "resolutionPass2SemanticOnlyChanges": [
+      "lower-hybrid-frequency:0 label",
+      "alfvenicity:6 label",
+      "electron-hall-parameter:1 label",
+      "ion-hall-parameter:1 label",
+      "electron-hall-parameter:0 quantity frequency->rate",
+      "ion-hall-parameter:0 quantity frequency->rate",
+      "electron-ion-collision-frequency:0 quantity frequency->rate",
+      "ion-ion-collision-frequency:0 quantity frequency->rate",
+      "electron-mean-free-path:1 quantity frequency->rate",
+      "ion-mean-free-path:1 quantity frequency->rate",
+      "spitzer-transport:0 quantity frequency->rate"
     ]
   },
   "calculators": [
@@ -187,7 +200,7 @@
       "numericOutputs": [
         {
           "outputIndex": 0,
-          "label": "Frequency",
+          "label": "Cyclic frequency",
           "symbol": "fLH",
           "quantity": "frequency",
           "value": 3.2662286647225827
@@ -906,12 +919,12 @@
           "outputIndex": 0,
           "label": "Characteristic electron-ion collision rate",
           "symbol": "νei",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 0.000006991511873534959
         },
         {
           "outputIndex": 1,
-          "label": "Electron Hall parameter",
+          "label": "Electron Hall/magnetization parameter",
           "symbol": "χe",
           "quantity": "dimensionless",
           "value": 125782523.16467325
@@ -933,12 +946,12 @@
           "outputIndex": 0,
           "label": "Characteristic ion-ion collision rate",
           "symbol": "νii",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 1.516608815730738e-7
         },
         {
           "outputIndex": 1,
-          "label": "Ion Hall parameter",
+          "label": "Ion Hall/magnetization parameter",
           "symbol": "χi",
           "quantity": "dimensionless",
           "value": 3157977.536345019
@@ -1011,7 +1024,7 @@
           "outputIndex": 0,
           "label": "Characteristic collision rate",
           "symbol": "νei",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 0.000006991511873534959
         },
         {
@@ -1037,7 +1050,7 @@
           "outputIndex": 0,
           "label": "Characteristic collision rate",
           "symbol": "νii",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 1.516608815730738e-7
         },
         {
@@ -1069,7 +1082,7 @@
           "outputIndex": 1,
           "label": "Characteristic collision rate",
           "symbol": "νei",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 0.000006991511873534959
         },
         {
@@ -1102,7 +1115,7 @@
           "outputIndex": 1,
           "label": "Characteristic collision rate",
           "symbol": "νii",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 1.516608815730738e-7
         },
         {
@@ -1127,7 +1140,7 @@
           "outputIndex": 0,
           "label": "Characteristic collision rate",
           "symbol": "νei",
-          "quantity": "frequency",
+          "quantity": "rate",
           "value": 0.000006991511873534959
         },
         {
@@ -1514,7 +1527,7 @@
         },
         {
           "outputIndex": 6,
-          "label": "Walén ratio",
+          "label": "Scalar Alfvén-normalized velocity/magnetic ratio",
           "symbol": "RW",
           "quantity": "dimensionless",
           "value": 1.0251533303954035
