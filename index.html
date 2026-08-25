@@ -345,7 +345,7 @@
         <header class="page-header">
           <p class="eyebrow">Semantic evidence taxonomy</p>
           <h1 id="validationHeading">Classified validation evidence</h1>
-          <p>Every in-browser record has one explicit semantic class. Independent benchmarks, identities, unit checks, scientific properties, domain guardrails, regressions, and provenance controls are distinguished rather than treated as equivalent evidence.</p>
+          <p>Every in-browser record has one explicit semantic class. Source-anchored comparators, identities, unit checks, scientific properties, domain guardrails, regressions, and provenance controls are distinguished rather than treated as equivalent evidence.</p>
         </header>
         <div class="release-status" role="group" aria-label="Release provenance">
           <span><strong>Version</strong> 1.1.0</span>
@@ -420,11 +420,11 @@
           </section>
           <section>
             <h2>Design, units, and privacy</h2>
-            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
+            <p>Calculations and plots run locally through one registered calculation core with explicit unit conventions; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
           </section>
           <section>
             <h2>Scientific basis and validation evidence</h2>
-            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. The current in-browser evidence includes six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor; identities and regression or implementation checks remain separately classified. Development-only scaling checks and the P_PROVENANCE core hash are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
+            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. The current in-browser evidence includes six source-anchored A_REFERENCE coefficient comparators and one C_UNIT conversion anchor; identities and regression or implementation checks remain separately classified. Development-only scaling checks and the P_PROVENANCE core hash are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
           </section>
           <section>
             <h2>Scope and limitations</h2>
@@ -432,7 +432,7 @@
           </section>
           <section>
             <h2>AI-assisted development</h2>
-            <p>ChatGPT, Claude, Gemini, DeepSeek, and Kimi assisted parts of coding, documentation, testing, and critical review. Their outputs were not accepted as scientific authority: formulas, assumptions, units, and numerical behaviour were reviewed using the applicable sources, analytical limits, and classified automated evidence available for each item. Not every calculator has an independent external benchmark. Final responsibility for the scientific content and implementation remains with the author.</p>
+            <p>ChatGPT and Anthropic Claude assisted with software development, documentation, testing, and technical consistency checks. All AI-assisted outputs incorporated into Alfvenica were reviewed and verified by the author against the source code, scientific references, and numerical tests, as applicable.</p>
           </section>
           <section>
             <h2>Collaboration and feedback</h2>
