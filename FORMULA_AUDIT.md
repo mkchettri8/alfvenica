@@ -283,6 +283,36 @@ The export/provenance suite is classified as `P_PROVENANCE` and
 warning capture, and exact numerical invariance across all calculators, without
 promoting those checks to independent scientific evidence.
 
+### Pass 4 Wind pathway evidence (development branch)
+
+The four-formula Wind interval chain adds **Node-only** checks in
+[`tests/interval-analysis.test.js`](tests/interval-analysis.test.js) and the
+separate [`tests/reference/wind-pass4-independent.js`](tests/reference/wind-pass4-independent.js).
+The reference helper imports neither the production physics nor the formula
+registry. It uses the accepted manifest's measured representative source row,
+separately declared CODATA 2022 constants, and algebraically independent SI
+expressions for proton trace beta, proton inertial length, perpendicular
+sigma-speed gyroradius, and proton-only Alfvén speed. These comparisons are
+`B_IDENTITY` analytical/numerical equation checks at a real source input state;
+there is **no published exact numerical result for that Wind row**. They do not
+add an `A_REFERENCE` record or change the six existing in-browser A_REFERENCE
+anchors. The proton inertial-length coefficient retains its previously audited
+NRL/CODATA `A_REFERENCE` check separately.
+
+The accepted Wind `W=sqrt(2kT/m_p)` to energy-equivalent eV conversions and the
+GSE component-vector magnitude are checked with explicit input/output units and
+source meaning. These boundary assertions are unit/dimensional checks, not a new
+independently anchored `C_UNIT` record. Wrong frame or time support, zero field,
+non-positive density, missing or substituted perpendicular speed, unavailable
+electron pressure, and an active invalid Alfvén guardrail exercise workflow
+domain/refusal behaviour; these are not new in-browser `E_DOMAIN` records.
+Direct interval-output comparisons against the shared `research-runner.js`
+route and the accepted Pass 1 representative core evaluation are
+`F_REGRESSION`; source-file SHA-256 verification is `P_PROVENANCE`. No
+measurement-uncertainty, total-beta, composition-corrected Alfvén-speed, or
+general physical-applicability validation is claimed. These development tests
+do not change the classification or count of the 43 in-browser records.
+
 ## Interpretation coverage
 
 Every selectable calculator has a separate scientific interpretation record containing:
