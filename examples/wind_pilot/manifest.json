@@ -1,0 +1,99 @@
+{
+  "status": "PASS_1_SCIENTIFIC_SPECIFICATION_FOR_REVIEW",
+  "access_date_utc": "2026-09-27",
+  "repository_start": {
+    "path": "~/alfvenica-release-2",
+    "branch": "release-2-development",
+    "commit": "4591581b9a0c203d931fae5c6814ba3bbc1986d9",
+    "release_baseline_tag": "v1.1.0",
+    "release_baseline_doi": "10.5281/zenodo.22061119"
+  },
+  "primary": {
+    "selection": "SWE Epoch at spectrum start in [2020-01-01T16:00:00Z, 2020-01-01T18:00:00Z)",
+    "first_selected_epoch_utc": "2020-01-01T16:00:34.499Z",
+    "last_selected_epoch_utc": "2020-01-01T17:59:30.747Z",
+    "last_nominal_spectrum_end_utc": "2020-01-01T18:01:02.747Z",
+    "swe_selected": 73,
+    "swe_fit_flag_10": 73,
+    "swe_required_fields_complete_and_positive": 73,
+    "mfi_1min_valid_vectors_in_clock_window": 120,
+    "mfi_3sec_valid_vectors_in_clock_window": 2400
+  },
+  "contrasting_candidate": {
+    "selection": "SWE Epoch at spectrum start in [2020-07-01T18:00:00Z, 2020-07-01T20:00:00Z)",
+    "swe_selected": 72,
+    "fit_flag_counts": { "10": 57, "9": 2, "3": 3, "2": 10 },
+    "swe_fit_flag_10_required_fields_complete_and_positive": 57,
+    "mfi_1min_valid_vectors_in_clock_window": 120,
+    "mfi_3sec_valid_vectors_in_clock_window": 2400
+  },
+  "source_files": [
+    {
+      "role": "primary_required_plasma_and_co_reported_field",
+      "product_id": "WI_H1_SWE",
+      "dataset_doi": "10.48322/nasd-j276",
+      "filename": "wi_h1_swe_20200101_v01.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/swe/swe_h1/2020/wi_h1_swe_20200101_v01.cdf",
+      "cdf_data_version": "01",
+      "byte_size": 642922,
+      "sha256": "77a26a8a939fb2cc280c8ac1f9e1cb7f10da40e279ed61842878f7fc4a9a0aa3"
+    },
+    {
+      "role": "primary_optional_independent_magnetic_field",
+      "product_id": "WI_H0_MFI",
+      "dataset_doi": "10.48322/av38-wn55",
+      "filename": "wi_h0_mfi_20200101_v05.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/mfi/mfi_h0/2020/wi_h0_mfi_20200101_v05.cdf",
+      "cdf_data_version": "05",
+      "cdf_software_version": "V05.00",
+      "byte_size": 2618130,
+      "sha256": "ccabedb8b4b19ade6c38eb5b6a8f8daee5ef78e32219fa33b5b6f0c6696f3375"
+    },
+    {
+      "role": "contrasting_candidate_plasma_and_co_reported_field",
+      "product_id": "WI_H1_SWE",
+      "dataset_doi": "10.48322/nasd-j276",
+      "filename": "wi_h1_swe_20200701_v01.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/swe/swe_h1/2020/wi_h1_swe_20200701_v01.cdf",
+      "cdf_data_version": "01",
+      "byte_size": 642922,
+      "sha256": "0416dac771794c62a7c987ac79c8d777b41fd99bd6ae91f45c23f77a4755000d"
+    },
+    {
+      "role": "contrasting_candidate_optional_independent_magnetic_field",
+      "product_id": "WI_H0_MFI",
+      "dataset_doi": "10.48322/av38-wn55",
+      "filename": "wi_h0_mfi_20200701_v05.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/mfi/mfi_h0/2020/wi_h0_mfi_20200701_v05.cdf",
+      "cdf_data_version": "05",
+      "cdf_software_version": "V05.00",
+      "byte_size": 2618130,
+      "sha256": "b0260f6fd93b5d7398975f6451541c5b3a149c5ea8d2b1d2096a566803cd1d46"
+    }
+  ],
+  "representative_source_row": {
+    "source_file": "wi_h1_swe_20200101_v01.cdf",
+    "cdf_record_index_zero_based": 565,
+    "Epoch_utc": "2020-01-01T16:00:34.499Z",
+    "fit_flag": 10,
+    "Proton_Np_nonlin_cm-3": 9.017107963562012,
+    "Proton_W_nonlin_km-s-1": 20.94145965576172,
+    "Proton_Wperp_nonlin_km-s-1": 19.35150718688965,
+    "Proton_Wpar_nonlin_km-s-1": 23.804887771606445,
+    "BX_nT": 3.336029291152954,
+    "BY_nT": -2.6335034370422363,
+    "BZ_nT": 0.33161216974258423,
+    "Proton_V_nonlin_km-s-1": 325.3563232421875,
+    "Alpha_Na_nonlin_cm-3": 0.07853515446186066
+  },
+  "representative_existing_core_evaluation_not_independent_validation": {
+    "density_m-3": 9017107.963562012,
+    "field_magnitude_T": 4.263144193604662e-9,
+    "proton_trace_temperature_eV": 2.2891344173498283,
+    "proton_perpendicular_temperature_eV": 1.9547309406776,
+    "proton_trace_beta": 0.4573290338083086,
+    "proton_inertial_length_m": 75831.54985640521,
+    "proton_perpendicular_sigma_gyroradius_m": 33508.66821622374,
+    "proton_only_alfven_speed_m-s-1": 30966.531429068775
+  }
+}

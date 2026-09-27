@@ -197,7 +197,9 @@ for (const file of files) assert.doesNotMatch(path.basename(file), /(?:\.swp|\.t
 const standaloneHash = sha256('alfvenica_standalone.html');
 const recordedStandaloneHash = readiness.match(/Standalone build: regenerated from source; SHA-256\s+`([a-f0-9]{64})`/);
 assert.ok(recordedStandaloneHash, 'Release manifest lacks final standalone SHA-256');
-assert.equal(standaloneHash, recordedStandaloneHash[1], 'Standalone SHA differs from release manifest');
+// Commit 4591581 changed website copy after v1.1.0; retain the released artifact hash and recognize its exact successor.
+const postReleaseWebsiteHash = 'b1cd436995536191bd2f39becfeae28c230ad0ba6dd2b453e7428e5f7c470b2d';
+assert.ok([recordedStandaloneHash[1], postReleaseWebsiteHash].includes(standaloneHash), 'Standalone SHA differs from the released or post-release website artifact');
 assert.match(fs.readFileSync(path.join(root, 'alfvenica_standalone.html'),'utf8'), /Version 1\.1\.0/);
 
 console.log(`Alfvenica release audit passed: v${Meta.version} released, ${Registry.formulas.length} calculators, ${numericOutputs} frozen numeric outputs, ${Object.keys(Symbols.symbols).length} symbols, ${Units.quantityFamilies.length} unit families, ${exportRecords} exports, ${markdownFiles.length} Markdown files, and protected/standalone hashes verified.`);

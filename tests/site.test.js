@@ -79,7 +79,7 @@ assert.match(html, /JSON record includes canonical inputs and outputs, formula p
 assert.match(html, /data-plot-mass-ratio-label/, 'Plot mass-ratio name is not registry-driven');
 assert.match(html, /data-plot-mass-ratio-relation/, 'Plot mass-ratio relation is not registry-driven');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
-assert.match(html, /six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor/, 'Independent in-browser evidence inventory is not disclosed');
+assert.match(html, /six source-anchored A_REFERENCE coefficient comparators and one C_UNIT conversion anchor/, 'Independent in-browser evidence inventory is not disclosed');
 assert.match(html, /P_PROVENANCE identifies artifacts but is not correctness evidence/, 'Provenance limitation is not disclosed');
 assert.match(html, /<strong>Version<\/strong> 1\.1\.0/, 'v1.1.0 version is missing');
 assert.match(html, /<strong>Released<\/strong> 22 August 2026/, 'Release date is missing');
@@ -161,8 +161,8 @@ assert.equal((footerMatch[1].match(/<span>/g) || []).length, 1, 'Global footer c
 assert.doesNotMatch(html, /Author and independence/, 'Old authorship heading remains');
 assert.doesNotMatch(html, /final-year PhD candidate/, 'Old PhD-candidate biography remains');
 assert.doesNotMatch(html, /Sikkim University/, 'Old institutional affiliation remains in the authorship presentation');
-for (const model of ['ChatGPT','Claude','Gemini','DeepSeek','Kimi']) assert.ok(html.includes(model), `${model} AI disclosure missing`);
-assert.match(html, /Final responsibility for the scientific content and implementation remains with the author/, 'AI responsibility statement missing');
+assert.match(html, /ChatGPT and Anthropic Claude assisted with software development, documentation, testing, and technical consistency checks\./, 'Current AI disclosure is missing');
+assert.match(html, /All AI-assisted outputs incorporated into Alfvenica were reviewed and verified by the author against the source code, scientific references, and numerical tests, as applicable\./, 'AI author-review statement is missing');
 assert.ok(html.includes(Meta.formulaAuditUrl), 'Formula-audit link missing');
 assert.ok(html.includes(Meta.ciUrl), 'CI link missing');
 assert.ok(html.includes('scientific_correction.yml'), 'Scientific issue route missing');
