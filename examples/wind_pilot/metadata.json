@@ -1,0 +1,110 @@
+{
+  "schema": { "name": "org.alfvenica.interval-input", "version": "1.0.0" },
+  "source": {
+    "mission": "Wind",
+    "productId": "WI_H1_SWE",
+    "datasetDoi": "10.48322/nasd-j276",
+    "fileName": "sample.csv",
+    "productVersion": "01",
+    "dataOrigin": "SYNTHETIC_TEST_DATA",
+    "sha256": null,
+    "digestScope": "SOURCE_FILE_BYTES_ONLY"
+  },
+  "time": {
+    "column": "Epoch",
+    "scale": "UTC",
+    "format": "ISO_8601_UTC_MILLISECONDS",
+    "meaning": "SWE_SPECTRUM_START",
+    "nominalSupportSeconds": 92,
+    "interval": { "start": "2020-01-01T16:00:00.000Z", "end": "2020-01-01T18:00:00.000Z" }
+  },
+  "columns": [
+    { "column": "source_record_index", "sourceVariable": null, "semanticId": "prepared.source_row_index", "kind": "source_index", "archiveUnit": null, "csvUnit": "1", "required": true },
+    { "column": "Epoch", "sourceVariable": "Epoch", "semanticId": "wind.swe.spectrum_start", "kind": "timestamp", "archiveUnit": "CDF_EPOCH_MS", "csvUnit": "ISO_8601_UTC_MILLISECONDS", "required": true },
+    { "column": "fit_flag", "sourceVariable": "fit_flag", "semanticId": "wind.swe.ion_fit_flag", "kind": "flag", "archiveUnit": "1", "csvUnit": "1", "required": true, "fillValues": [-128], "nullTokens": ["", "null"] },
+    {
+      "column": "Proton_Np_nonlin", "sourceVariable": "Proton_Np_nonlin", "semanticId": "wind.swe.proton.number_density.nonlin",
+      "kind": "number", "archiveUnit": "cm^-3", "csvUnit": "cm^-3", "required": true, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": null, "component": null, "frame": null,
+      "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_W_nonlin", "sourceVariable": "Proton_W_nonlin", "semanticId": "wind.swe.proton.thermal_speed.trace.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": true, "species": "proton",
+      "temperatureKind": "trace", "thermalSpeedConvention": "SQRT_2KT_OVER_M", "vector": null, "component": null, "frame": null,
+      "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_Wperp_nonlin", "sourceVariable": "Proton_Wperp_nonlin", "semanticId": "wind.swe.proton.thermal_speed.perpendicular.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": true, "species": "proton",
+      "temperatureKind": "perpendicular", "thermalSpeedConvention": "SQRT_2KT_OVER_M", "vector": null, "component": null, "frame": null,
+      "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "BX", "sourceVariable": "BX", "semanticId": "wind.swe.magnetic_field.x", "kind": "number",
+      "archiveUnit": "nT", "csvUnit": "nT", "required": true, "species": null, "temperatureKind": null,
+      "thermalSpeedConvention": null, "vector": "B", "component": "X", "frame": "GSE", "qualityFlag": "fit_flag",
+      "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "BY", "sourceVariable": "BY", "semanticId": "wind.swe.magnetic_field.y", "kind": "number",
+      "archiveUnit": "nT", "csvUnit": "nT", "required": true, "species": null, "temperatureKind": null,
+      "thermalSpeedConvention": null, "vector": "B", "component": "Y", "frame": "GSE", "qualityFlag": "fit_flag",
+      "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "BZ", "sourceVariable": "BZ", "semanticId": "wind.swe.magnetic_field.z", "kind": "number",
+      "archiveUnit": "nT", "csvUnit": "nT", "required": true, "species": null, "temperatureKind": null,
+      "thermalSpeedConvention": null, "vector": "B", "component": "Z", "frame": "GSE", "qualityFlag": "fit_flag",
+      "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_VX_nonlin", "sourceVariable": "Proton_VX_nonlin", "semanticId": "wind.swe.proton.velocity.x.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": false, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": "V", "component": "X", "frame": "GSE",
+      "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_VY_nonlin", "sourceVariable": "Proton_VY_nonlin", "semanticId": "wind.swe.proton.velocity.y.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": false, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": "V", "component": "Y", "frame": "GSE",
+      "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_VZ_nonlin", "sourceVariable": "Proton_VZ_nonlin", "semanticId": "wind.swe.proton.velocity.z.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": false, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": "V", "component": "Z", "frame": "GSE",
+      "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM", "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_sigmaNp_nonlin", "sourceVariable": "Proton_sigmaNp_nonlin", "semanticId": "wind.swe.proton.density_fit_sigma.nonlin",
+      "kind": "number", "archiveUnit": "cm^-3", "csvUnit": "cm^-3", "required": false, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": null, "component": null, "frame": null,
+      "uncertaintyOf": "Proton_Np_nonlin", "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM",
+      "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_sigmaW_nonlin", "sourceVariable": "Proton_sigmaW_nonlin", "semanticId": "wind.swe.proton.trace_speed_fit_sigma.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": false, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": null, "component": null, "frame": null,
+      "uncertaintyOf": "Proton_W_nonlin", "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM",
+      "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    },
+    {
+      "column": "Proton_sigmaWperp_nonlin", "sourceVariable": "Proton_sigmaWperp_nonlin", "semanticId": "wind.swe.proton.perpendicular_speed_fit_sigma.nonlin",
+      "kind": "number", "archiveUnit": "km/s", "csvUnit": "km/s", "required": false, "species": "proton",
+      "temperatureKind": null, "thermalSpeedConvention": null, "vector": null, "component": null, "frame": null,
+      "uncertaintyOf": "Proton_Wperp_nonlin", "qualityFlag": "fit_flag", "timeSupport": "SWE_SPECTRUM",
+      "fillValues": [-1e31], "nullTokens": ["", "null"], "validRange": null
+    }
+  ],
+  "processing": {
+    "missing": "FILL_TO_NULL_REJECT_REQUIRED",
+    "quality": "FIT_FLAG_10_ONLY",
+    "duplicate": "REJECT_LATER_ROW",
+    "ordering": "REJECT_OUT_OF_ORDER_ROW",
+    "units": "EXPLICIT_SUPPORTED_TO_CANONICAL",
+    "vectors": "PRESERVE_GSE_COMPONENTS",
+    "alignment": "NONE_COREPORTED"
+  }
+}
