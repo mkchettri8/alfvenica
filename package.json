@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "node tests/reference.test.js && node tests/units.test.js && node tests/domain.test.js && node tests/symbols.test.js && node tests/export.test.js && node tests/scientific-resolution-pass1.test.js && node tests/scientific-resolution-pass2.test.js && node tests/physics.test.js && node tests/plots.test.js && node tests/search.test.js && node build-standalone.js && node tests/site.test.js && node tests/release.test.js",
+    "test": "node tests/reference.test.js && node tests/units.test.js && node tests/domain.test.js && node tests/symbols.test.js && node tests/export.test.js && node tests/research-runner.test.js && node tests/scientific-resolution-pass1.test.js && node tests/scientific-resolution-pass2.test.js && node tests/physics.test.js && node tests/plots.test.js && node tests/search.test.js && node build-standalone.js && node tests/site.test.js && node tests/release.test.js",
     "test:mutation": "node tests/mutation.test.js",
     "test:reference": "node tests/reference.test.js",
     "test:symbols": "node tests/symbols.test.js",
@@ -21,6 +21,9 @@
     "test:resolution2": "node tests/scientific-resolution-pass2.test.js",
     "test:release": "node tests/release.test.js",
     "generate:reference": "node tests/reference/generate-reference-benchmarks.js",
-    "build:standalone": "node build-standalone.js"
+    "build:standalone": "node build-standalone.js",
+    "build:research": "node tools/build-research.js",
+    "replay": "node tools/replay-record.js",
+    "test:research": "node tests/research-runner.test.js"
   }
 }

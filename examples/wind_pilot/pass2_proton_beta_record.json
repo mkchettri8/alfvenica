@@ -1,0 +1,655 @@
+{
+  "schema": {
+    "name": "org.alfvenica.reproducible-calculation-record",
+    "version": "2.0.0"
+  },
+  "exportedAt": "2020-01-01T16:00:34.499Z",
+  "application": {
+    "name": "Alfvenica",
+    "version": "1.1.0",
+    "releaseStatus": "RELEASED",
+    "releaseDate": "2026-08-22",
+    "releaseTag": "v1.1.0",
+    "repositoryUrl": "https://github.com/mkchettri8/alfvenica",
+    "build": {
+      "kind": "browser-source-or-generated-standalone",
+      "sourceCommit": null,
+      "sourceCommitStatus": "UNAVAILABLE_NOT_EMBEDDED",
+      "note": "No source commit is claimed unless a verified commit is embedded by the build process."
+    },
+    "physicsCore": {
+      "baseline": "9ad37ae",
+      "baselineStatus": "V1_1_0_RELEASED_FROZEN",
+      "changeSet": "SCIENTIFIC_RESOLUTION_PASS_1_SD_10",
+      "sha256": "e6b039b9f18428a761fe4fd2b5616f1530ec26e875436ae616988aa52fac4756",
+      "baselineUrl": "https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9",
+      "evidenceClass": "P_PROVENANCE",
+      "note": "The core hash identifies the loaded code. The release baseline records ancestry; the change set transparently identifies the approved SD-10 correction. Neither is evidence of scientific correctness."
+    }
+  },
+  "calculation": {
+    "calculator": {
+      "id": "species-beta",
+      "title": "Species plasma beta",
+      "category": "Dimensionless regimes",
+      "description": "Ratio of species thermal pressure to magnetic pressure."
+    },
+    "formula": {
+      "id": "species-beta",
+      "equation": {
+        "html": "β<sub>s</sub> = 2μ<sub>0</sub>n<sub>s</sub>kT<sub>s</sub>/B²",
+        "latex": "\\beta_s=2\\mu_0n_skT_s/B^2"
+      },
+      "assumptions": [],
+      "modelScopeNote": null,
+      "references": [
+        {
+          "label": "NRL Plasma Formulary (2023)",
+          "url": "https://www.nrl.navy.mil/News-Media/Publications/"
+        },
+        {
+          "label": "NIST CODATA 2022 constants",
+          "url": "https://physics.nist.gov/cuu/Constants/"
+        }
+      ],
+      "semanticMetadataReviewStatus": "REVIEWED_METADATA",
+      "scientificReviewStatus": "UNCHANGED_REVIEW_STATUS",
+      "decisionIds": [],
+      "sourceDomain": null,
+      "equationSymbolIds": [
+        "generic-species-plasma-beta",
+        "vacuum-permeability",
+        "generic-species-number-density",
+        "boltzmann-constant",
+        "generic-species-temperature",
+        "magnetic-field-magnitude"
+      ]
+    },
+    "inputs": [
+      {
+        "key": "ns",
+        "semanticId": "generic-species-number-density",
+        "renderedSymbol": {
+          "unicode": "nₛ",
+          "plainText": "n_s",
+          "latex": "n_s"
+        },
+        "physicalName": "Species number density",
+        "quantity": "density",
+        "localRole": "Species density",
+        "species": {
+          "subject": "generic-species"
+        },
+        "display": {
+          "enteredValue": "9.017107963562012",
+          "value": 9.017107963562012,
+          "unit": "cm⁻³"
+        },
+        "internal": {
+          "value": 9017107.963562012,
+          "unit": "m⁻³",
+          "meaning": "number density",
+          "calculationBoundary": true
+        },
+        "canonicalSiUnit": "m^-3",
+        "conventionNotes": []
+      },
+      {
+        "key": "Ts",
+        "semanticId": "generic-species-temperature",
+        "renderedSymbol": {
+          "unicode": "Tₛ",
+          "plainText": "T_s",
+          "latex": "T_s"
+        },
+        "physicalName": "Species temperature",
+        "quantity": "temperature",
+        "localRole": "Species temperature",
+        "species": {
+          "subject": "generic-species"
+        },
+        "display": {
+          "enteredValue": "2.2891344173498283",
+          "value": 2.2891344173498283,
+          "unit": "eV"
+        },
+        "internal": {
+          "value": 2.2891344173498283,
+          "unit": "eV",
+          "meaning": "energy-equivalent temperature k_B T",
+          "calculationBoundary": true
+        },
+        "canonicalSiUnit": "K",
+        "conventionNotes": [
+          "Production inputs store the energy-equivalent k_B T in eV."
+        ]
+      },
+      {
+        "key": "B",
+        "semanticId": "magnetic-field-magnitude",
+        "renderedSymbol": {
+          "unicode": "B",
+          "plainText": "B",
+          "latex": "B"
+        },
+        "physicalName": "Magnetic-field magnitude",
+        "quantity": "magneticField",
+        "localRole": "Magnetic-field magnitude",
+        "species": null,
+        "display": {
+          "enteredValue": "4.263144193604662",
+          "value": 4.263144193604662,
+          "unit": "nT"
+        },
+        "internal": {
+          "value": 4.263144193604662e-9,
+          "unit": "T",
+          "meaning": "magnetic-field magnitude",
+          "calculationBoundary": true
+        },
+        "canonicalSiUnit": "T",
+        "conventionNotes": []
+      }
+    ],
+    "outputs": [
+      {
+        "key": "generic-species-plasma-beta",
+        "outputIndex": 0,
+        "kind": "numeric",
+        "semanticId": "generic-species-plasma-beta",
+        "renderedSymbol": {
+          "unicode": "β_s",
+          "plainText": "beta_s",
+          "latex": "\\beta_s"
+        },
+        "physicalName": "Species plasma beta",
+        "localLabel": "Species beta",
+        "quantity": "dimensionless",
+        "internal": {
+          "value": 0.4573290338083086,
+          "specialValue": null,
+          "unit": "",
+          "meaning": "dimensionless quantity"
+        },
+        "display": {
+          "value": 0.4573290338083086,
+          "specialValue": null,
+          "unit": ""
+        },
+        "canonicalSiUnit": "1"
+      }
+    ],
+    "symbols": [
+      {
+        "semanticId": "generic-species-number-density",
+        "canonicalName": "Species number density",
+        "renderedSymbol": {
+          "unicode": "nₛ",
+          "plainText": "n_s",
+          "latex": "n_s"
+        },
+        "definition": "Number density of the selected generic plasma species.",
+        "quantityType": "numberDensity",
+        "canonicalSiUnit": "m^-3",
+        "productionUnit": "m^-3",
+        "acceptedDisplayUnits": [
+          "m^-3",
+          "cm^-3"
+        ],
+        "species": {
+          "subject": "generic-species"
+        },
+        "indexMeaning": [
+          {
+            "rendered": "s",
+            "meaning": "selected plasma species"
+          }
+        ],
+        "relation": null,
+        "relationUnicode": null,
+        "conventionNotes": [],
+        "scope": "global",
+        "reviewStatus": "CONFIRMED_IMPLEMENTATION",
+        "formulaRole": {
+          "roles": [
+            "input",
+            "equation"
+          ],
+          "inputKeys": [
+            "ns"
+          ],
+          "outputIndexes": [],
+          "localLabels": [
+            "Species density"
+          ]
+        }
+      },
+      {
+        "semanticId": "generic-species-temperature",
+        "canonicalName": "Species temperature",
+        "renderedSymbol": {
+          "unicode": "Tₛ",
+          "plainText": "T_s",
+          "latex": "T_s"
+        },
+        "definition": "Scalar temperature of the selected generic plasma species.",
+        "quantityType": "temperature",
+        "canonicalSiUnit": "K",
+        "productionUnit": "eV",
+        "acceptedDisplayUnits": [
+          "K",
+          "eV"
+        ],
+        "species": {
+          "subject": "generic-species"
+        },
+        "indexMeaning": [
+          {
+            "rendered": "s",
+            "meaning": "selected plasma species"
+          }
+        ],
+        "relation": null,
+        "relationUnicode": null,
+        "conventionNotes": [
+          "Production inputs store the energy-equivalent k_B T in eV."
+        ],
+        "scope": "global",
+        "reviewStatus": "CONFIRMED_IMPLEMENTATION",
+        "formulaRole": {
+          "roles": [
+            "input",
+            "equation"
+          ],
+          "inputKeys": [
+            "Ts"
+          ],
+          "outputIndexes": [],
+          "localLabels": [
+            "Species temperature"
+          ]
+        }
+      },
+      {
+        "semanticId": "magnetic-field-magnitude",
+        "canonicalName": "Magnetic-field magnitude",
+        "renderedSymbol": {
+          "unicode": "B",
+          "plainText": "B",
+          "latex": "B"
+        },
+        "definition": "Magnitude of the magnetic flux density.",
+        "quantityType": "magneticField",
+        "canonicalSiUnit": "T",
+        "productionUnit": "T",
+        "acceptedDisplayUnits": [
+          "T",
+          "nT",
+          "G"
+        ],
+        "species": null,
+        "indexMeaning": [],
+        "relation": null,
+        "relationUnicode": null,
+        "conventionNotes": [],
+        "scope": "global",
+        "reviewStatus": "CONFIRMED_IMPLEMENTATION",
+        "formulaRole": {
+          "roles": [
+            "input",
+            "equation"
+          ],
+          "inputKeys": [
+            "B"
+          ],
+          "outputIndexes": [],
+          "localLabels": [
+            "Magnetic-field magnitude"
+          ]
+        }
+      },
+      {
+        "semanticId": "generic-species-plasma-beta",
+        "canonicalName": "Species plasma beta",
+        "renderedSymbol": {
+          "unicode": "β_s",
+          "plainText": "beta_s",
+          "latex": "\\beta_s"
+        },
+        "definition": "Ratio of selected-species scalar thermal pressure to magnetic pressure.",
+        "quantityType": "dimensionless",
+        "canonicalSiUnit": "1",
+        "productionUnit": "1",
+        "acceptedDisplayUnits": [
+          "1"
+        ],
+        "species": {
+          "subject": "generic-species"
+        },
+        "indexMeaning": [],
+        "relation": null,
+        "relationUnicode": null,
+        "conventionNotes": [],
+        "scope": "global",
+        "reviewStatus": "CONFIRMED_IMPLEMENTATION",
+        "formulaRole": {
+          "roles": [
+            "numeric-output",
+            "equation"
+          ],
+          "inputKeys": [],
+          "outputIndexes": [
+            0
+          ],
+          "localLabels": []
+        }
+      },
+      {
+        "semanticId": "vacuum-permeability",
+        "canonicalName": "Vacuum permeability",
+        "renderedSymbol": {
+          "unicode": "μ₀",
+          "plainText": "mu_0",
+          "latex": "\\mu_0"
+        },
+        "definition": "Magnetic permeability of vacuum used by the SI production equations.",
+        "quantityType": "permeability",
+        "canonicalSiUnit": "N A^-2",
+        "productionUnit": "N A^-2",
+        "acceptedDisplayUnits": [
+          "N A^-2"
+        ],
+        "species": null,
+        "indexMeaning": [],
+        "relation": null,
+        "relationUnicode": null,
+        "conventionNotes": [],
+        "scope": "constant",
+        "reviewStatus": "CONFIRMED_IMPLEMENTATION",
+        "formulaRole": {
+          "roles": [
+            "equation"
+          ],
+          "inputKeys": [],
+          "outputIndexes": [],
+          "localLabels": []
+        }
+      },
+      {
+        "semanticId": "boltzmann-constant",
+        "canonicalName": "Boltzmann constant",
+        "renderedSymbol": {
+          "unicode": "k_B",
+          "plainText": "k_B",
+          "latex": "k_B"
+        },
+        "definition": "Constant relating thermodynamic temperature to thermal energy.",
+        "quantityType": "thermalConstant",
+        "canonicalSiUnit": "J K^-1",
+        "productionUnit": "J K^-1",
+        "acceptedDisplayUnits": [
+          "J K^-1"
+        ],
+        "species": null,
+        "indexMeaning": [],
+        "relation": null,
+        "relationUnicode": null,
+        "conventionNotes": [],
+        "scope": "constant",
+        "reviewStatus": "CONFIRMED_IMPLEMENTATION",
+        "formulaRole": {
+          "roles": [
+            "equation"
+          ],
+          "inputKeys": [],
+          "outputIndexes": [],
+          "localLabels": []
+        }
+      }
+    ],
+    "conventions": {
+      "calculationBoundary": "Calculations use the internal values and units recorded for each input; display values are presentation-boundary conversions.",
+      "temperatureBoundary": "Temperature inputs are stored as energy-equivalent k_B T in eV; canonical thermodynamic SI temperature is kelvin.",
+      "frequencyBoundary": "Cyclic frequency f in Hz and angular frequency omega/Omega in rad s^-1 are distinct quantities, not display aliases.",
+      "unitConvention": "Canonical/internal calculation boundary with display-only unit conversion.",
+      "notationSectionIds": [
+        "calculation-boundary",
+        "species-notation",
+        "plasma-beta",
+        "scalar-vector"
+      ],
+      "ionMassConvention": null
+    },
+    "displaySystem": {
+      "id": "space",
+      "label": "Space",
+      "coherentSystem": false,
+      "shortDescription": "Space-physics display units; calculator values remain at the canonical calculation boundary.",
+      "limitations": [
+        "Temperature is displayed as energy-equivalent eV.",
+        "Characteristic rates remain s⁻¹ and are distinct from cyclic Hz and angular rad s⁻¹.",
+        "Angles are displayed in degrees."
+      ]
+    },
+    "constants": {
+      "revision": "NIST CODATA 2022",
+      "source": {
+        "label": "NIST CODATA 2022 constants",
+        "url": "https://physics.nist.gov/cuu/Constants/"
+      },
+      "values": {
+        "elementaryCharge": 1.602176634e-19,
+        "electronMass": 9.1093837139e-31,
+        "protonMass": 1.67262192595e-27,
+        "vacuumPermeability": 0.00000125663706127,
+        "vacuumPermittivity": 8.8541878188e-12,
+        "speedOfLight": 299792458,
+        "boltzmannConstant": 1.380649e-23,
+        "electronVolt": 1.602176634e-19,
+        "planckConstant": 6.62607015e-34,
+        "reducedPlanckConstant": 1.054571817e-34,
+        "astronomicalUnit": 149597870700,
+        "earthRadius": 6371000
+      },
+      "note": "Values are copied from the loaded production physics core; inclusion is provenance, not uncertainty propagation or scientific validation."
+    },
+    "applicability": {
+      "activeWarnings": [],
+      "diagnostics": [],
+      "reviewPending": [],
+      "informationalOnly": true,
+      "numericalResultsModified": false
+    },
+    "evidence": {
+      "exportRecordClass": "P_PROVENANCE",
+      "warningEvidenceClasses": [],
+      "availableTaxonomyIds": [
+        "A_REFERENCE",
+        "B_IDENTITY",
+        "C_UNIT",
+        "D_PROPERTY",
+        "E_DOMAIN",
+        "F_REGRESSION",
+        "P_PROVENANCE"
+      ],
+      "statement": "Export and provenance checks do not establish scientific correctness; scientific validation evidence is maintained separately."
+    },
+    "uncertainty": {
+      "propagationImplemented": false,
+      "statement": "No calculator-output uncertainty propagation is claimed by this record."
+    }
+  },
+  "reproduction": {
+    "deterministicState": {
+      "schema": {
+        "name": "org.alfvenica.deterministic-calculation-state",
+        "version": "1.0.0"
+      },
+      "applicationVersion": "1.1.0",
+      "physicsCoreSha256": "e6b039b9f18428a761fe4fd2b5616f1530ec26e875436ae616988aa52fac4756",
+      "formula": {
+        "id": "species-beta",
+        "equationLatex": "\\beta_s=2\\mu_0n_skT_s/B^2",
+        "scientificReviewStatus": "UNCHANGED_REVIEW_STATUS",
+        "decisionIds": []
+      },
+      "constants": {
+        "elementaryCharge": 1.602176634e-19,
+        "electronMass": 9.1093837139e-31,
+        "protonMass": 1.67262192595e-27,
+        "vacuumPermeability": 0.00000125663706127,
+        "vacuumPermittivity": 8.8541878188e-12,
+        "speedOfLight": 299792458,
+        "boltzmannConstant": 1.380649e-23,
+        "electronVolt": 1.602176634e-19,
+        "planckConstant": 6.62607015e-34,
+        "reducedPlanckConstant": 1.054571817e-34,
+        "astronomicalUnit": 149597870700,
+        "earthRadius": 6371000
+      },
+      "canonicalInputs": [
+        {
+          "key": "B",
+          "semanticId": "magnetic-field-magnitude",
+          "quantity": "magneticField",
+          "value": 4.263144193604662e-9,
+          "unit": "T"
+        },
+        {
+          "key": "ns",
+          "semanticId": "generic-species-number-density",
+          "quantity": "density",
+          "value": 9017107.963562012,
+          "unit": "m⁻³"
+        },
+        {
+          "key": "Ts",
+          "semanticId": "generic-species-temperature",
+          "quantity": "temperature",
+          "value": 2.2891344173498283,
+          "unit": "eV"
+        }
+      ]
+    },
+    "canonicalSerialization": "{\"applicationVersion\":\"1.1.0\",\"canonicalInputs\":[{\"key\":\"B\",\"quantity\":\"magneticField\",\"semanticId\":\"magnetic-field-magnitude\",\"unit\":\"T\",\"value\":4.263144193604662e-9},{\"key\":\"ns\",\"quantity\":\"density\",\"semanticId\":\"generic-species-number-density\",\"unit\":\"m⁻³\",\"value\":9017107.963562012},{\"key\":\"Ts\",\"quantity\":\"temperature\",\"semanticId\":\"generic-species-temperature\",\"unit\":\"eV\",\"value\":2.2891344173498283}],\"constants\":{\"astronomicalUnit\":149597870700,\"boltzmannConstant\":1.380649e-23,\"earthRadius\":6371000,\"electronMass\":9.1093837139e-31,\"electronVolt\":1.602176634e-19,\"elementaryCharge\":1.602176634e-19,\"planckConstant\":6.62607015e-34,\"protonMass\":1.67262192595e-27,\"reducedPlanckConstant\":1.054571817e-34,\"speedOfLight\":299792458,\"vacuumPermeability\":0.00000125663706127,\"vacuumPermittivity\":8.8541878188e-12},\"formula\":{\"decisionIds\":[],\"equationLatex\":\"\\\\beta_s=2\\\\mu_0n_skT_s/B^2\",\"id\":\"species-beta\",\"scientificReviewStatus\":\"UNCHANGED_REVIEW_STATUS\"},\"physicsCoreSha256\":\"e6b039b9f18428a761fe4fd2b5616f1530ec26e875436ae616988aa52fac4756\",\"schema\":{\"name\":\"org.alfvenica.deterministic-calculation-state\",\"version\":\"1.0.0\"}}",
+    "hash": null,
+    "hashAlgorithm": null,
+    "hashStatus": "NOT_GENERATED_CANONICAL_SERIALIZATION_PROVIDED",
+    "excludedFields": [
+      "exportedAt",
+      "displayInputs",
+      "displayOutputs",
+      "displaySystem",
+      "outputs",
+      "warnings",
+      "diagnostics"
+    ],
+    "normalization": "Object keys are lexicographically sorted, array order is preserved, and finite numeric negative zero is normalized to zero.",
+    "note": "This state identity is reproducibility metadata, not scientific validation."
+  },
+  "compatibility": {
+    "legacyFields": {}
+  },
+  "replay": {
+    "recordStatus": "DEVELOPMENT_REPLAY_RECORD",
+    "producer": {
+      "component": "Alfvenica research runner",
+      "status": "DEVELOPMENT_UNRELEASED",
+      "recordSchema": {
+        "name": "org.alfvenica.reproducible-calculation-record",
+        "version": "2.0.0"
+      },
+      "baseApplicationVersion": "1.1.0",
+      "historicalReleaseMembership": "NOT_PART_OF_BASE_RELEASE"
+    },
+    "runtime": {
+      "name": "Node.js",
+      "version": "v20.20.2"
+    },
+    "formulaIdentity": {
+      "kind": "FORMULA_DEFINITION_SHA256",
+      "sha256": "b5bb2642b2f4429ed48e48e346660e22301ab3926feb9b8637251126edf6cf0a"
+    },
+    "sourceIdentity": {
+      "kind": "SOURCE_SET_SHA256",
+      "sha256": "c4c0511260c6f2dbbf24aae254ff0b591970ad5ccdc38de85e0313c54eeea6d1",
+      "files": [
+        {
+          "file": "release-metadata.js",
+          "sha256": "87e76cf40ea2ca17adbb487ba1c5373e66858762452a10a593746abbe81b96cc"
+        },
+        {
+          "file": "plasma-physics.js",
+          "sha256": "e6b039b9f18428a761fe4fd2b5616f1530ec26e875436ae616988aa52fac4756"
+        },
+        {
+          "file": "unit-registry.js",
+          "sha256": "fb93cb432a2c08605657e369815f4750f268bb30900f90a0de91a28240231471"
+        },
+        {
+          "file": "symbol-registry.js",
+          "sha256": "76fc0318864cae27d450fa154a29a17a201c15d48bf429104be20c4d8202da37"
+        },
+        {
+          "file": "formula-registry.js",
+          "sha256": "5395ea97313e9623231b69d76b20d22adea0c5642d528f3d856e15a2237c6245"
+        },
+        {
+          "file": "domain-guardrails.js",
+          "sha256": "a1ebbe97e4515321b4134735563c92baa9a5f74cf0a0f4b334c06ede114ee203"
+        },
+        {
+          "file": "validation.js",
+          "sha256": "fd19aeb32448c9a9f4a7e8ee827947140ab7c1b97e5ca64fb197e3bb0a59dec1"
+        },
+        {
+          "file": "reproducible-export.js",
+          "sha256": "5b892b3e330a3e7192a92d0c28271e6d282c5e4c6d0c74e81c4c539274fa03e7"
+        },
+        {
+          "file": "research-runner.js",
+          "sha256": "71992b24f1af3141c23428e5f629504bdd680ae37514c8de5829523c88e3b9f2"
+        },
+        {
+          "file": "tools/replay-record.js",
+          "sha256": "6fc8173d73680b424983945eea7abd52f0e685524a6a89f5de978cec16881a1c"
+        },
+        {
+          "file": "tools/build-research.js",
+          "sha256": "4b00a87c433a16afb83ad1bfff23b9aab996ffe05fa47c53d3d3cf7658e03fbd"
+        }
+      ],
+      "sourceCommit": null,
+      "sourceCommitStatus": "NOT_CLAIMED_CONTENT_IDENTITY_USED",
+      "scope": "Exact bytes of the listed local execution files; excludes source data and generated standalone HTML."
+    },
+    "comparison": {
+      "relative": 1e-12,
+      "absolute": 0,
+      "meaning": "computational binary64 replay comparison; not scientific validation"
+    },
+    "warningIds": [],
+    "applicabilityStatus": "not_assessed",
+    "applicabilityAssessment": "Active guardrails only; no general physical compatibility assessment.",
+    "evidenceClass": "not_assessed",
+    "declaredAssumptions": [
+      "H+ proton trace beta only; no electron or alpha pressure.",
+      "Proton_W_nonlin is Wind most-probable trace thermal speed; T_trace[eV] = m_p w^2/(2e).",
+      "B is the magnitude of the co-reported WI_H1_SWE averaged GSE vector, not an average of field magnitudes.",
+      "fit_flag=10 in the accepted Pass 1 representative source row; runner does not recheck archive quality."
+    ],
+    "sourceData": {
+      "product_id": "WI_H1_SWE",
+      "filename": "wi_h1_swe_20200101_v01.cdf",
+      "sha256": "77a26a8a939fb2cc280c8ac1f9e1cb7f10da40e279ed61842878f7fc4a9a0aa3",
+      "row_index_zero_based": 565,
+      "epoch_utc": "2020-01-01T16:00:34.499Z"
+    },
+    "sourceDataVerification": "NOT_VERIFIED_BY_CALCULATION_RUNNER",
+    "constantsRevision": "NIST CODATA 2022",
+    "deterministicStateSchema": {
+      "name": "org.alfvenica.deterministic-calculation-state",
+      "version": "1.0.0"
+    }
+  }
+}
