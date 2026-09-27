@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "node tests/reference.test.js && node tests/units.test.js && node tests/domain.test.js && node tests/symbols.test.js && node tests/export.test.js && node tests/research-runner.test.js && node tests/interval-import.test.js && node tests/interval-analysis.test.js && node tests/scientific-resolution-pass1.test.js && node tests/scientific-resolution-pass2.test.js && node tests/physics.test.js && node tests/plots.test.js && node tests/search.test.js && node build-standalone.js && node tests/site.test.js && node tests/release.test.js",
+    "test": "node tests/reference.test.js && node tests/units.test.js && node tests/domain.test.js && node tests/symbols.test.js && node tests/export.test.js && node tests/research-runner.test.js && node tests/interval-import.test.js && node tests/interval-analysis.test.js && node tests/research-uncertainty.test.js && node tests/scientific-resolution-pass1.test.js && node tests/scientific-resolution-pass2.test.js && node tests/physics.test.js && node tests/plots.test.js && node tests/search.test.js && node build-standalone.js && node tests/site.test.js && node tests/release.test.js",
     "test:mutation": "node tests/mutation.test.js",
     "test:reference": "node tests/reference.test.js",
     "test:symbols": "node tests/symbols.test.js",
@@ -28,6 +28,8 @@
     "test:interval": "node tests/interval-import.test.js",
     "import:interval": "node tools/import-interval.js",
     "test:analysis": "node tests/interval-analysis.test.js",
-    "analyze:interval": "node tools/analyze-interval.js"
+    "analyze:interval": "node tools/analyze-interval.js",
+    "test:uncertainty": "node tests/research-uncertainty.test.js",
+    "analyze:uncertainty": "node tools/analyze-uncertainty.js"
   }
 }

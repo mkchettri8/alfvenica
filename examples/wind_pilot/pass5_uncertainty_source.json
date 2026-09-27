@@ -1,0 +1,45 @@
+{
+  "schema": {
+    "name": "org.alfvenica.wind-fit-uncertainty-source",
+    "version": "1.0.0"
+  },
+  "verification": "CDF_ATTRIBUTES_CHECKED_LOCALLY",
+  "source": {
+    "fileName": "wi_h1_swe_20200101_v01.cdf",
+    "sha256": "77a26a8a939fb2cc280c8ac1f9e1cb7f10da40e279ed61842878f7fc4a9a0aa3",
+    "byteSize": 642922,
+    "productId": "WI_H1_SWE",
+    "datasetDoi": "10.48322/nasd-j276",
+    "productVersion": "01"
+  },
+  "fields": {
+    "Proton_sigmaNp_nonlin": {
+      "associatedSourceVariable": "Proton_Np_nonlin",
+      "archiveUnit": "cm^{-3}",
+      "sigmaLevel": 1,
+      "meaning": "NONLINEAR_FIT_PRECISION_ONLY",
+      "cdfCatdesc": "1-sigma uncertainty in the proton density",
+      "cdfVarNotes": "Obtained from non-linear fitting to the ion current distribution function (CDF).",
+      "association": "DELTA_PLUS_VAR_AND_DELTA_MINUS_VAR"
+    },
+    "Proton_sigmaW_nonlin": {
+      "associatedSourceVariable": "Proton_W_nonlin",
+      "archiveUnit": "km/s",
+      "sigmaLevel": 1,
+      "meaning": "NONLINEAR_FIT_PRECISION_ONLY",
+      "cdfCatdesc": "1-sigma uncertainty in the proton trace thermal speed [km/s].",
+      "cdfVarNotes": "Obtained from non-linear fitting to the ion current distribution function (CDF).",
+      "association": "DELTA_PLUS_VAR_AND_DELTA_MINUS_VAR"
+    },
+    "Proton_sigmaWperp_nonlin": {
+      "associatedSourceVariable": "Proton_Wperp_nonlin",
+      "archiveUnit": "km/s",
+      "sigmaLevel": 1,
+      "meaning": "NONLINEAR_FIT_PRECISION_ONLY",
+      "cdfCatdesc": "1-sigma uncertainty in the perpendicular proton thermal speed [km/s].",
+      "cdfVarNotes": "Obtained from non-linear fitting to the ion current distribution function (CDF).",
+      "association": "DELTA_PLUS_VAR_AND_DELTA_MINUS_VAR"
+    }
+  },
+  "scope": "File identity and stated fit attributes only; not calibration, covariance, or scientific correctness"
+}
