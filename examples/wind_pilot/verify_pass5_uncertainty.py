@@ -20,10 +20,14 @@ FIELDS = {
 FIT_NOTE = "Obtained from non-linear fitting to the ion current distribution function (CDF)."
 
 
-def verify(path):
+def verify(path, case="primary"):
     path = Path(path)
+    if case not in ("primary", "contrasting_candidate"):
+        raise ValueError("Only the two accepted Pass 1 Wind windows are supported")
+    role = ("primary_required_plasma_and_co_reported_field" if case == "primary"
+            else "contrasting_candidate_plasma_and_co_reported_field")
     source = next(item for item in MANIFEST["source_files"]
-                  if item["role"] == "primary_required_plasma_and_co_reported_field")
+                  if item["role"] == role)
     data = path.read_bytes()
     digest = hashlib.sha256(data).hexdigest()
     if path.name != source["filename"] or len(data) != source["byte_size"] or digest != source["sha256"]:
@@ -59,6 +63,6 @@ def verify(path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: python verify_pass5_uncertainty.py <accepted-local.cdf>")
-    print(json.dumps(verify(sys.argv[1]), indent=2))
+    if len(sys.argv) not in (2, 3) or len(sys.argv) == 3 and sys.argv[2] != "--contrast":
+        raise SystemExit("Usage: python verify_pass5_uncertainty.py <accepted-local.cdf> [--contrast]")
+    print(json.dumps(verify(sys.argv[1], case="contrasting_candidate" if len(sys.argv) == 3 else "primary"), indent=2))

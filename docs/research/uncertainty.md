@@ -6,6 +6,8 @@
 
 The accepted local [WI_H1_SWE file](../../examples/wind_pilot/manifest.json), `wi_h1_swe_20200101_v01.cdf` (`Data_version=01`, SHA-256 `77a26a8a939fb2cc280c8ac1f9e1cb7f10da40e279ed61842878f7fc4a9a0aa3`), was inspected with [`verify_pass5_uncertainty.py`](../../examples/wind_pilot/verify_pass5_uncertainty.py). Its small [attribute record](../../examples/wind_pilot/pass5_uncertainty_source.json) records the CDF field attributes and file identity. The script verifies the source bytes against the accepted Pass 1 manifest and checks each parent variable's `DELTA_PLUS_VAR` and `DELTA_MINUS_VAR`, the sigma `CATDESC`, `UNITS`, and the nonlinear-fit `VAR_NOTES`. It makes no network request. The Node layer checks this attribute record against the accepted manifest and the prepared source declaration; it does **not** reopen or hash the CDF. A matching SHA-256 is file identity, not archive quality or scientific correctness.
 
+Pass 7 also checked these same fit-attribute meanings in the manifest-listed `wi_h1_swe_20200701_v01.cdf` (SHA-256 `0416dac771794c62a7c987ac79c8d777b41fd99bd6ae91f45c23f77a4755000d`). The verifier's explicit `--contrast` option and the uncertainty layer now accept that second **exact** manifest file/attribute identity; other source files still need their own verification. The propagation equation and fit-precision-only scope did not change.
+
 | CDF sigma field | Parent | Archive unit | CDF meaning |
 | --- | --- | --- | --- |
 | `Proton_sigmaNp_nonlin` | `Proton_Np_nonlin` | `cm^{-3}` | One-sigma uncertainty in fitted proton density. |

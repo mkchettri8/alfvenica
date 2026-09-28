@@ -6,6 +6,7 @@ The accepted Pass 1 manifest supplies the expected file identity and window.
 import copy
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -21,10 +22,14 @@ MANIFEST = json.loads((ROOT / "examples/wind_pilot/manifest.json").read_text())
 TEMPLATE = json.loads((ROOT / "examples/wind_pilot/metadata.json").read_text())
 
 
-def prepare(cdf_path, csv_path, sidecar_path):
+def prepare(cdf_path, csv_path, sidecar_path, case="primary"):
     cdf_path = Path(cdf_path)
+    if case not in ("primary", "contrasting_candidate"):
+        raise ValueError("Only the two accepted Pass 1 Wind windows are supported")
+    role = ("primary_required_plasma_and_co_reported_field" if case == "primary"
+            else "contrasting_candidate_plasma_and_co_reported_field")
     source = next(item for item in MANIFEST["source_files"]
-                  if item["role"] == "primary_required_plasma_and_co_reported_field")
+                  if item["role"] == role)
     data = cdf_path.read_bytes()
     digest = hashlib.sha256(data).hexdigest()
     if cdf_path.name != source["filename"] or len(data) != source["byte_size"] or digest != source["sha256"]:
@@ -49,6 +54,16 @@ def prepare(cdf_path, csv_path, sidecar_path):
             raise ValueError("CDF magnetic-field source/frame differs from accepted Pass 1")
 
     metadata = copy.deepcopy(TEMPLATE)
+    if case == "contrasting_candidate":
+        selection = re.fullmatch(
+            r"SWE Epoch at spectrum start in \[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ), "
+            r"(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ)\)", MANIFEST[case]["selection"])
+        if selection is None:
+            raise ValueError("Contrasting UTC window is not explicit in the accepted manifest")
+        metadata["time"]["interval"] = {
+            "start": selection.group(1).replace("Z", ".000Z"),
+            "end": selection.group(2).replace("Z", ".000Z"),
+        }
     metadata["source"] = {
         "mission": "Wind", "productId": source["product_id"], "datasetDoi": source["dataset_doi"],
         "fileName": source["filename"], "productVersion": global_attrs["Data_version"][0],
@@ -70,8 +85,13 @@ def prepare(cdf_path, csv_path, sidecar_path):
     start = pd.Timestamp(metadata["time"]["interval"]["start"])
     end = pd.Timestamp(metadata["time"]["interval"]["end"])
     selected = [index for index, timestamp in enumerate(times) if start <= timestamp < end]
-    if len(selected) != MANIFEST["primary"]["swe_selected"]:
+    if len(selected) != MANIFEST[case]["swe_selected"]:
         raise ValueError("Selected spectrum count differs from accepted Pass 1 inventory")
+    fit_flags = cdf.varget("fit_flag")[selected]
+    fit_flag_counts = {str(int(flag)): int(count) for flag, count in
+                       zip(*np.unique(fit_flags, return_counts=True))}
+    if case == "contrasting_candidate" and fit_flag_counts != MANIFEST[case]["fit_flag_counts"]:
+        raise ValueError("Contrasting fit-flag inventory differs from accepted Pass 1 manifest")
     columns = {"source_record_index": selected, "Epoch": [times[index] for index in selected]}
     for column in metadata["columns"]:
         name = column["sourceVariable"]
@@ -85,10 +105,11 @@ def prepare(cdf_path, csv_path, sidecar_path):
     frame = pd.DataFrame(columns)
     write_prepared_wind_interval(frame, metadata, csv_path, sidecar_path)
     return {"sourceSha256": digest, "sourceBytes": len(data), "selectedRows": len(selected),
+            "fitFlagCounts": fit_flag_counts,
             "firstSourceRow": selected[0], "lastSourceRow": selected[-1]}
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        raise SystemExit("Usage: python prepare_pass4_local_cdf.py <accepted.cdf> <prepared.csv> <metadata.json>")
-    print(json.dumps(prepare(*sys.argv[1:]), indent=2))
+    if len(sys.argv) not in (4, 5) or len(sys.argv) == 5 and sys.argv[4] != "--contrast":
+        raise SystemExit("Usage: python prepare_pass4_local_cdf.py <accepted.cdf> <prepared.csv> <metadata.json> [--contrast]")
+    print(json.dumps(prepare(*sys.argv[1:4], case="contrasting_candidate" if len(sys.argv) == 5 else "primary"), indent=2))

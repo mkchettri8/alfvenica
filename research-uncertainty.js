@@ -20,7 +20,11 @@ const fitFields = Object.freeze({
 const failure = (code, message) => ({ ok: false, error: { code, message } });
 
 function verifySourceEvidence(intake, evidence) {
-  const accepted = manifest.source_files.find(item => item.role === 'primary_required_plasma_and_co_reported_field');
+  const accepted = manifest.source_files.find(item =>
+    ['primary_required_plasma_and_co_reported_field',
+      'contrasting_candidate_plasma_and_co_reported_field'].includes(item.role) &&
+    item.filename === intake.source?.fileName);
+  if (!accepted) return false;
   if (intake.source?.dataOrigin !== 'CDF_DERIVED' ||
       evidence?.schema?.name !== 'org.alfvenica.wind-fit-uncertainty-source' ||
       evidence.schema.version !== '1.0.0' || evidence.verification !== 'CDF_ATTRIBUTES_CHECKED_LOCALLY') return false;

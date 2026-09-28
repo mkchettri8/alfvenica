@@ -1,0 +1,15 @@
+# Known limits of the Wind research pathway
+
+This page describes the currently tested `WI_H1_SWE` research route, not every Alfvenica calculator. A successful numerical evaluation establishes only a value for declared inputs; input quality, model applicability, validation evidence and physical interpretation remain distinct.
+
+| Area | Current boundary and consequence |
+| --- | --- |
+| Source and quality | Only the two [Pass 1 manifest](../../examples/wind_pilot/manifest.json) H1 daily CDFs were exercised end to end here. The primary policy retains **only `fit_flag=10`**. Other codes are rejected; their proton-variable suitability was not established. A declared source hash proves file-byte identity, not archive quality. |
+| Time and field | `Epoch` is spectrum **start**; 92 s is nominal support. Start-separation excess is not literal uncovered integration time. `BX/BY/BZ` are the H1 co-reported GSE vector mean; no independent H0 MFI alignment, per-spectrum end-time proof, interpolation or vector-frame transform is claimed. |
+| Species and temperatures | Density is proton number density. Trace thermal speed supplies trace/scalar proton beta; perpendicular thermal speed supplies perpendicular gyroradius after the documented Wind `sqrt(2kT/m)` to Alfvenica `sqrt(kT/m)` convention mapping. Scalar speed never substitutes for perpendicular speed. |
+| Model outputs | Beta is **proton beta**, not electron-plus-ion total beta. Alfvén speed uses **proton-only mass density**, not measured total composition. Scale ratios/order are numerical and do not identify a wave mode, KAW, instability, reconnection or turbulence regime. No full spectrum or MMS analysis is implemented. |
+| Uncertainty | The verified `Proton_sigmaNp_nonlin` permits only an inertial-length **nonlinear-fit precision component** on valid rows. Fitted covariance, calibrated magnetic-field uncertainty, calibration/systematic errors and full measurement uncertainties are unavailable. Interval min/median/max describe sample variation; equal-time window sensitivity is separate and is not a confidence interval. |
+| Evidence | The proton inertial-length coefficient has an `A_REFERENCE` NRL/CODATA anchor. Real-row independent equations are `B_IDENTITY`; several other relevant tests are unit/property/domain or `F_REGRESSION`. A file/source hash is `P_PROVENANCE`, not scientific validation. There is no published exact numerical benchmark for the selected Wind rows. |
+| Reproduction and release | Local Node/browser replay and the July contrast have been exercised. **An independent space-plasma researcher has not yet reported reproduction or judged the labels.** No Release 2 tag, DOI or released source-commit claim exists. The current base citation remains v1.1.0; cite an eventual research release only after it actually exists. |
+
+For calculation-level scope, see [FORMULA_AUDIT.md](../../FORMULA_AUDIT.md). Report a suspected scientific error through the repository's scientific-issue template; corrections need explicit source evidence, tests, a decision record where warranted, and a new version rather than alteration of the immutable v1.1.0 tag.

@@ -10,6 +10,7 @@ const root = path.resolve(__dirname, '..');
 const csv = fs.readFileSync(path.join(root, 'examples/wind_pilot/sample.csv'), 'utf8');
 const metadata = fs.readFileSync(path.join(root, 'examples/wind_pilot/metadata.json'), 'utf8');
 const evidence = JSON.parse(fs.readFileSync(path.join(root, 'examples/wind_pilot/pass5_uncertainty_source.json'), 'utf8'));
+const manifest = require('../examples/wind_pilot/manifest.json');
 const copy = value => JSON.parse(JSON.stringify(value));
 const intake = Intake.importInterval(csv, metadata);
 assert.equal(intake.ok, true);
@@ -51,6 +52,16 @@ observedIdentityMock.source = { ...observedIdentityMock.source, ...evidence.sour
 const mockAnalysis = Analysis.analyze(observedIdentityMock);
 assert.equal(mockAnalysis.ok, true);
 assert.equal(Uncertainty.verifySourceEvidence(observedIdentityMock, evidence), true);
+const candidate = manifest.source_files.find(item =>
+  item.role === 'contrasting_candidate_plasma_and_co_reported_field');
+const candidateEvidence = copy(evidence);
+Object.assign(candidateEvidence.source, { fileName: candidate.filename, sha256: candidate.sha256,
+  byteSize: candidate.byte_size, productVersion: candidate.cdf_data_version });
+const candidateIdentityMock = copy(observedIdentityMock);
+Object.assign(candidateIdentityMock.source, candidateEvidence.source);
+assert.equal(Uncertainty.verifySourceEvidence(candidateIdentityMock, candidateEvidence), true);
+candidateEvidence.source.sha256 = '0'.repeat(64);
+assert.equal(Uncertainty.verifySourceEvidence(candidateIdentityMock, candidateEvidence), false);
 const supported = Uncertainty.evaluate(observedIdentityMock, mockAnalysis, evidence);
 assert.equal(supported.ok, true);
 assert.equal(supported.sourceEvidenceStatus, 'ACCEPTED_CDF_ATTRIBUTE_MANIFEST_NOT_RECHECKED');

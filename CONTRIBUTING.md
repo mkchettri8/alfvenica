@@ -16,3 +16,7 @@ Contributions are welcome when they improve scientific correctness, validation, 
 Keep each pull request focused. Explain what changed, why it is scientifically justified, how it was tested, and whether it affects existing results. New formulas should update the physics core or registry, interpretation record, validation suite, formula audit, and changelog as appropriate.
 
 By contributing, you agree that your contribution may be distributed under the MIT License.
+
+## Wind research-pathway contributions
+
+For a new interval or a change to the research route, identify the public product, exact file/version/DOI and checksum; provide the variable/units/frame and time-support evidence, quality and fill policy, retained/rejected row accounting, and a replayable bundle. State which tests are external numerical references, analytical identities, unit/domain checks, regressions, or provenance checks. Explain any change to an accepted scientific convention before proposing code; a file hash or passing replay is not a scientific benchmark. Report output and warning changes, update the known limits, and request a scientific review for consequential claims. Do not include private rows or large source CDFs in a pull request without a reviewed reason.
