@@ -3,15 +3,22 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = __dirname;
-let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const css = fs.readFileSync(path.join(root, 'styles.css'), 'utf8');
-html = html.replace('  <link rel="stylesheet" href="styles.css">', `  <style>\n${css}\n  </style>`);
-
-for (const file of ['release-metadata.js', 'plasma-physics.js', 'unit-registry.js', 'symbol-registry.js', 'formula-registry.js', 'domain-guardrails.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'reproducible-export.js', 'search.js', 'app.js']) {
-  const code = fs.readFileSync(path.join(root, file), 'utf8').replace(/<\/script/gi, '<\\/script');
-  html = html.replace(`  <script src="${file}" defer></script>`, `  <script>\n${code}\n  </script>`);
+function render() {
+  require('./build-research-browser.js').build();
+  let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const css = fs.readFileSync(path.join(root, 'styles.css'), 'utf8');
+  html = html.replace('  <link rel="stylesheet" href="styles.css">', `  <style>\n${css}\n  </style>`);
+  for (const file of ['release-metadata.js', 'plasma-physics.js', 'unit-registry.js', 'symbol-registry.js', 'formula-registry.js', 'domain-guardrails.js', 'plot-registry.js', 'formula-insights.js', 'validation.js', 'reproducible-export.js', 'search.js', 'research-browser.js', 'wind-workbench.js', 'app.js']) {
+    const code = fs.readFileSync(path.join(root, file), 'utf8').replace(/<\/script/gi, '<\\/script');
+    html = html.replace(`  <script src="${file}" defer></script>`, `  <script>\n${code}\n  </script>`);
+  }
+  return html;
 }
-
-const output = path.join(root, 'alfvenica_standalone.html');
-fs.writeFileSync(output, html);
-console.log(`Built ${path.basename(output)} (${Math.round(Buffer.byteLength(html) / 1024)} KiB)`);
+function build() {
+  const html = render(), output = path.join(root, 'alfvenica_standalone.html');
+  fs.writeFileSync(output, html);
+  console.log(`Built ${path.basename(output)} (${Math.round(Buffer.byteLength(html) / 1024)} KiB)`);
+  return html;
+}
+if (require.main === module) build();
+module.exports = Object.freeze({ render, build });

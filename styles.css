@@ -325,5 +325,45 @@ button{color:inherit}
   .plot-heading-actions .standard-select{flex:1;min-width:180px}
   .plot-canvas{overflow-x:auto}
   .plot-canvas svg{min-width:0}
-  .plot-canvas-wide svg{min-width:760px}
+.plot-canvas-wide svg{min-width:760px}
+}
+
+/* Bounded local Wind research workbench. */
+.wind-page{max-width:1180px;margin:0 auto;padding:32px 22px 56px;overflow-x:clip}
+.wind-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px;margin:20px 0;box-shadow:var(--shadow);overflow-x:clip}
+.wind-panel h2{font-family:var(--serif);color:var(--primary);font-size:1.45rem;margin:0 0 14px}
+.wind-panel h3{font-family:var(--serif);color:var(--primary);font-size:1.12rem;margin:22px 0 9px}
+.wind-panel h4{color:var(--primary);font-size:.94rem;margin:18px 0 8px}
+.wind-file-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.wind-file-grid label{display:flex;flex-direction:column;gap:7px;font-size:.82rem;font-weight:600}
+.wind-file-grid input{max-width:100%;padding:8px;border:1px solid var(--border);border-radius:5px;background:var(--surface);color:var(--text)}
+.wind-file-grid input:focus-visible,.wind-workbench button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wind-status{padding:10px 12px;background:var(--surface-soft);border-left:3px solid var(--accent);font-size:.83rem}
+.wind-note{color:var(--muted);font-size:.83rem;line-height:1.6}
+.wind-assumptions{padding-left:22px;line-height:1.65;font-size:.86rem}
+.wind-table-scroll{max-width:100%;overflow-x:auto;margin:10px 0 18px;border:1px solid var(--border);border-radius:6px}
+.wind-table{width:100%;border-collapse:collapse;font-size:.77rem}
+.wind-table th,.wind-table td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border-soft);overflow-wrap:anywhere}
+.wind-table th{background:var(--surface-soft);font-weight:700;white-space:nowrap}
+.wind-table tr:last-child td{border-bottom:0}
+.wind-series-figure{margin:16px 0;border:1px solid var(--border);border-radius:7px;padding:13px}
+.wind-series-figure figcaption{font-weight:600;margin-bottom:8px}
+.wind-series-figure details summary{cursor:pointer;color:var(--accent-deep);font-size:.82rem}
+.wind-chart svg,.wind-figure svg{display:block;width:100%;height:auto;max-width:900px}
+.wind-figure{max-width:900px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.wind-export-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.wind-export-actions button{max-width:100%}
+@media(max-width:950px){
+  .header-inner{flex-wrap:wrap;gap:8px 16px}
+  .top-nav{order:3;width:100%;overflow-x:auto;justify-content:flex-start;gap:18px;scrollbar-width:none}
+  .nav-button{flex:0 0 auto;padding:8px 0}
+  .header-controls{margin-left:auto}
+}
+@media(max-width:760px){
+  .wind-page{padding:24px 14px 42px}
+  .wind-panel{padding:17px 14px}
+  .wind-file-grid{grid-template-columns:1fr}
+  .wind-table{min-width:540px}
+  .wind-chart,.wind-figure{overflow-x:auto}
+  .wind-chart svg{min-width:520px}
 }

@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const childProcess = require('node:child_process');
 
 const root = path.resolve(__dirname, '..');
 global.AlfvenicaRelease = require(path.join(root, 'release-metadata.js'));
@@ -194,12 +195,16 @@ for (const file of files.filter(file => textExtensions.has(path.extname(file))))
 }
 for (const file of files) assert.doesNotMatch(path.basename(file), /(?:\.swp|\.tmp|\.bak|~|\.DS_Store|Thumbs\.db)$/i, `Scratch artifact: ${path.relative(root,file)}`);
 
-const standaloneHash = sha256('alfvenica_standalone.html');
 const recordedStandaloneHash = readiness.match(/Standalone build: regenerated from source; SHA-256\s+`([a-f0-9]{64})`/);
 assert.ok(recordedStandaloneHash, 'Release manifest lacks final standalone SHA-256');
-// Commit 4591581 changed website copy after v1.1.0; retain the released artifact hash and recognize its exact successor.
+// Protect the committed release/website artifact independently of the Pass 6 development build.
 const postReleaseWebsiteHash = 'b1cd436995536191bd2f39becfeae28c230ad0ba6dd2b453e7428e5f7c470b2d';
-assert.ok([recordedStandaloneHash[1], postReleaseWebsiteHash].includes(standaloneHash), 'Standalone SHA differs from the released or post-release website artifact');
-assert.match(fs.readFileSync(path.join(root, 'alfvenica_standalone.html'),'utf8'), /Version 1\.1\.0/);
+const committedStandalone = childProcess.execFileSync('git', ['show', 'HEAD:alfvenica_standalone.html'], { cwd: root });
+const committedHash = crypto.createHash('sha256').update(committedStandalone).digest('hex');
+assert.ok([recordedStandaloneHash[1], postReleaseWebsiteHash].includes(committedHash), 'Committed standalone SHA differs from the protected release/website artifact');
+const developmentStandalone = fs.readFileSync(path.join(root, 'alfvenica_standalone.html'), 'utf8');
+assert.equal(developmentStandalone, require(path.join(root, 'build-standalone.js')).render(), 'Development standalone differs from current source generation');
+assert.match(developmentStandalone, /Version 1\.1\.0/);
+assert.match(developmentStandalone, /Wind interval workbench/);
 
 console.log(`Alfvenica release audit passed: v${Meta.version} released, ${Registry.formulas.length} calculators, ${numericOutputs} frozen numeric outputs, ${Object.keys(Symbols.symbols).length} symbols, ${Units.quantityFamilies.length} unit families, ${exportRecords} exports, ${markdownFiles.length} Markdown files, and protected/standalone hashes verified.`);

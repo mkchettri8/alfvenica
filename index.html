@@ -60,6 +60,8 @@
   <script src="validation.js" defer></script>
   <script src="reproducible-export.js" defer></script>
   <script src="search.js" defer></script>
+  <script src="research-browser.js" defer></script>
+  <script src="wind-workbench.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -76,6 +78,7 @@
       <nav class="top-nav" aria-label="Primary">
         <button class="nav-button active" type="button" data-view="calculator">Calculator</button>
         <button class="nav-button" type="button" data-view="plots">Plots</button>
+        <button class="nav-button" type="button" data-view="wind">Wind workbench</button>
         <button class="nav-button" type="button" data-view="examples">Examples</button>
         <button class="nav-button" type="button" data-view="validation">Validation</button>
         <button class="nav-button" type="button" data-view="notation">Notation</button>
@@ -322,6 +325,60 @@
           <h2>Scientific use</h2>
           <p>These plots contain no smoothing, fitting, or interpolated physics. Curves connect direct evaluations of the implemented equations only for readability. A visually smooth trend does not establish model validity, identify a wave mode, or replace uncertainty analysis. Exported files record the displayed values and fixed state.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="view wind-workbench" data-view-section="wind" data-wind-workbench aria-label="Wind interval workbench">
+      <div class="page-column wind-page">
+        <header class="page-header">
+          <p class="eyebrow">Development research workflow · WI_H1_SWE only</p>
+          <h1>Wind interval workbench</h1>
+          <p>Import a prepared local Wind CSV and its explicit JSON sidecar, inspect exclusions and assumptions, then run the accepted four-quantity analysis. Files stay in this browser until you download them.</p>
+        </header>
+        <section class="wind-panel" aria-label="Local import">
+          <h2>1. Import prepared files</h2>
+          <div class="wind-file-grid">
+            <label>Prepared CSV <input type="file" accept=".csv,text/csv" data-wind-csv></label>
+            <label>Matching JSON sidecar <input type="file" accept=".json,application/json" data-wind-metadata></label>
+            <label>Verified CDF fit-attribute JSON (optional) <input type="file" accept=".json,application/json" data-wind-evidence></label>
+          </div>
+          <p class="wind-note">The optional evidence file enables only the density-fit component of proton inertial-length uncertainty when it matches the accepted CDF identity. It does not establish full measurement error.</p>
+          <button type="button" class="primary-button" data-wind-import>Inspect import and QC</button>
+          <p class="wind-status" data-wind-status role="status" aria-live="polite">Choose local files to begin.</p>
+        </section>
+        <section class="wind-panel" data-wind-intake-panel hidden aria-label="Source, mapping and quality control">
+          <h2>2. Inspect source and quality control</h2>
+          <div data-wind-source></div>
+          <div data-wind-qc></div>
+          <h3>Explicit source-column mapping</h3>
+          <div class="wind-table-scroll" data-wind-mapping></div>
+          <h3>Rejected source rows</h3>
+          <div class="wind-table-scroll" data-wind-rejections></div>
+          <h3>Declared processing and assumptions</h3>
+          <ul class="wind-assumptions">
+            <li>H⁺ number density and <code>fit_flag=10</code> only; rejected rows never enter a formula.</li>
+            <li>WI_H1_SWE co-reported GSE mean-field components stay paired to their proton spectrum. No independent H0 alignment is performed.</li>
+            <li>Wind trace and perpendicular speeds use <code>W=sqrt(2 k T / m_p)</code> separately. Trace speed is never substituted for perpendicular speed.</li>
+            <li>Beta is proton beta; electron pressure for total beta is unavailable. Alfvén speed assumes proton-only mass density, not measured total composition.</li>
+            <li>Nominal 92-second support is declared; exact per-spectrum endpoints and calibration/covariance errors are not established.</li>
+          </ul>
+          <button type="button" class="primary-button" data-wind-run>Run accepted analysis</button>
+        </section>
+        <section class="wind-panel" data-wind-results hidden aria-label="Wind analysis results">
+          <h2>3. Review qualified results</h2>
+          <p class="wind-note" data-wind-results-qc></p>
+          <div class="wind-table-scroll" data-wind-summary></div>
+          <h3>Row-by-row series</h3>
+          <div data-wind-series></div>
+          <h3>Numerical scale ordering</h3>
+          <div class="wind-figure" data-wind-figure></div>
+          <p class="wind-note"><strong>Scale proximity or ordering alone does not identify a physical mode.</strong> The figure uses only proton inertial length and perpendicular proton gyroradius in metres.</p>
+          <h3>Uncertainty and robustness remain separate</h3>
+          <div data-wind-uncertainty></div>
+          <h3>Export local replay materials</h3>
+          <p class="wind-note">Download <code>analysis.json</code> for complete local replay. Companion files provide editable numbers, the figure, and a fact-only Methods draft. Uploaded rows are never placed in the page URL.</p>
+          <div class="wind-export-actions" data-wind-exports></div>
+        </section>
       </div>
     </section>
 

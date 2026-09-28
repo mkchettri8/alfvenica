@@ -18,7 +18,7 @@
     get(key, fallback) { try { return localStorage.getItem(key) || fallback; } catch (_) { return fallback; } },
     set(key, value) { try { localStorage.setItem(key, value); } catch (_) { /* local file or privacy mode */ } },
   };
-  const validViews = new Set(['calculator', 'plots', 'examples', 'validation', 'notation', 'about']);
+  const validViews = new Set(['calculator', 'plots', 'wind', 'examples', 'validation', 'notation', 'about']);
   const hellingerFormulaIds = new Set([
     'hellinger-proton-cyclotron',
     'hellinger-mirror',
@@ -1080,6 +1080,7 @@
     renderPlotControls();
     renderPlotStateInputs();
     bindPlotEvents();
+    window.AlfvenicaWindWorkbench.init();
     document.querySelector('[data-symbol-glossary-search]').addEventListener('input', renderSymbolGlossary);
     setView(state.view, { updateUrl: false, scroll: false });
 
