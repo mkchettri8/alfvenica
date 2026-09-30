@@ -1,6 +1,6 @@
 # Worked Wind proton-scale case: two accepted windows
 
-These are **local code-run results**, not an independent review or a physical-event classification. Both runs used the same `WI_H1_SWE` v01 preparation, explicit `fit_flag=10` policy, co-reported GSE `BX/BY/BZ`, four existing Alfvenica formula routes, and one-sigma nonlinear **density-fit component** method. Input files matched the frozen [Pass 1 manifest](../../examples/wind_pilot/manifest.json); numerical records can be regenerated with the [handoff procedure](independent_reproduction.md). The [SWE dataset DOI](https://doi.org/10.48322/nasd-j276) identifies the public product. No H0 MFI series was aligned.
+These are **local code-run results** for two accepted windows; they do not classify a physical event. Both runs used the same `WI_H1_SWE` v01 preparation, explicit `fit_flag=10` policy, co-reported GSE `BX/BY/BZ`, four existing Alfvenica formula routes, and one-sigma nonlinear **density-fit component** method. Input files matched the frozen [Pass 1 manifest](../../examples/wind_pilot/manifest.json); numerical records can be regenerated with the [reproduction guide](independent_reproduction.md). The [SWE dataset DOI](https://doi.org/10.48322/nasd-j276) identifies the public product. No H0 MFI series was aligned.
 
 | Spectrum-start window, UTC | CDF file / SHA-256 | Prepared / retained / rejected | Required-cell missing fraction |
 | --- | --- | ---: | ---: |
@@ -33,7 +33,7 @@ npm run create:analysis -- contrast.csv contrast-metadata.json contrast-fit-attr
 npm run replay:analysis -- contrast-output/analysis.json
 ```
 
-Both locally generated bundles replayed `MATCH` under the generating Node runtime. The `SOURCE_SET_SHA256` hashes identify only their listed software-file subsets; the source-CDF hashes identify data bytes. Neither establishes scientific correctness. The verified full Git commit plus source manifest identifies the complete reviewed checkout. A second researcher must still retrieve and reproduce the primary table and figure independently.
+Both locally generated bundles replayed `MATCH` under the generating Node runtime. The `SOURCE_SET_SHA256` hashes identify only their listed software-file subsets; the source-CDF hashes identify data bytes. Neither establishes scientific correctness. The verified full Git commit plus source manifest identifies the complete reviewed checkout. The [reproduction guide](independent_reproduction.md) gives the steps for checking the primary table and figure from the source CDF.
 
 ## When to use this pathway
 

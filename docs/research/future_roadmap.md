@@ -1,10 +1,10 @@
 # Evidence-led work after the Wind pathway
 
-This is a **provisional priority order from the two locally tested Wind windows**, not a claim of external-user demand. Re-rank after the independent reviewer and early users report actual needs. No item below is implemented by Pass 7.
+This is a **provisional priority order from the two locally tested Wind windows**, not a claim of external-user demand. Re-rank as documented use cases and user feedback accumulate. The items below describe future decisions, not implemented scientific capabilities.
 
 | Priority | Deferred decision | Evidence that would unlock it |
 | --- | --- | --- |
-| **P0** | Independent source-to-figure reproduction and versioned Wind release | Outside report with numerical differences and scientific-label judgement; resolved issues; tested clean tag, artifact hashes and verified citation/DOI. This is the present release blocker. |
+| **P0** | Versioned Wind release verification | Source-to-figure comparison using the [reproduction guide](independent_reproduction.md), resolved numerical discrepancies, tested clean tag, artifact hashes and verified citation/DOI. |
 | **P1** | Broader Wind stress cases and optional H0 comparison | July's 15/72 fit-flag rejections and larger nominal start separations show that QC and gaps matter. Before H0 use, resolve exact SWE support and field averaging/alignment (Pass 1 W1); before admitting non-10 flags, document code-specific suitability (W2). |
 | **P2** | Composition and directional pressure for a specific dataset | Proton-only Alfvén speed and trace/perpendicular conventions are material limits. Multi-ion physics needs measured charge states, densities, masses, flags and a new validated mixture model; directional pressure needs measured tensor/directional quantities and frame/time support. No simple substitution into proton-calibrated empirical contours. |
 | **P3** | MMS research contract, then a separate implementation decision | Use [MMS feasibility](mms_feasibility.md) to select real files, frames, quality, timing and independent benchmarks. Wind success alone does not authorize MMS calculations. |
