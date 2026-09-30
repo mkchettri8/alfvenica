@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and classified validation evidence.">
+  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and validation evidence.">
   <meta name="author" content="Mani K Chettri">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#f6f8f9">
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://alfvenica.org/">
   <meta property="og:title" content="Alfvenica — Space Plasma Toolkit">
-  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.">
+  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and validation evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alfvenica.org/">
   <title>Alfvenica — Space Plasma Toolkit</title>
@@ -30,12 +30,12 @@
     "applicationCategory": "ScientificApplication",
     "applicationSubCategory": "Space and astrophysical plasma physics",
     "operatingSystem": "Any modern web browser",
-    "softwareVersion": "1.1.0",
+    "softwareVersion": "2.0.0",
     "datePublished": "2026-08-05",
-    "dateModified": "2026-08-22",
+    "dateModified": "2026-09-30",
     "isAccessibleForFree": true,
     "license": "https://opensource.org/licenses/MIT",
-    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.",
+    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and validation evidence.",
     "keywords": ["space plasma physics", "plasma calculator", "kinetic Alfvén waves", "heliophysics", "research software"],
     "author": {
       "@type": "Person",
@@ -125,7 +125,7 @@ button{color:inherit}
 .search-suggestions-empty{margin:0;padding:12px;color:var(--muted);font-size:.8rem}
 .calculator-shell{max-width:1260px;margin:0 auto 42px;padding:0 22px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
 .formula-browser,.formula-detail{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow)}
-.formula-browser{overflow:hidden}
+.formula-browser{position:sticky;top:80px;display:flex;flex-direction:column;max-height:calc(100vh - 96px);overflow:hidden}
 .browser-sticky{padding:18px;border-bottom:1px solid var(--border-soft)}
 .field-label{display:block;font-size:.72rem;font-weight:600;color:var(--primary);margin-bottom:6px}
 .search-input{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:.65rem .7rem;outline:none}
@@ -134,7 +134,7 @@ button{color:inherit}
 .category-button:hover{color:var(--text)}
 .category-button.active{color:var(--primary);font-weight:700}
 .mobile-category-label,.category-select{display:none}
-.formula-list{max-height:calc(100vh - 250px);overflow-y:auto;padding:8px}
+.formula-list{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px}
 .formula-item{width:100%;border:0;border-left:2px solid transparent;background:transparent;text-align:left;padding:10px 10px 10px 12px;cursor:pointer;border-radius:0 6px 6px 0}
 .formula-item:hover{background:var(--surface-soft)}
 .formula-item.active{border-left-color:var(--accent);background:var(--surface-soft)}
@@ -171,7 +171,6 @@ button{color:inherit}
 .warning-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
 .warning-heading strong{color:var(--danger);font-size:.77rem;text-transform:uppercase;letter-spacing:.04em}
 .calculation-domain-note .warning-heading strong,.calculation-warning-caution .warning-heading strong{color:var(--accent-deep)}
-.warning-heading span{color:var(--muted);font-size:.65rem;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;text-align:right}
 .calculation-warning p,.calculation-domain-note p{margin:.35rem 0 0;color:var(--text)}
 .warning-observed{display:block;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:.35rem}
 .calculation-warning details{margin-top:.5rem;color:var(--muted)}
@@ -224,34 +223,38 @@ button{color:inherit}
 .empty-state p{color:var(--muted)}
 .page-column{max-width:1080px;margin:0 auto;padding:44px 22px 60px}
 .page-header{padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:24px}
-.release-status{display:flex;align-items:center;flex-wrap:wrap;gap:10px 24px;background:var(--surface-soft);border:1px solid var(--border);border-radius:9px;padding:12px 16px;margin-bottom:14px;color:var(--muted);font-size:.76rem}
-.release-status strong{color:var(--primary);margin-right:4px}
-.validation-summary{display:flex;align-items:baseline;justify-content:space-between;gap:18px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:18px 20px;margin-bottom:18px}
-.validation-summary strong{font-family:var(--serif);font-size:1.45rem;color:var(--primary)}
-.validation-summary span{color:var(--muted);font-size:.85rem}
+.validation-summary{margin-bottom:18px}
+.validation-result{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:18px 20px;margin-bottom:14px}
+.validation-result strong{display:block;font-family:var(--serif);font-size:1.32rem;color:var(--primary)}
+.validation-result span{display:block;margin-top:4px;color:var(--muted);font-size:.85rem}
+.validation-result-issue{border-color:var(--danger)}
+.validation-result-issue strong{color:var(--danger)}
+.validation-result-issue ul{margin:10px 0 0;padding-left:20px;font-size:.82rem}
+.validation-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.validation-overview-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:16px 18px}
+.validation-overview-item h2{font-family:var(--serif);font-size:1.08rem;color:var(--primary);margin:0 0 5px}
+.validation-overview-item p{color:var(--muted);font-size:.82rem;line-height:1.5;margin:0}
+.validation-overview-item .status-fail{display:block;margin-top:8px;font-size:.78rem}
+.validation-overview-item:last-child{grid-column:1/-1}
+.validation-technical{background:var(--surface);border:1px solid var(--border);border-radius:9px;margin-top:14px}
+.validation-technical>summary{cursor:pointer;color:var(--accent-deep);font-weight:600;padding:15px 18px}
+.validation-technical-content{border-top:1px solid var(--border);padding:18px}
+.validation-technical-content>p{color:var(--muted);font-size:.82rem;margin:0 0 14px}
 .validation-groups{display:grid;gap:14px}
-.validation-group{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden}
-.validation-group summary{display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:15px 18px;cursor:pointer;background:var(--surface);list-style:none}
-.validation-group summary::-webkit-details-marker{display:none}
-.validation-group summary::after{content:'+';color:var(--accent-deep);font-size:1.05rem;font-weight:600}
-.validation-group[open] summary::after{content:'−'}
+.validation-group{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden;padding-top:15px}
 .validation-group-title{font-family:var(--serif);font-size:1.1rem;color:var(--primary);font-weight:600}
-.validation-group-summary{font-size:.76rem;color:var(--muted)}
+.validation-group h3{margin:0 18px 12px}
+.validation-scroll-hint{display:none}
 .validation-group .table-wrap{border:0;border-top:1px solid var(--border);border-radius:0}
 .table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:9px}
-.validation-table{width:100%;border-collapse:collapse;min-width:760px}
+.validation-table{width:100%;border-collapse:collapse;min-width:660px}
 .validation-table th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;background:var(--surface-soft);padding:.7rem .8rem;border-bottom:1px solid var(--border)}
 .validation-table td{padding:.66rem .8rem;border-bottom:1px solid var(--border-soft);font-size:.8rem;vertical-align:top}
 .validation-table tr:last-child td{border-bottom:0}
-.status-pass{color:var(--accent-deep);font-weight:700}
 .status-fail{color:var(--danger);font-weight:700}
 .integrity-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:20px;margin-top:14px}
 .integrity-card h2{font-family:var(--serif);font-size:1.2rem;color:var(--primary);margin:0 0 4px}
-.integrity-card>p{color:var(--muted);font-size:.82rem;margin:0 0 14px}
-.integrity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.integrity-item{background:var(--surface-soft);border-radius:7px;padding:14px}
-.integrity-item strong{display:block;font-family:var(--serif);font-size:1.25rem;color:var(--primary)}
-.integrity-item span{display:block;margin-top:2px;color:var(--muted);font-size:.75rem;line-height:1.45}
+.integrity-card>p{color:var(--muted);font-size:.82rem;margin:0;line-height:1.5}
 .method-note,.citation-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:22px;margin-top:20px}
 .method-note h2,.citation-box h2,.about-grid h2{font-family:var(--serif);color:var(--primary);font-size:1.25rem;margin:0 0 .5rem}
 .method-note p,.citation-box p,.about-grid p{color:var(--muted);margin:0}
@@ -309,16 +312,17 @@ button{color:inherit}
   .global-search{max-width:620px}
   .example-grid{grid-template-columns:1fr 1fr}
   .header-inner{gap:16px}.brand-subtitle{display:none}.top-nav{gap:12px}.control-label{display:none}
-  .calculator-shell{grid-template-columns:1fr}.formula-browser{display:grid;grid-template-columns:280px 1fr}.browser-sticky{border-bottom:0;border-right:1px solid var(--border-soft)}.formula-list{max-height:300px}
+  .calculator-shell{grid-template-columns:1fr}.formula-browser{position:static;display:grid;grid-template-columns:280px 1fr;max-height:none}.browser-sticky{border-bottom:0;border-right:1px solid var(--border-soft)}.formula-list{flex:none;max-height:300px}
   .category-nav,.desktop-category-label{display:none}.mobile-category-label,.category-select{display:block}.category-select{width:100%;margin-top:6px}.calculation-grid{grid-template-columns:1fr}.interpretation-grid,.notes-grid{grid-template-columns:1fr}
   .notation-symbol-grid{grid-template-columns:1fr}
   .unit-system-grid{grid-template-columns:1fr}
 }
 @media(max-width:680px){
+  .validation-scroll-hint{display:block;color:var(--muted);font-size:.75rem;margin:0 18px 10px}
   .formula-detail{scroll-margin-top:110px}.result-actions{gap:5px;flex-wrap:wrap;justify-content:flex-end}
-  .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:100%;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:absolute;right:14px;top:8px}.text-button{font-size:.76rem}
-  .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid{grid-template-columns:1fr}.integrity-grid{grid-template-columns:1fr}.validation-summary,.validation-group summary{align-items:flex-start;flex-direction:column;gap:4px}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
-  .symbol-definitions-heading,.glossary-heading{display:block}.symbol-definitions-status{text-align:left}.glossary-search-label{min-width:0;margin-top:14px}.symbol-table{display:block;min-width:0}.symbol-table thead{display:none}.symbol-table tbody,.symbol-table tr,.symbol-table td{display:block;width:100%!important}.symbol-table tr{padding:11px 12px;border-bottom:1px solid var(--border)}.symbol-table tr:last-child{border-bottom:0}.symbol-table td{padding:3px 0;border:0}.symbol-table td+td{margin-top:5px}.symbol-glyph>span,.symbol-glyph>small{display:inline}.symbol-glyph>small{margin-left:7px}.symbol-glossary,.notation-section,.unit-system-guide{padding:18px 15px}.glossary-table-wrap{max-height:none}.warning-heading{align-items:flex-start;flex-direction:column;gap:2px}.warning-heading span{text-align:left}
+  .header-inner{min-height:auto;padding:10px 14px;flex-wrap:wrap}.brand{width:auto;align-items:center;gap:8px}.brand-mark{width:28px;height:28px}.brand-subtitle{display:none}.top-nav{order:3;width:100%;justify-content:space-between}.nav-button{padding:8px 0}.header-controls{margin-left:auto;position:static}.compact-select{max-width:125px}.text-button{font-size:.76rem}
+  .intro-band{padding:28px 14px 20px}.calculator-shell{padding:0 14px}.formula-browser{display:block}.browser-sticky{border-right:0;border-bottom:1px solid var(--border-soft)}.formula-list{max-height:260px}.formula-detail{padding:22px 18px}.environment-bar{align-items:flex-start;flex-direction:column}.environment-controls{width:100%}.standard-select{flex:1;min-width:0}.input-grid{grid-template-columns:1fr}.result-row{grid-template-columns:1fr;gap:3px}.result-row dd{text-align:left}.example-grid,.about-grid,.validation-overview{grid-template-columns:1fr}.site-footer{padding:18px 14px 26px;flex-direction:column}.page-column{padding:32px 14px 48px}
+  .symbol-definitions-heading,.glossary-heading{display:block}.symbol-definitions-status{text-align:left}.glossary-search-label{min-width:0;margin-top:14px}.symbol-table{display:block;min-width:0}.symbol-table thead{display:none}.symbol-table tbody,.symbol-table tr,.symbol-table td{display:block;width:100%!important}.symbol-table tr{padding:11px 12px;border-bottom:1px solid var(--border)}.symbol-table tr:last-child{border-bottom:0}.symbol-table td{padding:3px 0;border:0}.symbol-table td+td{margin-top:5px}.symbol-glyph>span,.symbol-glyph>small{display:inline}.symbol-glyph>small{margin-left:7px}.symbol-glossary,.notation-section,.unit-system-guide{padding:18px 15px}.glossary-table-wrap{max-height:none}.warning-heading{align-items:flex-start;flex-direction:column;gap:2px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
@@ -376,7 +380,48 @@ button{color:inherit}
   .plot-heading-actions .standard-select{flex:1;min-width:180px}
   .plot-canvas{overflow-x:auto}
   .plot-canvas svg{min-width:0}
-  .plot-canvas-wide svg{min-width:760px}
+.plot-canvas-wide svg{min-width:760px}
+}
+
+/* Bounded local Wind research workbench. */
+.wind-page{max-width:1180px;margin:0 auto;padding:32px 22px 56px;overflow-x:clip}
+.wind-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px;margin:20px 0;box-shadow:var(--shadow);overflow-x:clip}
+.wind-panel h2{font-family:var(--serif);color:var(--primary);font-size:1.45rem;margin:0 0 14px}
+.wind-panel h3{font-family:var(--serif);color:var(--primary);font-size:1.12rem;margin:22px 0 9px}
+.wind-panel h4{color:var(--primary);font-size:.94rem;margin:18px 0 8px}
+.wind-file-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.wind-file-grid label{display:flex;flex-direction:column;gap:7px;font-size:.82rem;font-weight:600}
+.wind-file-grid input{max-width:100%;padding:8px;border:1px solid var(--border);border-radius:5px;background:var(--surface);color:var(--text)}
+.wind-file-grid input:focus-visible,.wind-workbench button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wind-status{padding:10px 12px;background:var(--surface-soft);border-left:3px solid var(--accent);font-size:.83rem}
+.wind-note{color:var(--muted);font-size:.83rem;line-height:1.6}
+.wind-assumptions{padding-left:22px;line-height:1.65;font-size:.86rem}
+.wind-table-scroll{max-width:100%;overflow-x:auto;margin:10px 0 18px;border:1px solid var(--border);border-radius:6px}
+.wind-table{width:100%;border-collapse:collapse;font-size:.77rem}
+.wind-table th,.wind-table td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border-soft);overflow-wrap:anywhere}
+.wind-table th{background:var(--surface-soft);font-weight:700;white-space:nowrap}
+.wind-table tr:last-child td{border-bottom:0}
+.wind-series-figure{margin:16px 0;border:1px solid var(--border);border-radius:7px;padding:13px}
+.wind-series-figure figcaption{font-weight:600;margin-bottom:8px}
+.wind-series-figure details summary{cursor:pointer;color:var(--accent-deep);font-size:.82rem}
+.wind-source-details summary{cursor:pointer;color:var(--accent-deep);font-size:.82rem;font-weight:600;margin:10px 0}
+.wind-chart svg,.wind-figure svg{display:block;width:100%;height:auto;max-width:900px}
+.wind-figure{max-width:900px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.wind-export-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.wind-export-actions button{max-width:100%}
+@media(max-width:950px){
+  .header-inner{flex-wrap:wrap;gap:8px 16px}
+  .top-nav{order:3;width:100%;overflow-x:auto;justify-content:flex-start;gap:18px;scrollbar-width:none}
+  .nav-button{flex:0 0 auto;padding:8px 0}
+  .header-controls{margin-left:auto}
+}
+@media(max-width:760px){
+  .wind-page{padding:24px 14px 42px}
+  .wind-panel{padding:17px 14px}
+  .wind-file-grid{grid-template-columns:1fr}
+  .wind-table{min-width:540px}
+  .wind-chart,.wind-figure{overflow-x:auto}
+  .wind-chart svg{min-width:520px}
 }
 
   </style>
@@ -391,11 +436,11 @@ button{color:inherit}
 
   return Object.freeze({
     applicationName: 'Alfvenica',
-    version: '1.1.0',
+    version: '2.0.0',
     releaseStatus: 'RELEASED',
-    releaseDate: '2026-08-22',
-    releaseTag: 'v1.1.0',
-    validationDate: '2026-08-22',
+    releaseDate: '2026-09-30',
+    releaseTag: 'v2.0.0',
+    validationDate: '2026-09-30',
     constantsRevision: 'NIST CODATA 2022',
     constantsSourceLabel: 'NIST CODATA 2022 constants',
     constantsSourceUrl: 'https://physics.nist.gov/cuu/Constants/',
@@ -410,16 +455,19 @@ button{color:inherit}
     plotMetricCount: 28,
     htmlIdCount: 100,
     repositoryUrl: 'https://github.com/mkchettri8/alfvenica',
-    versionDoi: '10.5281/zenodo.22061119',
-    versionDoiUrl: 'https://doi.org/10.5281/zenodo.22061119',
-    zenodoRecordUrl: 'https://zenodo.org/records/22061119',
+    versionDoi: null,
+    versionDoiStatus: 'PENDING',
+    versionDoiUrl: null,
+    zenodoRecordUrl: null,
     conceptDoi: '10.5281/zenodo.22061118',
+    baseApplicationVersion: '1.1.0',
+    baseVersionDoi: '10.5281/zenodo.22061119',
     physicsBaselineUrl: 'https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9',
     ciUrl: 'https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml',
     formulaAuditUrl: 'https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md',
     scientificIssueUrl: 'https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml',
-    citation: 'Chettri, M. K. (2026). Alfvenica: Interactive Space Plasma Toolkit (Version 1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22061119',
-    bibtex: '@software{chettri_alfvenica_2026,\n  author    = {Chettri, Mani K},\n  title     = {Alfvenica: Interactive Space Plasma Toolkit},\n  version   = {1.1.0},\n  year      = {2026},\n  publisher = {Zenodo},\n  doi       = {10.5281/zenodo.22061119},\n  url       = {https://doi.org/10.5281/zenodo.22061119}\n}',
+    citation: 'Chettri, M. K. (2026). Alfvenica: Interactive Space Plasma Toolkit (Version 2.0.0) [Computer software]. https://github.com/mkchettri8/alfvenica',
+    bibtex: '@software{chettri_alfvenica_2026_v2,\n  author  = {Chettri, Mani K},\n  title   = {Alfvenica: Interactive Space Plasma Toolkit},\n  version = {2.0.0},\n  year    = {2026},\n  url     = {https://github.com/mkchettri8/alfvenica}\n}',
   });
 }));
 
@@ -3759,6 +3807,1472 @@ button{color:inherit}
 
   </script>
   <script>
+/* Generated by build-research-browser.js; do not edit by hand. */
+(function(root) {
+'use strict';
+
+const factories = Object.create(null), cache = Object.create(null);
+const formulaIdentities = {"electron-gyrofrequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"36e7761c71c7fa89f28582bf3b98d233d94d52fe5a1211c62589640f2a39bcda"},"ion-gyrofrequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"74eee4caab024c779038e4be0c158ff01eb9b8cb6c4347eb4c3e04ca5367c0f6"},"electron-plasma-frequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"0b3a0a97ab55dd25e77e41ee837224751b2c8000e4b418a11ceb043e3da2a76d"},"ion-plasma-frequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"7d5936730fd36c23faebc1ceb8a14139e13df48688cc67ae4cf7736ed8fc36f5"},"upper-hybrid-frequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"07bb395d2408da4d410dd0feae2a7e5dd8eefab498bb2375b3a7e46b90773579"},"lower-hybrid-frequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"3d8843ed65d7dfecff3f6d962101b4127f7f1eb346d15222a23d0a449978e003"},"electron-debye-length":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"9746f632ab77d62894603e619428df3f195ae2a0132b557470b373e095146021"},"total-debye-length":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"4e913e0a2c970751c6ebd7826d60b6754a52fe918bad934f4a7bcc434c060670"},"electron-gyroradius":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"7fab375419d3d2db1e9aa3a2b5f61f533fd9dd1a62c38fb461ae4fb590e59ea2"},"ion-gyroradius":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"401577a59cef63344f32f43d192cd6137e350a0109039e75392af1b25ee8f291"},"electron-inertial-length":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"b2a3a7137e79524b84405e2b6bdd7384b0549396cf321256431ce61abffa8c4a"},"ion-inertial-length":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"8082e22ee2cf1a77e8aaad1f752e29087dfd900c989edbd742bf52eada4955f7"},"ion-sound-gyroradius":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"5b90dad0b78796ad53f923cecbf3cd2620c29cc1eefc8a1dbe0ecc5001b8a8de"},"debye-sphere-population":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"ba6d3d858a84e9566fc6812e16b66c4c449fcc0436fa0fa926a1448ace9f31c3"},"electron-thermal-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"8e093f6e80f006bc65ccab842e16c707a007e2ed72ec463fb61960308f73c082"},"ion-thermal-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"af1e7d04d5e3e823f25e572fa833b2476a2cc9a98e9ca5b3cea6c168b6e92b00"},"alfven-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"b24ca535eea8dca45b0d4f14797f1e5fa2b6ada72e582bb490648acacb4b5935"},"relativistic-alfven-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"2f3c3416a91823524cb726933f4121c1347996e6ffd24347a0c9ce09625362ed"},"ion-sound-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"1a732158f26e9847f6c61276c07a48e95e7fd13bc45678e93f03d0a37fdc8c60"},"mhd-sound-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"66e658f18e914307433a88516f85919696404485d75fcf177de73391cfd2fc2d"},"magnetosonic-speeds":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"958c69c0afbb2fd95f7a54d1ceae89927e1824dda32d4163260cf486ac859c50"},"exb-drift":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"b8c6d054e2276f769bc86c2e07cbc6c1f955963e794c04c5686fa1cd1c4e850d"},"diamagnetic-drift":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"42257172f1e0d6f580d87effffd8c41b1953e780579a598e33daa87e66ec99c1"},"species-pressure":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"25fd66f92a6d5dd4d538814897848792101d7316f36cc9f5a5d4cd9284132564"},"total-thermal-pressure":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"e99d88b0de62dc23c9878c87c5bccf910753571a13e7d92b9c0ba7b63feabef0"},"magnetic-pressure":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"e6c918ff2976a94e9d95a9be0530071fd2835c2c89f5deedd0024895eb73d8b4"},"dynamic-pressure":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"a4a3c34ef0a4f3bc7111f9638fad2b5f95003ec1f79ab113ccbb49a1616d905e"},"field-energy-density":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"b14ac8ab7245bb3e5860dcc0bee96f785465b4db6eb4a55dd620f485724559e0"},"poynting-flux":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"d17172ad15fb347e6391b4026f8a8450b5cc497eddb78c7194dfa37bdf6d5865"},"pressure-balance-field":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"a1b3d30546feb725ede090e70aab5e9f5e1a9ebbbc247cf19877ad39069aecde"},"species-beta":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"b5bb2642b2f4429ed48e48e346660e22301ab3926feb9b8637251126edf6cf0a"},"total-beta":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"2f079739fe03625d7bf9cfd7ac10e01e4853f908367873748a3f4c360a98ffc9"},"mach-numbers":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"c8f0fcdfcb61df88d72055ff557d56016f4e6601435d43180c964be4347daff5"},"magnetization-parameter":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"2ed4791c298e40f447d7301287decfaf514e1c7c910f1da53db63521fd3e30f2"},"electron-magnetization-ratio":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"dcaca358527e80051552cf76cbc48a91bccfd082e53862a37b98d6d75b76be0c"},"plasma-coupling":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"816028773377fe17e41ea478fb277b4e744500a8d519bb0be82c416ef4d08beb"},"electron-hall-parameter":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"72329891d3b96556530fd7d0fc9106db36c47d9cfb72c5f6b69a32ec35663100"},"ion-hall-parameter":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"efc592c41182eca8ebab0e06baea41e9e8f100b62717d8588ee4319f2d4137d2"},"knudsen-number":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"411dc45085f76e8919921554c5576011e1e5a9db8513727de67c27767e17d856"},"coulomb-log-ei":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"dfa6ec3df684913c8aa83c860f020d44ff31aeb43ca0c70945e7d4c97f20a527"},"coulomb-log-ii":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"f6e7d1bb1207d45549714bad95cb87d1e8a960572289a3b90614fbd71527dd6f"},"electron-ion-collision-frequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"138a9373f5c5227055af9ea1c785d39875724f3bcf1fe7df8a646da45f2d8319"},"ion-ion-collision-frequency":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"2d484416b54e86ae88b77fa86f6e980fa6e31242d79fe9efc71c5563995adfc9"},"electron-mean-free-path":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"6dafbfcf1e540583d248c3b9e08f6ab7413bb17061deaf28f1d02052b9f123bc"},"ion-mean-free-path":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"4aad0a689ce990099f6e41fe09a94c093a5451d97a3734105be00cf34132feac"},"spitzer-transport":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"254f84e5067f3aaa7ffe4208c28bee6ea74eb827ab161072eef157e3e777bce9"},"shock-compression":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"21d38a947f4062712961b0b48ca499cbb0db9742fd690bc9608e83d9710b25b9"},"lundquist-number":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"386ee50a338b2b07a9fdb532d759744bdd0a1663db9660d0d78c76bbc7270ec8"},"magnetic-reynolds-number":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"242fb859ec6155d51f2f6b8b703521b8955443c62adac89b2cfcfc021a76adde"},"sweet-parker":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"5370a002f52df3c0ec57ac53bea9ab9829cc8eb6de8757a00239c08a2378a55f"},"alfven-transit-time":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"a385de5b35a6f4fe13952ece4bd9e17639f0655c1d50c6fd085f1ad8e5265a9a"},"taylor-mapping":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"dd079c2cbdafad014796ee8530c0f335437110d92339a00eff4b19538bb851e3"},"doppler-shift":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"72f99d882b8d8311404d4a1e1d38d68e89dc44c225a71fcbc8accaf64ededd2f"},"kinetic-break-frequencies":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"d9d0f7c6cf77a6774740829738e20bb595cb1a39e9129fde4511047d77e95070"},"eb-phase-speed":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"1d9d06c6e8029f48ef1f9b30d25fcb7e3c4700a166f5c1b65a3139b21a80d1e9"},"current-sheet-crossing":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"01828db017f93d3828647e4f96a27f068b7443a8d7cbf2e79da9eda904745d96"},"current-density-sheet":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"8e855eda3aa5bf903605e2c48d6e2478b3db522498ae8458a7cdf31c35584dc8"},"alfvenicity":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"19046a7e57732bf461f5469e7e960fcc5d3a467fc3db4a293572646a5124321b"},"kaw-regime":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"743a578aca94afe165865073af71d596e26091b8f028ec85413999f96da1d8c2"},"kaw-normalizations":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"204b0386765909634329aeb4b74f96ac38e3b0836b6935ebd3c71beb77252147"},"kaw-dispersion":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"f88631d1c85cb538dc77252b60c00f01a5210cee76e9ea294d62978f72c663ad"},"kaw-landau-accessibility":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"6c6bff0a4b743cbb8bbb22f87d78a93f1bfaeae7cef31af9cf1e3a1e34374dbb"},"kaw-eb-diagnostic":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"2c521bff69b61accf548f26efa0b43e843f30e64ec152173ce10e5ed9fcbcb7c"},"kaw-parallel-electric-field":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"943affc1cbd066a6866105fc996e56e6fd0834cb285c3fbf520705a27850d43b"},"fluid-firehose":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"9fae2fd0c2d25f77f2103dc73584b747854fe7bbe4b25b93c73ad74454b8a7b4"},"fluid-mirror":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"da318971c8dff315928ff5c2068b4bae03072348f1b03e10631a223c4d830ca8"},"hellinger-proton-cyclotron":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"00e802c018b8e27020e6457e40639816fbaa0ffbfa36398152815b062df07d9f"},"hellinger-mirror":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"35ba91f3937516b114ca431bc80408b551ee00b48750cbb123891659c41267f3"},"hellinger-parallel-firehose":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"928590bf375d3d83c7e49fb432250d60dcff6f94bad1149245608ef31f8885eb"},"hellinger-oblique-firehose":{"kind":"FORMULA_DEFINITION_SHA256","sha256":"7f647f381c7be46d5170b4ca82131e5520e847df7f30cb7bbc51fad2e300cb1c"}};
+const calculatorSourceIdentity = {"kind":"SOURCE_SET_SHA256","sha256":"60f08b5bb9a632a011fd5157824059a07b29e1a3a19a225a9b92553f10d07e1a","files":[{"file":"release-metadata.js","sha256":"0616779bd9e00e87eef9b74030ccd268d5de1b7ac57facdfe0ac84408b2dc732"},{"file":"plasma-physics.js","sha256":"e6b039b9f18428a761fe4fd2b5616f1530ec26e875436ae616988aa52fac4756"},{"file":"unit-registry.js","sha256":"fb93cb432a2c08605657e369815f4750f268bb30900f90a0de91a28240231471"},{"file":"symbol-registry.js","sha256":"76fc0318864cae27d450fa154a29a17a201c15d48bf429104be20c4d8202da37"},{"file":"formula-registry.js","sha256":"5395ea97313e9623231b69d76b20d22adea0c5642d528f3d856e15a2237c6245"},{"file":"domain-guardrails.js","sha256":"a1ebbe97e4515321b4134735563c92baa9a5f74cf0a0f4b334c06ede114ee203"},{"file":"validation.js","sha256":"fd19aeb32448c9a9f4a7e8ee827947140ab7c1b97e5ca64fb197e3bb0a59dec1"},{"file":"reproducible-export.js","sha256":"5b892b3e330a3e7192a92d0c28271e6d282c5e4c6d0c74e81c4c539274fa03e7"},{"file":"research-runner.js","sha256":"71992b24f1af3141c23428e5f629504bdd680ae37514c8de5829523c88e3b9f2"},{"file":"tools/replay-record.js","sha256":"6fc8173d73680b424983945eea7abd52f0e685524a6a89f5de978cec16881a1c"},{"file":"tools/build-research.js","sha256":"4b00a87c433a16afb83ad1bfff23b9aab996ffe05fa47c53d3d3cf7658e03fbd"}],"sourceCommit":null,"sourceCommitStatus":"NOT_CLAIMED_CONTENT_IDENTITY_USED","scope":"Exact bytes of the listed local execution files; excludes source data and generated standalone HTML."};
+const buildIdentity = {"kind":"SOURCE_SET_SHA256","sha256":"63b75420c8a4632ddf9c9b1c07a5a97eb1e925b021cf3f717932928dcf2e0ac4","files":[{"file":"interval-import.js","sha256":"65caf630cd8ca1f35d15ba9722a29bd47061d7810534003424cbe619fe74e321"},{"file":"model-compatibility.js","sha256":"fbc2cd0326c3e82415573929a20356d70f4ba7e6ebf5c15e46f59f100a50b9e1"},{"file":"interval-analysis.js","sha256":"ed29d201b2fd1a0e716599252e88f302a7946c9a996f40bdf7b9c8ff4c59f61f"},{"file":"research-sensitivity.js","sha256":"bc0b6eee0ecb4d13e18ecea274d4933bcf75b30b3f8b3456388253643b6f2b6b"},{"file":"research-uncertainty.js","sha256":"0b51ccf983e435873b2510b9a17ca4f781158e0dbfcf3da7303a2a158549e9c7"},{"file":"research-bundle.js","sha256":"893f8dc014fd6003c6385e59a73be5c0bbfd64036a088198f6e67e371039f401"},{"file":"research-source-identity.js","sha256":"ec0086bf4208bf7525aa4ebb194425f0dd718aa209e63da1ec834fd1e179a970"},{"file":"build-research-browser.js","sha256":"aab287f277cc69086002e0f2a685d0d9f1ab85f2fb5667fe65811cf610f78cde"},{"file":"wind-workbench.js","sha256":"579adbd752bfd659ff78f6bdd63f0a6d597c6743b0c1c016e22e02403ac5e7f4"},{"file":"app.js","sha256":"2bb502767ced098e6b9a2b5728525c810209d5d9cdcd118ff2df85c1445b8186"},{"file":"index.html","sha256":"44797a95fb5df747437c5d4528e7b7e44ba457f123d2d8914171b996157c8767"},{"file":"styles.css","sha256":"56484d1312863aea115ae2522fdef5f8d85d87f20e7ca441b7093ce011da5bf3"}],"sourceCommit":null,"sourceCommitStatus":"NOT_CLAIMED_CONTENT_IDENTITY_USED","scope":"Exact bytes of listed Wind workbench source files; excludes source data and generated standalone HTML."};
+factories['./research-runner.js'] = function(require, module) {
+  const Registry = root.PlasmaFormulaRegistry, Units = root.PlasmaUnitRegistry;
+  const Exporter = root.AlfvenicaReproducibleExport;
+  module.exports = Object.freeze({
+    formulaIdentity(formula) { return formulaIdentities[formula.id]; },
+    sourceIdentity() { return calculatorSourceIdentity; },
+    run(state) {
+      const formula = Registry.formulas.find(item => item.id === state?.formula_id);
+      if (!formula) return { ok: false, error: { code: 'UNKNOWN_FORMULA', message: 'Unknown formula ID' } };
+      const inputs = state.canonical_inputs;
+      if (!inputs || Object.keys(inputs).length !== formula.inputs.length ||
+          formula.inputs.some(input => !Number.isFinite(inputs[input.key]) ||
+            state.input_units?.[input.key] !== Units.canonicalQuantities[input.quantity].unit)) {
+        return { ok: false, error: { code: 'INVALID_INPUT', message: 'Canonical inputs or units differ' } };
+      }
+      try {
+        const record = Exporter.createRecord({ formula, canonicalInputs: inputs,
+          unitSystemId: 'space', exportedAt: '1970-01-01T00:00:00.000Z' });
+        const outputs = record.calculation.outputs.map(output => ({ key: output.key, kind: output.kind,
+          value: output.kind === 'numeric' ? output.internal.value : output.value,
+          specialValue: output.kind === 'numeric' ? output.internal.specialValue : null,
+          unit: output.kind === 'numeric' ? output.internal.unit : null }));
+        const warnings = record.calculation.applicability.activeWarnings;
+        return { ok: true, formula_id: formula.id, outputs, value: outputs[0].value,
+          unit: outputs[0].unit, warnings, warning_ids: warnings.map(item => item.id),
+          applicability_status: warnings.length ? 'warning_active' : 'not_assessed' };
+      } catch (cause) {
+        return { ok: false, error: { code: 'CALCULATION_FAILED', message: cause.message } };
+      }
+    },
+  });
+};
+factories['./plasma-physics.js'] = function(require, module) { module.exports = root.PlasmaPhysics; };
+factories['./unit-registry.js'] = function(require, module) { module.exports = root.PlasmaUnitRegistry; };
+factories['./examples/wind_pilot/manifest.json'] = function(require, module) {
+  module.exports = {
+  "status": "PASS_1_SCIENTIFIC_SPECIFICATION_FOR_REVIEW",
+  "access_date_utc": "2026-09-27",
+  "repository_start": {
+    "path": "~/alfvenica-release-2",
+    "branch": "release-2-development",
+    "commit": "4591581b9a0c203d931fae5c6814ba3bbc1986d9",
+    "release_baseline_tag": "v1.1.0",
+    "release_baseline_doi": "10.5281/zenodo.22061119"
+  },
+  "primary": {
+    "selection": "SWE Epoch at spectrum start in [2020-01-01T16:00:00Z, 2020-01-01T18:00:00Z)",
+    "first_selected_epoch_utc": "2020-01-01T16:00:34.499Z",
+    "last_selected_epoch_utc": "2020-01-01T17:59:30.747Z",
+    "last_nominal_spectrum_end_utc": "2020-01-01T18:01:02.747Z",
+    "swe_selected": 73,
+    "swe_fit_flag_10": 73,
+    "swe_required_fields_complete_and_positive": 73,
+    "mfi_1min_valid_vectors_in_clock_window": 120,
+    "mfi_3sec_valid_vectors_in_clock_window": 2400
+  },
+  "contrasting_candidate": {
+    "selection": "SWE Epoch at spectrum start in [2020-07-01T18:00:00Z, 2020-07-01T20:00:00Z)",
+    "swe_selected": 72,
+    "fit_flag_counts": { "10": 57, "9": 2, "3": 3, "2": 10 },
+    "swe_fit_flag_10_required_fields_complete_and_positive": 57,
+    "mfi_1min_valid_vectors_in_clock_window": 120,
+    "mfi_3sec_valid_vectors_in_clock_window": 2400
+  },
+  "source_files": [
+    {
+      "role": "primary_required_plasma_and_co_reported_field",
+      "product_id": "WI_H1_SWE",
+      "dataset_doi": "10.48322/nasd-j276",
+      "filename": "wi_h1_swe_20200101_v01.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/swe/swe_h1/2020/wi_h1_swe_20200101_v01.cdf",
+      "cdf_data_version": "01",
+      "byte_size": 642922,
+      "sha256": "77a26a8a939fb2cc280c8ac1f9e1cb7f10da40e279ed61842878f7fc4a9a0aa3"
+    },
+    {
+      "role": "primary_optional_independent_magnetic_field",
+      "product_id": "WI_H0_MFI",
+      "dataset_doi": "10.48322/av38-wn55",
+      "filename": "wi_h0_mfi_20200101_v05.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/mfi/mfi_h0/2020/wi_h0_mfi_20200101_v05.cdf",
+      "cdf_data_version": "05",
+      "cdf_software_version": "V05.00",
+      "byte_size": 2618130,
+      "sha256": "ccabedb8b4b19ade6c38eb5b6a8f8daee5ef78e32219fa33b5b6f0c6696f3375"
+    },
+    {
+      "role": "contrasting_candidate_plasma_and_co_reported_field",
+      "product_id": "WI_H1_SWE",
+      "dataset_doi": "10.48322/nasd-j276",
+      "filename": "wi_h1_swe_20200701_v01.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/swe/swe_h1/2020/wi_h1_swe_20200701_v01.cdf",
+      "cdf_data_version": "01",
+      "byte_size": 642922,
+      "sha256": "0416dac771794c62a7c987ac79c8d777b41fd99bd6ae91f45c23f77a4755000d"
+    },
+    {
+      "role": "contrasting_candidate_optional_independent_magnetic_field",
+      "product_id": "WI_H0_MFI",
+      "dataset_doi": "10.48322/av38-wn55",
+      "filename": "wi_h0_mfi_20200701_v05.cdf",
+      "archive_url": "https://cdaweb.gsfc.nasa.gov/pub/data/wind/mfi/mfi_h0/2020/wi_h0_mfi_20200701_v05.cdf",
+      "cdf_data_version": "05",
+      "cdf_software_version": "V05.00",
+      "byte_size": 2618130,
+      "sha256": "b0260f6fd93b5d7398975f6451541c5b3a149c5ea8d2b1d2096a566803cd1d46"
+    }
+  ],
+  "representative_source_row": {
+    "source_file": "wi_h1_swe_20200101_v01.cdf",
+    "cdf_record_index_zero_based": 565,
+    "Epoch_utc": "2020-01-01T16:00:34.499Z",
+    "fit_flag": 10,
+    "Proton_Np_nonlin_cm-3": 9.017107963562012,
+    "Proton_W_nonlin_km-s-1": 20.94145965576172,
+    "Proton_Wperp_nonlin_km-s-1": 19.35150718688965,
+    "Proton_Wpar_nonlin_km-s-1": 23.804887771606445,
+    "BX_nT": 3.336029291152954,
+    "BY_nT": -2.6335034370422363,
+    "BZ_nT": 0.33161216974258423,
+    "Proton_V_nonlin_km-s-1": 325.3563232421875,
+    "Alpha_Na_nonlin_cm-3": 0.07853515446186066
+  },
+  "representative_existing_core_evaluation_not_independent_validation": {
+    "density_m-3": 9017107.963562012,
+    "field_magnitude_T": 4.263144193604662e-9,
+    "proton_trace_temperature_eV": 2.2891344173498283,
+    "proton_perpendicular_temperature_eV": 1.9547309406776,
+    "proton_trace_beta": 0.4573290338083086,
+    "proton_inertial_length_m": 75831.54985640521,
+    "proton_perpendicular_sigma_gyroradius_m": 33508.66821622374,
+    "proton_only_alfven_speed_m-s-1": 30966.531429068775
+  }
+}
+;
+};
+
+factories["./interval-import.js"] = function(require, module, exports) {
+const global = root;
+/* Versioned, local WI_H1_SWE prepared-CSV intake. No plasma diagnostics live here. */
+(function initIntervalImport(root, factory) {
+  if (typeof module === 'object' && module.exports && !root.PlasmaUnitRegistry) {
+    root.PlasmaPhysics = root.PlasmaPhysics || require('./plasma-physics.js');
+    root.PlasmaUnitRegistry = require('./unit-registry.js');
+  }
+  const api = factory(root.PlasmaUnitRegistry, root.TextEncoder);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.AlfvenicaIntervalImport = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function buildIntervalImport(Units, TextEncoderClass) {
+  'use strict';
+  if (!Units || !TextEncoderClass) throw new Error('Unit registry and TextEncoder are required');
+  if (Units.canonicalQuantities?.density?.unit !== 'm⁻³' ||
+      Units.canonicalQuantities?.magneticField?.unit !== 'T' ||
+      Units.canonicalQuantities?.speed?.unit !== 'm s⁻¹') {
+    throw new Error('Wind intake target units disagree with the Alfvenica unit registry');
+  }
+
+  const schema = Object.freeze({ name: 'org.alfvenica.interval-input', version: '1.0.0' });
+  const limits = Object.freeze({ csvBytes: 1048576, metadataBytes: 65536, rows: 1000 });
+  const policies = Object.freeze({
+    missing: 'FILL_TO_NULL_REJECT_REQUIRED', quality: 'FIT_FLAG_10_ONLY',
+    duplicate: 'REJECT_LATER_ROW', ordering: 'REJECT_OUT_OF_ORDER_ROW',
+    units: 'EXPLICIT_SUPPORTED_TO_CANONICAL', vectors: 'PRESERVE_GSE_COMPONENTS',
+    alignment: 'NONE_COREPORTED',
+  });
+  const isoUtc = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+  const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
+  const integer = /^(?:0|[1-9]\d*|-[1-9]\d*)$/;
+  const fieldDefinitions = Object.freeze([
+    { id: 'prepared.source_row_index', sourceVariable: null, kind: 'source_index', archiveUnit: null, required: true },
+    { id: 'wind.swe.spectrum_start', sourceVariable: 'Epoch', kind: 'timestamp', archiveUnit: 'CDF_EPOCH_MS', required: true },
+    { id: 'wind.swe.ion_fit_flag', sourceVariable: 'fit_flag', kind: 'flag', archiveUnit: '1', required: true },
+    { id: 'wind.swe.proton.number_density.nonlin', sourceVariable: 'Proton_Np_nonlin', kind: 'number', archiveUnit: 'cm^-3', family: 'density', species: 'proton', required: true, domain: 'positive' },
+    { id: 'wind.swe.proton.thermal_speed.trace.nonlin', sourceVariable: 'Proton_W_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', temperatureKind: 'trace', thermalSpeedConvention: 'SQRT_2KT_OVER_M', required: true, domain: 'positive' },
+    { id: 'wind.swe.proton.thermal_speed.perpendicular.nonlin', sourceVariable: 'Proton_Wperp_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', temperatureKind: 'perpendicular', thermalSpeedConvention: 'SQRT_2KT_OVER_M', required: true, domain: 'positive' },
+    { id: 'wind.swe.magnetic_field.x', sourceVariable: 'BX', kind: 'number', archiveUnit: 'nT', family: 'magneticField', vector: 'B', component: 'X', frame: 'GSE', required: true },
+    { id: 'wind.swe.magnetic_field.y', sourceVariable: 'BY', kind: 'number', archiveUnit: 'nT', family: 'magneticField', vector: 'B', component: 'Y', frame: 'GSE', required: true },
+    { id: 'wind.swe.magnetic_field.z', sourceVariable: 'BZ', kind: 'number', archiveUnit: 'nT', family: 'magneticField', vector: 'B', component: 'Z', frame: 'GSE', required: true },
+    { id: 'wind.swe.proton.velocity.x.nonlin', sourceVariable: 'Proton_VX_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', vector: 'V', component: 'X', frame: 'GSE', required: false },
+    { id: 'wind.swe.proton.velocity.y.nonlin', sourceVariable: 'Proton_VY_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', vector: 'V', component: 'Y', frame: 'GSE', required: false },
+    { id: 'wind.swe.proton.velocity.z.nonlin', sourceVariable: 'Proton_VZ_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', vector: 'V', component: 'Z', frame: 'GSE', required: false },
+    { id: 'wind.swe.proton.density_fit_sigma.nonlin', sourceVariable: 'Proton_sigmaNp_nonlin', kind: 'number', archiveUnit: 'cm^-3', family: 'density', species: 'proton', uncertaintyOf: 'Proton_Np_nonlin', required: false },
+    { id: 'wind.swe.proton.trace_speed_fit_sigma.nonlin', sourceVariable: 'Proton_sigmaW_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', uncertaintyOf: 'Proton_W_nonlin', required: false },
+    { id: 'wind.swe.proton.perpendicular_speed_fit_sigma.nonlin', sourceVariable: 'Proton_sigmaWperp_nonlin', kind: 'number', archiveUnit: 'km/s', family: 'speed', species: 'proton', uncertaintyOf: 'Proton_Wperp_nonlin', required: false },
+  ]);
+  const byId = Object.fromEntries(fieldDefinitions.map(field => [field.id, field]));
+  const requiredIds = fieldDefinitions.filter(field => field.required).map(field => field.id);
+  const numericRequiredIds = fieldDefinitions.filter(field => field.required && field.kind === 'number').map(field => field.id);
+  const reasonOrder = Object.freeze([
+    'INVALID_UTC_TIMESTAMP', 'OUTSIDE_INTERVAL', 'DUPLICATE_TIMESTAMP', 'OUT_OF_ORDER_TIMESTAMP',
+    'DISALLOWED_FLAG', 'INVALID_FLAG', 'FILL_REQUIRED', 'MISSING_REQUIRED', 'NON_FINITE', 'INVALID_NUMBER',
+    'ARCHIVE_RANGE', 'NON_POSITIVE_DENSITY', 'NON_POSITIVE_THERMAL_SPEED', 'ZERO_MAGNETIC_VECTOR',
+    'INVALID_SOURCE_ROW_INDEX', 'DUPLICATE_SOURCE_ROW_INDEX',
+  ]);
+  const failure = (code, message) => ({ ok: false, error: { code, message } });
+  function byteLength(text) { return new TextEncoderClass().encode(text).length; }
+  function parseUtc(value) {
+    if (typeof value !== 'string' || !isoUtc.test(value)) return null;
+    const date = new Date(value);
+    return Number.isFinite(date.getTime()) && date.toISOString() === value ? { iso: date.toISOString(), ms: date.getTime() } : null;
+  }
+  function parseCsv(text) {
+    const records = [];
+    let row = [], field = '', quoted = false, afterQuote = false, atStart = true;
+    for (let index = 0; index < text.length; index += 1) {
+      const char = text[index];
+      if (quoted) {
+        if (char === '"' && text[index + 1] === '"') { field += '"'; index += 1; }
+        else if (char === '"') { quoted = false; afterQuote = true; }
+        else field += char;
+      } else if (char === ',') {
+        row.push(field); field = ''; atStart = true; afterQuote = false;
+      } else if (char === '\n' || char === '\r') {
+        row.push(field); records.push(row); row = []; field = ''; atStart = true; afterQuote = false;
+        if (char === '\r' && text[index + 1] === '\n') index += 1;
+        if (records.length > limits.rows + 1) throw new Error('CSV_ROW_LIMIT');
+      } else if (char === '"' && atStart && !afterQuote) {
+        quoted = true; atStart = false;
+      } else if (char === '"' || afterQuote) {
+        throw new Error('MALFORMED_CSV_QUOTE');
+      } else {
+        field += char; atStart = false;
+      }
+    }
+    if (quoted) throw new Error('MALFORMED_CSV_QUOTE');
+    if (row.length || field !== '' || !text.endsWith('\n') && !text.endsWith('\r')) {
+      row.push(field); records.push(row);
+    }
+    if (!records.length || records[0].length === 1 && records[0][0] === '') throw new Error('EMPTY_CSV');
+    const header = records.shift();
+    if (new Set(header).size !== header.length || header.some(item => !item)) throw new Error('INVALID_CSV_HEADER');
+    for (const rowValues of records) if (rowValues.length !== header.length) throw new Error('MALFORMED_CSV_ROW');
+    return { header, records };
+  }
+  function canonicalValue(family, unit, value) {
+    // Preserve the explicit multiplication order in the accepted Wind Pass 1 contract.
+    if (family === 'density') return unit === 'cm^-3' ? value * 1e6 : value;
+    if (family === 'magneticField') return unit === 'nT' ? value * 1e-9 : value;
+    if (family === 'speed') return unit === 'km/s' ? value * 1e3 : value;
+    throw new Error('Unsupported quantity family');
+  }
+  function allowedUnit(family, unit) {
+    return family === 'density' ? ['cm^-3', 'm^-3'].includes(unit) :
+      family === 'magneticField' ? ['nT', 'T'].includes(unit) :
+        family === 'speed' ? ['km/s', 'm/s'].includes(unit) : false;
+  }
+  function validateMetadata(meta) {
+    if (!meta || typeof meta !== 'object' || Array.isArray(meta)) return failure('INVALID_METADATA', 'Sidecar must be a JSON object');
+    if (meta.schema?.name !== schema.name || meta.schema?.version !== schema.version) return failure('UNSUPPORTED_SCHEMA', 'Unsupported interval-input schema');
+    const source = meta.source;
+    if (!source || source.mission !== 'Wind' || source.productId !== 'WI_H1_SWE' ||
+        source.datasetDoi !== '10.48322/nasd-j276' || typeof source.fileName !== 'string' || !source.fileName ||
+        typeof source.productVersion !== 'string' || !source.productVersion ||
+        !['CDF_DERIVED', 'SYNTHETIC_TEST_DATA'].includes(source.dataOrigin)) {
+      return failure('INVALID_SOURCE', 'Wind H1 source, file, product version, DOI, and data origin must be explicit');
+    }
+    if (source.sha256 !== null && typeof source.sha256 !== 'undefined' && !/^[a-f0-9]{64}$/.test(source.sha256)) return failure('INVALID_SOURCE_DIGEST', 'Source SHA-256 must be 64 lowercase hex characters');
+    if (source.digestScope !== 'SOURCE_FILE_BYTES_ONLY') return failure('INVALID_SOURCE_DIGEST', 'Digest scope must identify source-file bytes only');
+    const time = meta.time;
+    if (!time || time.column !== 'Epoch' || time.scale !== 'UTC' || time.format !== 'ISO_8601_UTC_MILLISECONDS' ||
+        time.meaning !== 'SWE_SPECTRUM_START' || time.nominalSupportSeconds !== 92) {
+      return failure('INVALID_TIME_METADATA', 'SWE timestamp support and explicit UTC format are required');
+    }
+    const start = parseUtc(time.interval?.start), end = parseUtc(time.interval?.end);
+    if (!start || !end || start.ms >= end.ms) return failure('INVALID_TIME_METADATA', 'A valid half-open UTC interval is required');
+    if (!meta.processing || Object.keys(meta.processing).length !== Object.keys(policies).length ||
+        Object.entries(policies).some(([key, value]) => meta.processing[key] !== value)) {
+      return failure('INVALID_PROCESSING_POLICY', 'Unsupported, extra, or missing processing policy');
+    }
+    if (!Array.isArray(meta.columns)) return failure('INVALID_COLUMN_MAP', 'Explicit column map is required');
+    const ids = new Set(), names = new Set();
+    for (const column of meta.columns) {
+      const expected = byId[column?.semanticId];
+      if (!expected || typeof column.column !== 'string' || !column.column || ids.has(expected.id) || names.has(column.column)) return failure('INVALID_COLUMN_MAP', 'Unknown, duplicate, or unnamed column identity');
+      ids.add(expected.id); names.add(column.column);
+      if (column.sourceVariable !== expected.sourceVariable || column.kind !== expected.kind || column.archiveUnit !== expected.archiveUnit ||
+          column.required !== expected.required) return failure('INCOMPATIBLE_COLUMN_MEANING', `${column.column}: source variable, kind, archive unit, or required status differs`);
+      if (expected.kind === 'number') {
+        if (column.species !== (expected.species || null) || column.temperatureKind !== (expected.temperatureKind || null) ||
+            column.thermalSpeedConvention !== (expected.thermalSpeedConvention || null) ||
+            (column.uncertaintyOf || null) !== (expected.uncertaintyOf || null) ||
+            column.vector !== (expected.vector || null) || column.component !== (expected.component || null) ||
+            column.frame !== (expected.frame || null) || column.qualityFlag !== 'fit_flag' ||
+            column.timeSupport !== 'SWE_SPECTRUM') return failure('INCOMPATIBLE_COLUMN_MEANING', `${column.column}: species, temperature, vector, quality, or time support differs`);
+        if (!allowedUnit(expected.family, column.csvUnit)) return failure('INVALID_UNIT', `${column.column}: unsupported or incompatible CSV unit`);
+        if (column.csvUnit !== expected.archiveUnit && (!column.preparation || typeof column.preparation !== 'string')) return failure('MISSING_PREPARATION_TRACE', `${column.column}: prepared-unit change must be declared`);
+        if (!Array.isArray(column.fillValues) || column.fillValues.length !== 1 || column.fillValues[0] !== -1e31 ||
+            JSON.stringify(column.nullTokens) !== JSON.stringify(['', 'null'])) return failure('INVALID_MISSING_POLICY', `${column.column}: fill and null tokens must be declared`);
+        if (source.dataOrigin === 'CDF_DERIVED') {
+          const range = column.validRange;
+          if (!range || !Number.isFinite(range.min) || !Number.isFinite(range.max) || range.min > range.max ||
+              range.unit !== expected.archiveUnit || range.source !== 'CDF_VALIDMIN_VALIDMAX') return failure('MISSING_ARCHIVE_RANGE', `${column.column}: source CDF VALIDMIN/VALIDMAX are required`);
+        } else if (column.validRange !== null) return failure('INVALID_ARCHIVE_RANGE', `${column.column}: synthetic fixture must not claim CDF range verification`);
+      } else if (expected.kind === 'flag') {
+        if (column.csvUnit !== '1' || JSON.stringify(column.fillValues) !== '[-128]' ||
+            JSON.stringify(column.nullTokens) !== JSON.stringify(['', 'null'])) return failure('INVALID_FLAG_METADATA', 'fit_flag unit or missing marker differs');
+      } else if (expected.kind === 'timestamp') {
+        if (column.csvUnit !== 'ISO_8601_UTC_MILLISECONDS') return failure('INVALID_TIME_METADATA', 'Epoch must be prepared as explicit ISO UTC');
+      } else if (column.csvUnit !== '1') return failure('INVALID_COLUMN_MAP', 'Source row index must be an integer');
+    }
+    if (requiredIds.some(id => !ids.has(id))) return failure('MISSING_REQUIRED_COLUMN', 'Required Wind H1 column mapping is absent');
+    const velocityIds = fieldDefinitions.filter(field => field.vector === 'V').map(field => field.id);
+    if (velocityIds.some(id => ids.has(id)) && velocityIds.some(id => !ids.has(id))) return failure('INCOMPLETE_VECTOR_METADATA', 'Velocity components must be declared as a complete GSE vector');
+    return { ok: true, start, end };
+  }
+  function parseNumber(raw, column, integerOnly = false) {
+    if (column.nullTokens.includes(raw)) return { kind: 'missing', value: null };
+    if (decimal.test(raw) && Number.isFinite(Number(raw)) && column.fillValues.includes(Number(raw))) return { kind: 'fill', value: null };
+    if (raw === 'NaN' || raw === 'Infinity' || raw === '-Infinity' || decimal.test(raw) && !Number.isFinite(Number(raw))) return { kind: 'nonfinite', value: null };
+    if (!(integerOnly ? integer : decimal).test(raw)) return { kind: 'invalid', value: null };
+    const value = Number(raw);
+    if (!Number.isFinite(value)) return { kind: 'nonfinite', value: null };
+    return { kind: 'number', value };
+  }
+  function median(values) {
+    if (!values.length) return null;
+    const ordered = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(ordered.length / 2);
+    return ordered.length % 2 ? ordered[mid] : (ordered[mid - 1] + ordered[mid]) / 2;
+  }
+  function importInterval(csvText, metadataInput) {
+    if (typeof csvText !== 'string' || byteLength(csvText) > limits.csvBytes) return failure('CSV_SIZE_LIMIT', 'CSV must be text within the byte limit');
+    let meta;
+    try { meta = typeof metadataInput === 'string' ? JSON.parse(metadataInput) : metadataInput; }
+    catch (_) { return failure('INVALID_METADATA', 'Sidecar JSON is malformed'); }
+    let metadataBytes;
+    try { metadataBytes = byteLength(typeof metadataInput === 'string' ? metadataInput : JSON.stringify(meta)); }
+    catch (_) { return failure('INVALID_METADATA', 'Sidecar cannot be serialized'); }
+    if (metadataBytes > limits.metadataBytes) return failure('METADATA_SIZE_LIMIT', 'Sidecar exceeds the byte limit');
+    const validation = validateMetadata(meta);
+    if (!validation.ok) return validation;
+    let parsed;
+    try { parsed = parseCsv(csvText); }
+    catch (cause) { return failure(cause.message, 'CSV is malformed or exceeds a row/column limit'); }
+    if (parsed.records.length > limits.rows) return failure('CSV_ROW_LIMIT', 'Too many CSV data rows');
+    if (parsed.header.length !== meta.columns.length || parsed.header.some(name => !meta.columns.some(column => column.column === name))) return failure('CSV_COLUMN_MAP_MISMATCH', 'Every CSV header must have one declared column and vice versa');
+    const descriptors = Object.fromEntries(meta.columns.map(column => [column.column, { ...column, expected: byId[column.semanticId] }]));
+    const mappingTrace = [];
+    for (const column of meta.columns) {
+      mappingTrace.push({ operationId: 'MAP_COLUMN', column: column.column, sourceVariable: column.sourceVariable, semanticId: column.semanticId, csvUnit: column.csvUnit });
+      if (column.kind === 'number' && column.csvUnit !== column.archiveUnit) {
+        mappingTrace.push({ operationId: 'DECLARE_UPSTREAM_UNIT_CONVERSION', column: column.column,
+          archiveUnit: column.archiveUnit, csvUnit: column.csvUnit, declaration: column.preparation,
+          verification: 'CALLER_DECLARED_NOT_RECOMPUTED' });
+      }
+    }
+    const seenTimes = new Set(), seenSourceIndices = new Set();
+    let lastMs = null, missingCellCount = 0, selectedRows = 0;
+    const rows = [];
+    for (const [rowOffset, cells] of parsed.records.entries()) {
+      const raw = Object.fromEntries(parsed.header.map((name, index) => [name, cells[index]]));
+      const normalized = {}, transformations = [], reasons = new Set();
+      const sourceIndexColumn = meta.columns.find(column => column.kind === 'source_index');
+      const indexText = raw[sourceIndexColumn.column];
+      const sourceIndex = integer.test(indexText) && Number.isSafeInteger(Number(indexText)) && Number(indexText) >= 0 ? Number(indexText) : null;
+      const sampleId = sourceIndex === null ? `${meta.source.fileName}#csv-row:${rowOffset + 1}` :
+        `${meta.source.fileName}#source-row:${sourceIndex}@csv-row:${rowOffset + 1}`;
+      if (sourceIndex === null) reasons.add('INVALID_SOURCE_ROW_INDEX');
+      else if (seenSourceIndices.has(sourceIndex)) reasons.add('DUPLICATE_SOURCE_ROW_INDEX');
+      else seenSourceIndices.add(sourceIndex);
+      normalized[sourceIndexColumn.semanticId] = sourceIndex;
+      const timeColumn = meta.columns.find(column => column.kind === 'timestamp');
+      const time = parseUtc(raw[timeColumn.column]);
+      normalized[timeColumn.semanticId] = time ? time.iso : null;
+      if (!time) {
+        reasons.add('INVALID_UTC_TIMESTAMP');
+        if (Number(raw[timeColumn.column]) === -1e31 && raw[timeColumn.column] !== '') {
+          transformations.push({ operationId: 'FILL_TO_NULL', column: timeColumn.column, raw: raw[timeColumn.column], normalized: null });
+        }
+      }
+      else {
+        transformations.push({ operationId: 'NORMALIZE_UTC_TIMESTAMP', column: timeColumn.column, raw: raw[timeColumn.column], normalized: time.iso });
+        if (time.ms >= validation.start.ms && time.ms < validation.end.ms) selectedRows += 1;
+        else reasons.add('OUTSIDE_INTERVAL');
+        if (seenTimes.has(time.ms)) reasons.add('DUPLICATE_TIMESTAMP');
+        else seenTimes.add(time.ms);
+        if (lastMs !== null && time.ms < lastMs) reasons.add('OUT_OF_ORDER_TIMESTAMP');
+        if (lastMs === null || time.ms > lastMs) lastMs = time.ms;
+      }
+      const flagColumn = meta.columns.find(column => column.kind === 'flag');
+      const flag = parseNumber(raw[flagColumn.column], flagColumn, true);
+      normalized[flagColumn.semanticId] = flag.value;
+      if (flag.kind !== 'number') {
+        reasons.add('INVALID_FLAG');
+        if (flag.kind === 'fill' || flag.kind === 'missing') transformations.push({ operationId: 'FILL_TO_NULL', column: flagColumn.column, raw: raw[flagColumn.column], normalized: null });
+      } else if (flag.value !== 10) reasons.add('DISALLOWED_FLAG');
+      for (const column of meta.columns.filter(item => item.kind === 'number')) {
+        const rawValue = raw[column.column], parsedValue = parseNumber(rawValue, column);
+        if (parsedValue.kind !== 'number') {
+          normalized[column.semanticId] = null;
+          if (parsedValue.kind === 'fill' || parsedValue.kind === 'missing') {
+            if (column.required) { reasons.add(parsedValue.kind === 'fill' ? 'FILL_REQUIRED' : 'MISSING_REQUIRED'); missingCellCount += 1; }
+            transformations.push({ operationId: parsedValue.kind === 'fill' ? 'FILL_TO_NULL' : 'MISSING_TO_NULL', column: column.column, raw: rawValue, normalized: null });
+          } else reasons.add(parsedValue.kind === 'nonfinite' ? 'NON_FINITE' : 'INVALID_NUMBER');
+          continue;
+        }
+        const value = canonicalValue(byId[column.semanticId].family, column.csvUnit, parsedValue.value);
+        if (!Number.isFinite(value)) { normalized[column.semanticId] = null; reasons.add('NON_FINITE'); continue; }
+        normalized[column.semanticId] = value;
+        const targetUnit = Units.canonicalQuantities[byId[column.semanticId].family].unit;
+        if (column.csvUnit !== (byId[column.semanticId].family === 'density' ? 'm^-3' : byId[column.semanticId].family === 'speed' ? 'm/s' : 'T')) {
+          transformations.push({ operationId: 'CONVERT_UNIT', column: column.column, raw: parsedValue.value, rawUnit: column.csvUnit, normalized: value, normalizedUnit: targetUnit });
+        }
+        if (column.validRange) {
+          const expected = byId[column.semanticId];
+          if (value < canonicalValue(expected.family, expected.archiveUnit, column.validRange.min) ||
+              value > canonicalValue(expected.family, expected.archiveUnit, column.validRange.max)) reasons.add('ARCHIVE_RANGE');
+        }
+        if (byId[column.semanticId].domain === 'positive' && value <= 0) reasons.add(byId[column.semanticId].family === 'density' ? 'NON_POSITIVE_DENSITY' : 'NON_POSITIVE_THERMAL_SPEED');
+      }
+      const component = (variable, axis) => {
+        const definition = fieldDefinitions.find(field => field.vector === variable && field.component === axis);
+        return Object.hasOwn(normalized, definition.id) ? normalized[definition.id] : null;
+      };
+      const vectors = {
+        B: { frame: 'GSE', components: { X: component('B', 'X'), Y: component('B', 'Y'), Z: component('B', 'Z') } },
+        V: { frame: meta.columns.some(column => byId[column.semanticId].vector === 'V') ? 'GSE' : null,
+          components: { X: component('V', 'X'), Y: component('V', 'Y'), Z: component('V', 'Z') } },
+      };
+      vectors.B.availability = Object.values(vectors.B.components).every(Number.isFinite) ? 'complete' : 'incomplete';
+      vectors.V.availability = vectors.V.frame === null ? 'not_declared' :
+        Object.values(vectors.V.components).every(Number.isFinite) ? 'complete' : 'incomplete';
+      if (Object.values(vectors.B.components).every(value => value === 0)) reasons.add('ZERO_MAGNETIC_VECTOR');
+      const rejectionReasons = reasonOrder.filter(reason => reasons.has(reason));
+      if (rejectionReasons.length) transformations.push({ operationId: 'REJECT_ROW', sampleId, reasons: rejectionReasons });
+      rows.push({ sampleId, csvRowNumber: rowOffset + 1, sourceRowIndex: sourceIndex, status: rejectionReasons.length ? 'rejected' : 'retained', firstFailure: rejectionReasons[0] || null,
+        rejectionReasons, timestampUtc: time ? time.iso : null, raw, normalized, vectors, transformations });
+    }
+    const retainedRows = rows.filter(row => row.status === 'retained');
+    const rejectedRows = rows.filter(row => row.status === 'rejected');
+    const firstFailureCounts = {}, allReasonCounts = {};
+    for (const row of rejectedRows) {
+      firstFailureCounts[row.firstFailure] = (firstFailureCounts[row.firstFailure] || 0) + 1;
+      for (const reason of row.rejectionReasons) allReasonCounts[reason] = (allReasonCounts[reason] || 0) + 1;
+    }
+    const starts = retainedRows.map(row => Date.parse(row.timestampUtc));
+    const separations = starts.slice(1).map((time, index) => (time - starts[index]) / 1000);
+    const excessBeyondNominal = separations.map(seconds => Math.max(0, seconds - meta.time.nominalSupportSeconds));
+    const nominalGaps = excessBeyondNominal.filter(seconds => seconds > 0);
+    const summary = {
+      totalRows: rows.length, selectedRows, retainedRows: retainedRows.length, rejectedRows: rejectedRows.length,
+      firstFailureCounts, allReasonCounts, missingCellCount,
+      missingFraction: rows.length ? missingCellCount / (rows.length * numericRequiredIds.length) : null,
+      disallowedFlagCount: allReasonCounts.DISALLOWED_FLAG || 0,
+      invalidDomainCount: rows.filter(row => row.rejectionReasons.some(reason => ['NON_POSITIVE_DENSITY', 'NON_POSITIVE_THERMAL_SPEED', 'ZERO_MAGNETIC_VECTOR'].includes(reason))).length,
+      duplicateTimestampCount: allReasonCounts.DUPLICATE_TIMESTAMP || 0,
+      outOfOrderCount: allReasonCounts.OUT_OF_ORDER_TIMESTAMP || 0,
+      medianCadenceSeconds: median(separations),
+      gaps: { nominalSupportSeconds: meta.time.nominalSupportSeconds, nominalGapCount: nominalGaps.length,
+        totalExcessBeyondNominalSeconds: excessBeyondNominal.reduce((sum, value) => sum + value, 0),
+        maxExcessBeyondNominalSeconds: nominalGaps.length ? Math.max(...nominalGaps) : 0 },
+    };
+    return { ok: true, schema: { ...schema }, source: { ...meta.source, identityMeaning: 'FILE_IDENTITY_ONLY_NOT_QUALITY' },
+      time: { ...meta.time }, summary, mappingTrace, rows, retainedRows, rejectedRows,
+      alignmentStatus: 'NOT_PERFORMED_COREPORTED_H1', alignedPairCount: null,
+      inputValidity: 'declared_metadata_and_row_checks_only', modelApplicability: 'not_assessed',
+      sourceDigestStatus: meta.source.sha256 ? 'DECLARED_NOT_RECOMPUTED' : 'NOT_SUPPLIED',
+      sourceMetadataVerification: meta.source.dataOrigin === 'CDF_DERIVED' ? 'DECLARED_NOT_INDEPENDENTLY_CHECKED_AGAINST_CDF' : 'SYNTHETIC_TEST_DATA' };
+  }
+  return Object.freeze({ schema, limits, policies, fieldDefinitions, parseUtc, importInterval });
+}));
+
+};
+factories["./model-compatibility.js"] = function(require, module, exports) {
+const global = root;
+/* Pass 4 Wind H1 input/model compatibility. No numerical plasma physics here. */
+'use strict';
+const Intake = require('./interval-import.js');
+
+const fields = Object.freeze(Object.fromEntries(Intake.fieldDefinitions
+  .filter(field => field.sourceVariable)
+  .map(field => [field.sourceVariable, field])));
+const definitions = Object.freeze({
+  proton_beta_trace: Object.freeze({ formulaId: 'species-beta', species: 'H+', densityKind: 'proton_number_density',
+    chargeState: 1, massRatioToProton: 1, temperatureKind: 'trace_scalar',
+    temperatureSource: 'Proton_W_nonlin', fieldSource: 'WI_H1_SWE co-reported GSE mean vector',
+    timeSupport: 'same SWE spectrum; Epoch is start; nominal 92 s', model: 'proton thermal pressure only' }),
+  proton_inertial_length: Object.freeze({ formulaId: 'ion-inertial-length', species: 'H+', densityKind: 'proton_number_density',
+    chargeState: 1, massRatioToProton: 1, temperatureKind: 'not_required', fieldSource: 'not_used_by_formula',
+    timeSupport: 'SWE spectrum; Epoch is start; nominal 92 s', model: 'single proton species' }),
+  proton_gyroradius_perp_sigma: Object.freeze({ formulaId: 'ion-gyroradius', species: 'H+', densityKind: 'proton_number_density',
+    chargeState: 1, massRatioToProton: 1, temperatureKind: 'perpendicular',
+    temperatureSource: 'Proton_Wperp_nonlin', fieldSource: 'WI_H1_SWE co-reported GSE mean vector',
+    timeSupport: 'same SWE spectrum; Epoch is start; nominal 92 s', model: 'one-component sigma thermal speed' }),
+  alfven_speed_proton_only: Object.freeze({ formulaId: 'alfven-speed', species: 'H+', densityKind: 'proton_number_density',
+    chargeState: 1, massRatioToProton: 1, temperatureKind: 'not_required',
+    fieldSource: 'WI_H1_SWE co-reported GSE mean vector', timeSupport: 'same SWE spectrum; Epoch is start; nominal 92 s',
+    model: 'classical nonrelativistic MHD; proton-only mass-density approximation rho=n_p*m_p',
+    massDensity: 'PROTON_ONLY_APPROXIMATION', measuredCompositionStatus: 'UNAVAILABLE_NOT_ASSUMED' }),
+});
+
+function assess(intake, row, quantityId) {
+  const definition = definitions[quantityId];
+  if (!definition) return { status: 'incompatible', reasons: [{ id: 'UNSUPPORTED_QUANTITY', message: String(quantityId) }], missing_fields: [] };
+  const problems = [], missing = [];
+  const add = (status, id, field, message) => {
+    problems.push({ status, id, field, message });
+    if (status === 'not_assessed') missing.push(field);
+  };
+  const source = intake?.source, time = intake?.time, values = row?.normalized;
+  if (intake?.ok !== true || intake.schema?.name !== Intake.schema.name || intake.schema?.version !== Intake.schema.version) {
+    add('incompatible', 'INVALID_INTAKE_CONTRACT', 'schema', 'A successful Pass 3 interval input is required');
+  }
+  if (!row || row.status !== 'retained' || !Array.isArray(row.rejectionReasons) ||
+      row.rejectionReasons.length || row.firstFailure !== null || typeof row.sampleId !== 'string' || !row.sampleId) {
+    add('incompatible', 'ROW_NOT_RETAINED', 'row.status', 'Only traceable retained Pass 3 rows may be calculated');
+  }
+  if (!Number.isSafeInteger(row?.sourceRowIndex) || row.sourceRowIndex < 0) {
+    add('not_assessed', 'SOURCE_ROW_ID_MISSING', 'row.sourceRowIndex', 'A valid source-record index is required');
+  }
+  if (!source?.mission || !source?.productId || !source?.fileName || !source?.productVersion || !source?.datasetDoi) {
+    add('not_assessed', 'SOURCE_IDENTITY_MISSING', 'source', 'Source identity is incomplete');
+  } else if (source.mission !== 'Wind' || source.productId !== 'WI_H1_SWE' || source.datasetDoi !== '10.48322/nasd-j276') {
+    add('incompatible', 'SOURCE_NOT_WIND_H1', 'source', 'This pathway is defined for WI_H1_SWE only');
+  }
+  if (!['CDF_DERIVED', 'SYNTHETIC_TEST_DATA'].includes(source?.dataOrigin)) {
+    add('not_assessed', 'DATA_ORIGIN_MISSING', 'source.dataOrigin', 'Data origin must be declared');
+  }
+  if (!time?.scale || !time?.meaning || !Number.isFinite(time?.nominalSupportSeconds) || !time?.interval) {
+    add('not_assessed', 'TIME_SUPPORT_MISSING', 'time', 'SWE timestamp meaning, interval, and nominal support are required');
+  } else if (time.scale !== 'UTC' || time.meaning !== 'SWE_SPECTRUM_START' || time.nominalSupportSeconds !== 92) {
+    add('incompatible', 'TIME_SUPPORT_MISMATCH', 'time', 'Declared support disagrees with the accepted H1 pathway');
+  }
+  if (!row?.timestampUtc || !Intake.parseUtc(row.timestampUtc)) {
+    add('not_assessed', 'ROW_TIME_MISSING', 'row.timestampUtc', 'A canonical UTC spectrum-start timestamp is required');
+  } else {
+    const start = Intake.parseUtc(time?.interval?.start), end = Intake.parseUtc(time?.interval?.end);
+    if (values?.[fields.Epoch.id] !== row.timestampUtc ||
+        time?.interval && (!start || !end) ||
+        start && end && (row.timestampUtc < start.iso || row.timestampUtc >= end.iso)) {
+      add('incompatible', 'ROW_TIME_MISMATCH', 'row.timestampUtc', 'Timestamp must agree with normalized Epoch and requested interval');
+    }
+  }
+  if (!intake || !Object.hasOwn(intake, 'alignmentStatus')) {
+    add('not_assessed', 'FIELD_PAIRING_UNASSESSED', 'alignmentStatus', 'H1 co-reported field pairing must be declared');
+  } else if (!Object.hasOwn(intake, 'alignedPairCount')) {
+    add('not_assessed', 'PAIR_COUNT_UNASSESSED', 'alignedPairCount', 'Independent pairing status must be explicit');
+  } else if (intake.alignmentStatus !== 'NOT_PERFORMED_COREPORTED_H1' || intake.alignedPairCount !== null) {
+    add('incompatible', 'FIELD_PAIRING_MISMATCH', 'alignmentStatus', 'No H0 pairing is part of this pathway');
+  }
+  if (values?.[fields.fit_flag.id] !== 10) add('incompatible', 'FIT_FLAG_NOT_10', 'fit_flag', 'The primary pilot retains fit_flag=10 only');
+
+  function requireMapped(sourceVariable) {
+    const expected = fields[sourceVariable];
+    const entry = intake?.mappingTrace?.find(item => item.operationId === 'MAP_COLUMN' && item.semanticId === expected.id);
+    if (!entry) add('not_assessed', 'SEMANTIC_MAPPING_MISSING', sourceVariable, `Mapping for ${sourceVariable} is absent`);
+    else if (entry.sourceVariable !== sourceVariable) add('incompatible', 'SEMANTIC_MAPPING_MISMATCH', sourceVariable, `Mapping for ${sourceVariable} is contradictory`);
+  }
+  requireMapped('Epoch');
+  requireMapped('fit_flag');
+  requireMapped('Proton_Np_nonlin');
+  const density = values?.[fields.Proton_Np_nonlin.id];
+  if (density === null || typeof density === 'undefined') add('not_assessed', 'DENSITY_MISSING', 'Proton_Np_nonlin', 'Proton number density is required');
+  else if (!Number.isFinite(density) || density <= 0) add('incompatible', 'DENSITY_DOMAIN', 'Proton_Np_nonlin', 'Proton number density must be positive and finite');
+
+  // The accepted intake requires the complete co-reported H1 field even where a
+  // particular formula uses only density; an invalid source row is not rescued here.
+  const vector = row?.vectors?.B;
+  for (const axis of ['X', 'Y', 'Z']) {
+    const name = `B${axis}`, expected = fields[name];
+    requireMapped(name);
+    const component = vector?.components?.[axis];
+    if (component === null || typeof component === 'undefined') add('not_assessed', 'FIELD_COMPONENT_MISSING', name, `${name} is required`);
+    else if (!Number.isFinite(component) || !Object.is(component, values?.[expected.id])) {
+      add('incompatible', 'FIELD_COMPONENT_MISMATCH', name, `${name} must be finite and match its normalized component`);
+    }
+  }
+  if (!vector?.frame) add('not_assessed', 'FIELD_FRAME_MISSING', 'B.frame', 'The H1 field frame must be declared');
+  else if (vector.frame !== 'GSE') add('incompatible', 'FIELD_FRAME_MISMATCH', 'B.frame', 'The accepted H1 field vector is GSE');
+  if (vector?.availability !== 'complete') add('not_assessed', 'FIELD_VECTOR_INCOMPLETE', 'B.availability', 'A complete field vector is required');
+  if (vector?.components && ['X', 'Y', 'Z'].every(axis => vector.components[axis] === 0)) {
+    add('incompatible', 'ZERO_MAGNETIC_VECTOR', 'B', 'A zero field vector is outside the accepted row domain');
+  } else if (vector?.components && ['X', 'Y', 'Z'].every(axis => Number.isFinite(vector.components[axis])) &&
+      !Number.isFinite(Math.hypot(vector.components.X, vector.components.Y, vector.components.Z))) {
+    add('incompatible', 'FIELD_MAGNITUDE_DOMAIN', 'B', 'Field magnitude must remain finite');
+  }
+
+  const thermalSource = definition.temperatureSource;
+  if (thermalSource) {
+    requireMapped(thermalSource);
+    const speed = values?.[fields[thermalSource].id];
+    if (speed === null || typeof speed === 'undefined') {
+      const scalarOffered = thermalSource === 'Proton_Wperp_nonlin' && Number.isFinite(values?.[fields.Proton_W_nonlin.id]);
+      add(scalarOffered ? 'incompatible' : 'not_assessed', scalarOffered ? 'TRACE_CANNOT_REPLACE_PERP' : 'THERMAL_SPEED_MISSING',
+        thermalSource, scalarOffered ? 'Trace speed cannot supply perpendicular temperature' : 'Required proton thermal speed is absent');
+    } else if (!Number.isFinite(speed) || speed <= 0) {
+      add('incompatible', 'THERMAL_SPEED_DOMAIN', thermalSource, 'Required proton thermal speed must be positive and finite');
+    }
+  }
+  const status = problems.some(item => item.status === 'incompatible') ? 'incompatible' :
+    problems.length ? 'not_assessed' : 'compatible';
+  return {
+    status, reasons: problems.length ? problems.map(({ status: _, ...reason }) => reason) :
+      [{ id: 'WIND_H1_DECLARED_SCOPE', message: 'Declared proton inputs and co-reported H1 timing/field match this quantity; broader physical applicability is not assessed' }],
+    missing_fields: [...new Set(missing)],
+    scope: 'declared-input/model compatibility only; not archive authentication or general physical applicability',
+  };
+}
+
+module.exports = Object.freeze({ definitions, assess });
+
+};
+factories["./interval-analysis.js"] = function(require, module, exports) {
+const global = root;
+/* Pass 4 four-quantity Wind chain. All plasma outputs use research-runner.js. */
+'use strict';
+const Intake = require('./interval-import.js');
+const Compatibility = require('./model-compatibility.js');
+const Runner = require('./research-runner.js');
+const Physics = require('./plasma-physics.js');
+const Units = require('./unit-registry.js');
+
+const schema = Object.freeze({ name: 'org.alfvenica.wind-interval-analysis', version: '1.0.0' });
+const field = Object.freeze(Object.fromEntries(Intake.fieldDefinitions
+  .filter(item => item.sourceVariable)
+  .map(item => [item.sourceVariable, item.id])));
+const quantityIds = Object.freeze(Object.keys(Compatibility.definitions));
+const outputQuantities = Object.freeze({ proton_beta_trace: 'dimensionless', proton_inertial_length: 'length',
+  proton_gyroradius_perp_sigma: 'length', alfven_speed_proton_only: 'speed' });
+const assumptions = Object.freeze({
+  proton_beta_trace: ['H+ trace scalar pressure only; no electron or alpha pressure.', 'Wind W_trace=sqrt(2kT_trace/m_p).'],
+  proton_inertial_length: ['Single H+ species with charge state Z=1 and mass m_p.', 'Proton number density is not mass density.'],
+  proton_gyroradius_perp_sigma: ['Wind W_perp=sqrt(2kT_perp/m_p).', 'Alfvenica uses one-component sigma speed sqrt(kT_perp/m_p).'],
+  alfven_speed_proton_only: ['Proton-only mass-density approximation rho=n_p*m_p; no alpha abundance inferred.',
+    'Classical nonrelativistic MHD expression.'],
+});
+const failure = (code, message) => ({ ok: false, error: { code, message } });
+
+function median(values) {
+  const sorted = [...values].sort((a, b) => a - b), middle = Math.floor(sorted.length / 2);
+  return sorted.length ? sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2 : null;
+}
+function actualInputs(row, quantityId) {
+  const values = row.normalized;
+  const density = values[field.Proton_Np_nonlin];
+  const fieldComponents = row.vectors.B.components;
+  const B = Math.hypot(fieldComponents.X, fieldComponents.Y, fieldComponents.Z);
+  const transformations = [];
+  if (quantityId !== 'proton_inertial_length') {
+    transformations.push({ operationId: 'H1_MEAN_VECTOR_MAGNITUDE', sourceFrame: 'GSE',
+      sourceComponentsTesla: { ...fieldComponents }, valueTesla: Number.isFinite(B) ? B : null,
+      specialValue: Number.isFinite(B) ? null : 'NON_FINITE_DERIVED',
+      meaning: 'magnitude of co-reported component-averaged vector, not mean of magnitudes' });
+  }
+  const temperature = sourceName => {
+    const speed = values[field[sourceName]];
+    const eV = Physics.constants.protonMass * speed * speed / (2 * Physics.constants.elementaryCharge);
+    transformations.push({ operationId: 'WIND_THERMAL_SPEED_TO_TEMPERATURE', sourceVariable: sourceName,
+      sourceSemanticId: field[sourceName], speedMps: speed, convention: 'W=sqrt(2kT/m_p)',
+      protonMassKg: Physics.constants.protonMass, elementaryChargeC: Physics.constants.elementaryCharge,
+      temperatureEv: Number.isFinite(eV) ? eV : null,
+      specialValue: Number.isFinite(eV) ? null : 'NON_FINITE_DERIVED' });
+    return eV;
+  };
+  let canonicalInputs;
+  if (quantityId === 'proton_beta_trace') canonicalInputs = { ns: density, Ts: temperature('Proton_W_nonlin'), B };
+  else if (quantityId === 'proton_inertial_length') canonicalInputs = { ni: density, Z: 1, mu: 1 };
+  else if (quantityId === 'proton_gyroradius_perp_sigma') canonicalInputs = { Ti: temperature('Proton_Wperp_nonlin'), B, Z: 1, mu: 1 };
+  else canonicalInputs = { B, ni: density, mu: 1 };
+  return { canonicalInputs, transformations };
+}
+function analyze(intake) {
+  if (!intake || intake.ok !== true || intake.schema?.name !== Intake.schema.name ||
+      intake.schema?.version !== Intake.schema.version || !Array.isArray(intake.rows) ||
+      !Array.isArray(intake.retainedRows) || !Array.isArray(intake.rejectedRows)) {
+    return failure('INVALID_INTAKE_RESULT', 'A successful Pass 3 interval result is required');
+  }
+  const retained = intake.rows.filter(row => row.status === 'retained');
+  const rejected = intake.rows.filter(row => row.status === 'rejected');
+  const ids = rows => rows.map(row => row.sampleId);
+  if (retained.length + rejected.length !== intake.rows.length ||
+      intake.summary?.totalRows !== intake.rows.length ||
+      new Set(ids(intake.rows)).size !== intake.rows.length ||
+      JSON.stringify(ids(retained)) !== JSON.stringify(ids(intake.retainedRows)) ||
+      JSON.stringify(ids(rejected)) !== JSON.stringify(ids(intake.rejectedRows)) ||
+      intake.summary?.retainedRows !== retained.length || intake.summary?.rejectedRows !== rejected.length) {
+    return failure('INCONSISTENT_INTAKE_ROWS', 'Retained/rejected row identities or counts disagree');
+  }
+  const series = {}, summary = {};
+  for (const quantityId of quantityIds) {
+    const definition = Compatibility.definitions[quantityId];
+    const formula = global.PlasmaFormulaRegistry.formulas.find(item => item.id === definition.formulaId);
+    if (!formula) return failure('FORMULA_UNAVAILABLE', `Formula ${definition.formulaId} is absent`);
+    const formulaIdentity = Runner.formulaIdentity(formula);
+    const unit = Units.canonicalQuantities[outputQuantities[quantityId]].unit;
+    series[quantityId] = retained.map(row => {
+      let compatibility = Compatibility.assess(intake, row, quantityId);
+      const base = {
+        quantityId, formula_id: definition.formulaId, formula_identity: formulaIdentity,
+        sampleId: row.sampleId, timestampUtc: row.timestampUtc, sourceRowIndex: row.sourceRowIndex,
+        sourceLineage: { productId: intake.source?.productId || null, datasetDoi: intake.source?.datasetDoi || null,
+          productVersion: intake.source?.productVersion || null, dataOrigin: intake.source?.dataOrigin || null,
+          sourceFileName: intake.source?.fileName || null,
+          sourceFileSha256: intake.source?.sha256 || null, sourceDigestStatus: intake.sourceDigestStatus,
+          csvRowNumber: row.csvRowNumber, sourceRowIndex: row.sourceRowIndex,
+          intakeTransformations: row.transformations },
+        modelMetadata: definition, assumptions: assumptions[quantityId], compatibility,
+        calculationStatus: compatibility.status === 'compatible' ? 'pending' : compatibility.status,
+        value: null, unit, canonical_inputs: null, input_units: null, inputTransformations: [],
+        warnings: [], warning_ids: [], runner_applicability_status: 'not_assessed',
+      };
+      if (compatibility.status !== 'compatible') return base;
+      const { canonicalInputs, transformations } = actualInputs(row, quantityId);
+      const inputUnits = Object.fromEntries(formula.inputs.map(item => [item.key, Units.canonicalQuantities[item.quantity].unit]));
+      base.canonical_inputs = canonicalInputs;
+      base.input_units = inputUnits;
+      base.inputTransformations = transformations;
+      if (Object.values(canonicalInputs).some(value => !Number.isFinite(value) || value <= 0)) {
+        base.canonical_inputs = null;
+        base.input_units = null;
+        base.calculationStatus = 'failed';
+        base.failure = { code: 'NON_FINITE_OR_NON_POSITIVE_DERIVED_INPUT', message: 'Derived canonical input is outside the formula domain' };
+        return base;
+      }
+      const result = Runner.run({ formula_id: definition.formulaId, canonical_inputs: canonicalInputs, input_units: inputUnits });
+      if (!result.ok || !Number.isFinite(result.outputs?.[0]?.value)) {
+        base.calculationStatus = 'failed';
+        base.failure = result.error || { code: 'NON_FINITE_OUTPUT', message: 'Formula produced no finite primary output' };
+        return base;
+      }
+      base.warnings = result.warnings;
+      base.warning_ids = result.warning_ids;
+      base.runner_applicability_status = result.applicability_status;
+      if (result.warnings.some(warning => warning.severity === 'INVALID')) {
+        compatibility = { ...compatibility, status: 'incompatible', reasons: [
+          ...compatibility.reasons, { id: 'ACTIVE_INVALID_DOMAIN_GUARD', message: 'Existing guardrail marks the model outside its intended domain' }] };
+        base.compatibility = compatibility;
+        base.calculationStatus = 'incompatible';
+        return base;
+      }
+      base.value = result.outputs[0].value;
+      base.unit = result.outputs[0].unit;
+      base.calculationStatus = 'calculated';
+      return base;
+    });
+    const calculated = series[quantityId].filter(item => item.calculationStatus === 'calculated');
+    const values = calculated.map(item => item.value);
+    const warningCounts = {};
+    for (const item of series[quantityId]) for (const id of item.warning_ids) warningCounts[id] = (warningCounts[id] || 0) + 1;
+    summary[quantityId] = { formula_id: definition.formulaId, unit, retainedSourceRows: retained.length,
+      calculatedCount: calculated.length,
+      incompatibleCount: series[quantityId].filter(item => item.calculationStatus === 'incompatible').length,
+      notAssessedCount: series[quantityId].filter(item => item.calculationStatus === 'not_assessed').length,
+      failedCount: series[quantityId].filter(item => item.calculationStatus === 'failed').length,
+      median: median(values), min: values.length ? Math.min(...values) : null,
+      max: values.length ? Math.max(...values) : null, warningCounts };
+  }
+  return { ok: true, schema: { ...schema }, source: intake.source, sourceDigestStatus: intake.sourceDigestStatus,
+    sourceMetadataVerification: intake.sourceMetadataVerification, time: intake.time,
+    intakeSummary: intake.summary, rejectedSampleIds: ids(rejected), retainedSampleIds: ids(retained),
+    alignmentStatus: intake.alignmentStatus, alignedPairCount: intake.alignedPairCount,
+    calculatorSourceIdentity: Runner.sourceIdentity(), series, summary,
+    unavailableOutputs: { total_beta: { status: 'not_assessed', value: null,
+      reasons: [{ id: 'ELECTRON_PRESSURE_UNAVAILABLE', message: 'No consistently defined electron pressure/temperature is available in this pathway' }],
+      missing_fields: ['electron_pressure'] } },
+    applicabilityScope: 'Specific declared-input/model compatibility only; no general physical interpretation or uncertainty assessment.',
+  };
+}
+
+module.exports = Object.freeze({ schema, quantityIds, analyze });
+
+};
+factories["./research-sensitivity.js"] = function(require, module, exports) {
+const global = root;
+/* Pass 5 window-choice sensitivity over already calculated Pass 4 samples. */
+'use strict';
+const Analysis = require('./interval-analysis.js');
+
+const failure = (code, message) => ({ ok: false, error: { code, message } });
+function median(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length ? sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2 : null;
+}
+
+function windowSensitivity(analysis) {
+  if (!analysis?.ok || analysis.schema?.name !== Analysis.schema.name ||
+      analysis.schema?.version !== Analysis.schema.version || !analysis.time?.interval ||
+      !Array.isArray(analysis.retainedSampleIds)) return failure('INVALID_ANALYSIS', 'Pass 4 interval analysis is required');
+  const { start, end } = analysis.time.interval;
+  const startMs = Date.parse(start), endMs = Date.parse(end);
+  if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs <= startMs ||
+      new Date(startMs).toISOString() !== start || new Date(endMs).toISOString() !== end) {
+    return failure('INVALID_WINDOW', 'A canonical UTC half-open interval is required');
+  }
+  const midpointMs = startMs + (endMs - startMs) / 2;
+  if (!Number.isInteger(midpointMs) || midpointMs === startMs || midpointMs === endMs) {
+    return failure('INVALID_WINDOW', 'The declared interval cannot be divided into two exact millisecond windows');
+  }
+  const midpoint = new Date(midpointMs).toISOString();
+  const windows = [
+    { stateId: 'FULL_ACCEPTED_WINDOW', start, end },
+    { stateId: 'FIRST_EQUAL_TIME_HALF', start, end: midpoint },
+    { stateId: 'SECOND_EQUAL_TIME_HALF', start: midpoint, end },
+  ];
+  const variants = windows.map(window => {
+    const sampleIds = analysis.series[Analysis.quantityIds[0]]
+      .filter(item => item.timestampUtc >= window.start && item.timestampUtc < window.end)
+      .map(item => item.sampleId);
+    const set = new Set(sampleIds);
+    return {
+      ...window, status: sampleIds.length ? 'calculated' : 'no_samples', method: 'HALF_OPEN_START_TIME_WINDOW_NO_RECALCULATION',
+      assumptions: ['Accepted fit_flag=10 policy and H1 co-reported field remain unchanged.',
+        'Equal-duration split is a processing-choice contrast, not a physical event boundary.'],
+      commonSourceLineage: { ...analysis.source, sourceDigestStatus: analysis.sourceDigestStatus },
+      sourceSampleIds: sampleIds,
+      quantities: Object.fromEntries(Analysis.quantityIds.map(id => {
+        const items = analysis.series[id].filter(item => set.has(item.sampleId));
+        const calculated = items.filter(item => item.calculationStatus === 'calculated');
+        const values = calculated.map(item => item.value);
+        return [id, { formula_id: items[0]?.formula_id || analysis.summary[id].formula_id,
+          unit: analysis.summary[id].unit, calculatedSampleIds: calculated.map(item => item.sampleId),
+          retainedSourceRows: items.length, calculatedCount: calculated.length,
+          incompatibleCount: items.filter(item => item.calculationStatus === 'incompatible').length,
+          notAssessedCount: items.filter(item => item.calculationStatus === 'not_assessed').length,
+          failedCount: items.filter(item => item.calculationStatus === 'failed').length,
+          median: median(values), min: values.length ? Math.min(...values) : null,
+          max: values.length ? Math.max(...values) : null }];
+      })),
+    };
+  });
+  return { ok: true, status: 'available', method: 'EQUAL_DURATION_SUBWINDOW_COMPARISON',
+    inputsUsed: ['Pass 4 calculated series', 'accepted half-open UTC window'],
+    unavailableInputs: [], units: 'per quantity',
+    lineage: { ...analysis.source, sourceDigestStatus: analysis.sourceDigestStatus }, variants,
+    unavailableChoices: {
+      h0_mfi_field: { status: 'not_assessed', reason: 'No independently aligned H0 stream was ingested' },
+      non_10_fit_flags: { status: 'not_assessed', reason: 'No accepted alternative fit-flag policy exists' },
+    } };
+}
+
+module.exports = Object.freeze({ windowSensitivity });
+
+};
+factories["./research-uncertainty.js"] = function(require, module, exports) {
+const global = root;
+/* Pass 5 fit precision, interval variation, and separate robustness states. */
+'use strict';
+const Intake = require('./interval-import.js');
+const Analysis = require('./interval-analysis.js');
+const Sensitivity = require('./research-sensitivity.js');
+const manifest = require('./examples/wind_pilot/manifest.json');
+
+const schema = Object.freeze({ name: 'org.alfvenica.wind-interval-uncertainty', version: '1.0.0' });
+const densityId = 'wind.swe.proton.number_density.nonlin';
+const sigmaId = 'wind.swe.proton.density_fit_sigma.nonlin';
+const fitNote = 'Obtained from non-linear fitting to the ion current distribution function (CDF).';
+const fitFields = Object.freeze({
+  Proton_sigmaNp_nonlin: { parent: 'Proton_Np_nonlin', unit: 'cm^{-3}',
+    description: '1-sigma uncertainty in the proton density' },
+  Proton_sigmaW_nonlin: { parent: 'Proton_W_nonlin', unit: 'km/s',
+    description: '1-sigma uncertainty in the proton trace thermal speed [km/s].' },
+  Proton_sigmaWperp_nonlin: { parent: 'Proton_Wperp_nonlin', unit: 'km/s',
+    description: '1-sigma uncertainty in the perpendicular proton thermal speed [km/s].' },
+});
+const failure = (code, message) => ({ ok: false, error: { code, message } });
+
+function verifySourceEvidence(intake, evidence) {
+  const accepted = manifest.source_files.find(item =>
+    ['primary_required_plasma_and_co_reported_field',
+      'contrasting_candidate_plasma_and_co_reported_field'].includes(item.role) &&
+    item.filename === intake.source?.fileName);
+  if (!accepted) return false;
+  if (intake.source?.dataOrigin !== 'CDF_DERIVED' ||
+      evidence?.schema?.name !== 'org.alfvenica.wind-fit-uncertainty-source' ||
+      evidence.schema.version !== '1.0.0' || evidence.verification !== 'CDF_ATTRIBUTES_CHECKED_LOCALLY') return false;
+  const source = evidence.source;
+  if (!source || !Number.isSafeInteger(source.byteSize) || source.byteSize <= 0 ||
+      !/^[a-f0-9]{64}$/.test(source.sha256 || '') ||
+      source.sha256 !== accepted.sha256 || source.fileName !== accepted.filename ||
+      source.byteSize !== accepted.byte_size || source.productVersion !== accepted.cdf_data_version ||
+      source.sha256 !== intake.source.sha256 || source.fileName !== intake.source.fileName ||
+      source.productId !== intake.source.productId || source.datasetDoi !== intake.source.datasetDoi ||
+      source.productVersion !== intake.source.productVersion) return false;
+  if (!evidence.fields || Object.keys(evidence.fields).sort().join('|') !== Object.keys(fitFields).sort().join('|')) return false;
+  return Object.entries(fitFields).every(([name, expected]) => {
+    const item = evidence.fields[name];
+    return item && item.associatedSourceVariable === expected.parent && item.archiveUnit === expected.unit &&
+      item.sigmaLevel === 1 && item.meaning === 'NONLINEAR_FIT_PRECISION_ONLY' &&
+      item.cdfCatdesc === expected.description && item.cdfVarNotes === fitNote &&
+      item.association === 'DELTA_PLUS_VAR_AND_DELTA_MINUS_VAR';
+  });
+}
+
+function densityFitSigma(lengthM, densityPerM3, sigmaDensityPerM3) {
+  if (![lengthM, densityPerM3, sigmaDensityPerM3].every(Number.isFinite) ||
+      lengthM <= 0 || densityPerM3 <= 0 || sigmaDensityPerM3 < 0) return null;
+  const result = lengthM * sigmaDensityPerM3 / (2 * densityPerM3);
+  return Number.isFinite(result) ? result : null;
+}
+
+function state(status, unit, lineage, options = {}) {
+  return { status, method: options.method || null, value: options.value ?? null,
+    unit, inputsUsed: options.inputsUsed || [], assumptions: options.assumptions || [],
+    unavailableInputs: options.unavailableInputs || [], lineage,
+    reason: options.reason || null, scope: options.scope || null,
+    fullMeasurementUncertaintyStatus: status === 'not_calculated' ?
+      'not_calculated' : 'measurement_uncertainty_unavailable' };
+}
+
+function evaluate(intake, analysis, sourceEvidence = null) {
+  if (intake?.ok !== true || intake.schema?.name !== Intake.schema.name ||
+      intake.schema.version !== Intake.schema.version || analysis?.ok !== true ||
+      analysis.schema?.name !== Analysis.schema.name || analysis.schema.version !== Analysis.schema.version ||
+      !Array.isArray(intake.retainedRows) || !Array.isArray(analysis.retainedSampleIds) ||
+      !analysis.series || !analysis.summary) return failure('INVALID_UPSTREAM_RESULT', 'Pass 3 intake and Pass 4 analysis are required');
+  const ids = intake.retainedRows.map(row => row.sampleId);
+  if (JSON.stringify(ids) !== JSON.stringify(analysis.retainedSampleIds) ||
+      intake.source?.fileName !== analysis.source?.fileName || intake.source?.sha256 !== analysis.source?.sha256 ||
+      intake.source?.productVersion !== analysis.source?.productVersion ||
+      intake.time?.interval?.start !== analysis.time?.interval?.start ||
+      intake.time?.interval?.end !== analysis.time?.interval?.end) {
+    return failure('INCONSISTENT_LINEAGE', 'Intake and analysis source or retained sample IDs disagree');
+  }
+  for (const id of Analysis.quantityIds) {
+    if (!Array.isArray(analysis.series[id]) || analysis.series[id].length !== ids.length ||
+        analysis.series[id].some((item, index) => item.sampleId !== ids[index] ||
+          item.sourceRowIndex !== intake.retainedRows[index].sourceRowIndex ||
+          item.timestampUtc !== intake.retainedRows[index].timestampUtc)) {
+      return failure('INCONSISTENT_SERIES', `${id} does not match the retained intake rows`);
+    }
+  }
+  const verified = verifySourceEvidence(intake, sourceEvidence);
+  const sigmaMapping = intake.mappingTrace?.find(item => item.operationId === 'MAP_COLUMN' &&
+    item.semanticId === sigmaId);
+  const sigmaMapped = sigmaMapping?.sourceVariable === 'Proton_sigmaNp_nonlin';
+  const sensitivity = Sensitivity.windowSensitivity(analysis);
+  if (!sensitivity.ok) return sensitivity;
+  const series = {}, summary = {};
+  for (const id of Analysis.quantityIds) {
+    series[id] = analysis.series[id].map((item, index) => {
+      const row = intake.retainedRows[index];
+      const lineage = { ...item.sourceLineage, sampleId: item.sampleId,
+        timestampUtc: item.timestampUtc, sourceEvidenceFileSha256: verified ? sourceEvidence.source.sha256 : null };
+      let measurement_uncertainty;
+      if (item.calculationStatus !== 'calculated') {
+        measurement_uncertainty = state('not_calculated', item.unit, lineage,
+          { reason: 'Pass 4 produced no compatible numerical result for this sample',
+            unavailableInputs: ['calculated_output'] });
+      } else if (id === 'proton_inertial_length' && verified && sigmaMapped) {
+        const n = row.normalized[densityId], sigma = row.normalized[sigmaId];
+        if (item.canonical_inputs?.ni !== n || item.formula_id !== 'ion-inertial-length') {
+          return failure('INCONSISTENT_ANALYSIS_INPUTS', 'Inertial length inputs differ from the source row');
+        }
+        if (sigma === null || typeof sigma === 'undefined') {
+          measurement_uncertainty = state('measurement_uncertainty_unavailable', item.unit, lineage,
+            { method: 'FIRST_ORDER_DENSITY_FIT_COMPONENT', unavailableInputs: ['Proton_sigmaNp_nonlin'],
+              reason: 'The source density fit sigma is missing for this sample' });
+        } else {
+          const propagated = densityFitSigma(item.value, n, sigma);
+          measurement_uncertainty = propagated === null ?
+            state('invalid_source_sigma', item.unit, lineage,
+              { method: 'FIRST_ORDER_DENSITY_FIT_COMPONENT', inputsUsed: [{ sourceVariable: 'Proton_sigmaNp_nonlin', value: sigma, unit: 'm⁻³' }],
+                reason: 'Density fit sigma or propagated value is outside its domain' }) :
+            state('available_fit_component', item.unit, lineage,
+              { method: 'FIRST_ORDER_DENSITY_FIT_COMPONENT', value: propagated,
+                inputsUsed: [{ sourceVariable: 'Proton_Np_nonlin', value: n, unit: 'm⁻³' },
+                  { sourceVariable: 'Proton_sigmaNp_nonlin', value: sigma, unit: 'm⁻³', sigmaLevel: 1 },
+                  { formulaId: item.formula_id, calculatedValue: item.value, unit: item.unit }],
+                assumptions: ['First-order derivative of d_p proportional to n_p^(-1/2).',
+                  'One-sigma density fit precision is the only propagated random input.'],
+                unavailableInputs: ['density_calibration_or_systematic_uncertainty'],
+                scope: 'NONLINEAR_FIT_PRECISION_COMPONENT_ONLY_NOT_TOTAL_MEASUREMENT_ERROR' });
+        }
+      } else {
+        const missing = id === 'proton_inertial_length' ?
+          [verified ? 'Proton_sigmaNp_nonlin_mapping' : 'verified_CDF_fit_sigma_attributes'] :
+          id === 'proton_beta_trace' ? ['magnetic_field_one_sigma', 'covariance_density_trace_speed',
+            ...(verified ? [] : ['verified_CDF_fit_sigma_attributes'])] :
+            ['magnetic_field_one_sigma', ...(verified ? [] : ['verified_CDF_fit_sigma_attributes'])];
+        measurement_uncertainty = state('measurement_uncertainty_unavailable', item.unit, lineage,
+          { method: null, unavailableInputs: missing,
+            reason: 'Required source uncertainty or covariance is unavailable; no independence assumption is made',
+            assumptions: ['No field deviation is interpreted as calibrated magnetic-field one-sigma.'] });
+      }
+      return { sampleId: item.sampleId, timestampUtc: item.timestampUtc, quantityId: id,
+        calculationStatus: item.calculationStatus, measurement_uncertainty };
+    });
+    const failed = series[id].find(item => item.error);
+    if (failed) return failed;
+    const base = analysis.summary[id];
+    const calculatedIds = analysis.series[id].filter(item => item.calculationStatus === 'calculated').map(item => item.sampleId);
+    summary[id] = {
+      measurement_uncertainty: { status: 'per_sample', statusCounts: series[id].reduce((counts, item) => {
+        const status = item.measurement_uncertainty.status;
+        counts[status] = (counts[status] || 0) + 1;
+        return counts;
+      }, {}), unit: base.unit, method: id === 'proton_inertial_length' ? 'FIRST_ORDER_DENSITY_FIT_COMPONENT_WHERE_VERIFIED' : null,
+      inputsUsed: id === 'proton_inertial_length' ? ['Proton_sigmaNp_nonlin'] : [],
+      assumptions: ['Fit precision is not instrument calibration uncertainty.'],
+      unavailableInputs: id === 'proton_beta_trace' ? ['magnetic_field_one_sigma', 'covariance_density_trace_speed'] :
+        id === 'proton_inertial_length' ? ['density_calibration_or_systematic_uncertainty'] : ['magnetic_field_one_sigma'],
+      lineage: { ...analysis.source, sourceDigestStatus: analysis.sourceDigestStatus } },
+      interval_variation: { status: base.calculatedCount ? 'available' : 'unavailable',
+        method: 'MEDIAN_MIN_MAX_OF_CALCULATED_RETAINED_SAMPLES', inputsUsed: calculatedIds,
+        assumptions: ['Spread describes variation among accepted calculated samples, not instrument uncertainty.'],
+        unavailableInputs: [], unit: base.unit, median: base.median, min: base.min, max: base.max,
+        calculatedCount: base.calculatedCount,
+        lineage: { ...analysis.source, sourceDigestStatus: analysis.sourceDigestStatus } },
+      processing_sensitivity: { status: sensitivity.status, method: sensitivity.method,
+        inputsUsed: sensitivity.inputsUsed, assumptions: ['No fit-flag, field-source, or alignment policy changed.'],
+        unavailableInputs: ['H0-aligned_field', 'defensible_non_10_fit_flag_policy'],
+        unit: base.unit, variantStateIds: sensitivity.variants.map(variant => variant.stateId),
+        lineage: sensitivity.lineage },
+      model_sensitivity: { status: 'not_assessed', method: null, inputsUsed: [],
+        assumptions: [], unavailableInputs: ['measured_composition_or_analyst_supplied_documented_scenario'],
+        unit: base.unit, lineage: { ...analysis.source, sourceDigestStatus: analysis.sourceDigestStatus },
+        reason: 'No alpha abundance scenario is inferred or selected' },
+      limitations: { status: 'documented', method: 'SOURCE_AND_MODEL_SCOPE_REVIEW',
+        inputsUsed: ['accepted Pass 1–4 contracts', 'verified CDF fit attributes where supplied'],
+        assumptions: [], unavailableInputs: [], unit: null,
+        lineage: { ...analysis.source, sourceDigestStatus: analysis.sourceDigestStatus }, items: [
+        'No independent calibration/systematic uncertainty is supplied for the fitted proton density or thermal speeds.',
+        ...(id === 'proton_beta_trace' ? ['Density–trace-speed fit covariance is unavailable; total beta also requires electron pressure.'] : []),
+        ...(id === 'alfven_speed_proton_only' ? ['Proton-only mass density is a model approximation; measured composition is unavailable.'] : []),
+        ...(id === 'proton_gyroradius_perp_sigma' ? ['Co-reported B variation is not a calibrated B measurement sigma.'] : []),
+        'Independent H0 field alignment and exact per-spectrum support remain unresolved.',
+      ] },
+    };
+  }
+  return { ok: true, schema: { ...schema }, source: analysis.source, sourceDigestStatus: analysis.sourceDigestStatus,
+    sourceEvidenceStatus: verified ? 'ACCEPTED_CDF_ATTRIBUTE_MANIFEST_NOT_RECHECKED' : 'NOT_VERIFIED',
+    sourceEvidence: verified ? sourceEvidence : null,
+    series, summary, processingSensitivity: sensitivity,
+    stochasticMethod: 'NONE_ANALYTIC_ONLY',
+    scope: 'Fit component, sample variation, processing choice, and model limitation remain distinct; no confidence interval or scientific-correctness claim.' };
+}
+
+module.exports = Object.freeze({ schema, verifySourceEvidence, densityFitSigma, evaluate });
+
+};
+factories["./research-bundle.js"] = function(require, module, exports) {
+const global = root;
+/* Pass 6 bounded Wind analysis record and deterministic presentation data. */
+'use strict';
+const Intake = require('./interval-import.js');
+const Analysis = require('./interval-analysis.js');
+const Uncertainty = require('./research-uncertainty.js');
+
+const schema = Object.freeze({ name: 'org.alfvenica.wind-analysis-bundle', version: '1.0.0' });
+const tolerance = Object.freeze({ relative: 1e-12, absolute: 0,
+  meaning: 'binary64 computational reproduction; not scientific correctness or measurement agreement' });
+const labels = Object.freeze({
+  proton_beta_trace: 'Proton trace beta',
+  proton_inertial_length: 'Proton inertial length',
+  proton_gyroradius_perp_sigma: 'Perpendicular proton gyroradius (sigma-speed convention)',
+  alfven_speed_proton_only: 'Proton-only Alfvén speed',
+});
+const failure = (code, message) => ({ ok: false, error: { code, message } });
+const csvCell = value => {
+  const text = value === null || value === undefined ? '' : String(value);
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+};
+const csv = rows => rows.map(row => row.map(csvCell).join(',')).join('\n') + '\n';
+const escapeXml = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[char]);
+function median(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length ? (sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2) : null;
+}
+function plottingData(analysis) {
+  return analysis.retainedSampleIds.map((sampleId, index) => {
+    const row = { sampleId, timestampUtc: analysis.series.proton_beta_trace[index].timestampUtc };
+    for (const id of Analysis.quantityIds) {
+      const item = analysis.series[id][index];
+      row[id] = item.calculationStatus === 'calculated' ? item.value : null;
+      row[`${id}_warning_ids`] = item.warning_ids;
+    }
+    const d = row.proton_inertial_length, rho = row.proton_gyroradius_perp_sigma;
+    row.inertial_to_gyroradius_ratio = d !== null && rho !== null && rho > 0 ? d / rho : null;
+    return row;
+  });
+}
+function plottingCsv(rows) {
+  const columns = ['sampleId', 'timestampUtc', ...Analysis.quantityIds, 'inertial_to_gyroradius_ratio'];
+  return csv([columns, ...rows.map(row => columns.map(key => row[key]))]);
+}
+function summaryTable(analysis, uncertainty) {
+  return Analysis.quantityIds.map(id => ({ quantityId: id, quantity: labels[id], species: 'H+',
+    formulaId: analysis.summary[id].formula_id, unit: analysis.summary[id].unit,
+    retainedRows: analysis.summary[id].retainedSourceRows,
+    calculatedCount: analysis.summary[id].calculatedCount,
+    incompatibleCount: analysis.summary[id].incompatibleCount,
+    notAssessedCount: analysis.summary[id].notAssessedCount,
+    failedCount: analysis.summary[id].failedCount,
+    median: analysis.summary[id].median, min: analysis.summary[id].min, max: analysis.summary[id].max,
+    measurementStatusCounts: uncertainty.summary[id].measurement_uncertainty.statusCounts,
+    modelSensitivityStatus: uncertainty.summary[id].model_sensitivity.status,
+    assumption: analysis.series[id][0]?.assumptions?.[0] || null }));
+}
+function summaryCsv(rows) {
+  const columns = ['quantityId', 'species', 'formulaId', 'unit', 'retainedRows', 'calculatedCount',
+    'incompatibleCount', 'notAssessedCount', 'failedCount', 'median', 'min', 'max',
+    'measurementStatusCounts', 'modelSensitivityStatus', 'assumption'];
+  return csv([columns, ...rows.map(row => columns.map(key =>
+    key === 'measurementStatusCounts' ? JSON.stringify(row[key]) : row[key]))]);
+}
+function scaleFigureSvg(rows, interval) {
+  const d = median(rows.map(row => row.proton_inertial_length).filter(Number.isFinite));
+  const rho = median(rows.map(row => row.proton_gyroradius_perp_sigma).filter(Number.isFinite));
+  const paired = rows.filter(row => Number.isFinite(row.proton_inertial_length) &&
+    Number.isFinite(row.proton_gyroradius_perp_sigma)).length;
+  const max = Math.max(d || 0, rho || 0, 1);
+  const width = 780, scale = 430 / max;
+  const bar = (y, value, fill, label) => `<text x="28" y="${y - 9}" font-size="15">${escapeXml(label)}</text>` +
+    (value === null ? `<text x="28" y="${y + 17}" font-size="14">Unavailable</text>` :
+      `<rect x="28" y="${y}" width="${(value * scale).toFixed(4)}" height="25" fill="${fill}"/>` +
+      `<text x="${Math.min(560, 38 + value * scale).toFixed(4)}" y="${y + 18}" font-size="14">${escapeXml(value.toPrecision(6))} m</text>`);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 305" role="img" aria-labelledby="scaleTitle scaleDesc">` +
+    `<title id="scaleTitle">Wind proton scale ordering</title>` +
+    `<desc id="scaleDesc">Median proton inertial length and perpendicular gyroradius for ${paired} paired calculated samples. Numerical order alone does not identify a physical mode.</desc>` +
+    `<rect width="780" height="305" fill="#ffffff"/><g fill="#183247" font-family="Arial, sans-serif">` +
+    `<text x="28" y="31" font-size="21" font-weight="bold">Wind proton length scales</text>` +
+    `<text x="28" y="55" font-size="13">${escapeXml(interval.start)} to ${escapeXml(interval.end)} UTC · ${paired} paired samples · H+</text>` +
+    bar(105, d, '#0e7c86', 'Proton inertial length') + bar(172, rho, '#9a5c22', 'Perpendicular proton gyroradius') +
+    `<text x="28" y="226" font-size="13">Unit: m · W_perp=sqrt(2 k T_perp / m_p); gyroradius uses one-component sigma.</text>` +
+    `<text x="28" y="252" font-size="13">Co-reported WI_H1_SWE GSE field; fit_flag=10 primary policy.</text>` +
+    `<text x="28" y="281" font-size="13" font-weight="bold">Scale proximity/order alone does not identify a physical mode.</text>` +
+    `</g></svg>`;
+}
+function methodsDraft(intake, analysis, uncertainty, identity, software) {
+  const source = intake.source, q = intake.summary;
+  const flags = Object.entries(q.allReasonCounts).map(([reason, count]) => `${reason}: ${count}`).join('; ') || 'none';
+  const formulas = Analysis.quantityIds.map(id => `- ${labels[id]}: \`${analysis.summary[id].formula_id}\`; ${analysis.summary[id].calculatedCount} calculated rows; ${analysis.summary[id].unit || 'dimensionless'}.`).join('\n');
+  const warningIds = [...new Set(Analysis.quantityIds.flatMap(id => analysis.series[id].flatMap(row => row.warning_ids)))];
+  return `# Methods draft — AUTHOR REVIEW REQUIRED\n\n` +
+    `Dataset: ${source.mission} ${source.productId}, product version ${source.productVersion}, DOI https://doi.org/${source.datasetDoi}. Data origin: ${source.dataOrigin}.\n\n` +
+    `Prepared source file: ${source.fileName}. Source SHA-256: ${source.sha256 || 'not supplied'} (${source.digestScope || 'scope not supplied'}; file identity only, not scientific correctness). The browser does not recompute CDF bytes.\n\n` +
+    `UTC selection: [${intake.time.interval.start}, ${intake.time.interval.end}); Epoch is the SWE spectrum start with nominal ${intake.time.nominalSupportSeconds}-second support. Exact per-spectrum endpoints are not established.\n\n` +
+    `Primary quality policy: fit_flag=10 only; no interpolation or independent H0 alignment. ${q.totalRows} prepared rows, ${q.retainedRows} retained, ${q.rejectedRows} rejected. Rejection reasons: ${flags}. Missing fraction: ${q.missingFraction}. Median retained start separation: ${q.medianCadenceSeconds} s. Nominal gap count: ${q.gaps.nominalGapCount}; these are start-separation diagnostics, not verified uncovered time.\n\n` +
+    `The magnetic field is the WI_H1_SWE co-reported GSE mean vector; B=|<B_vector>| after component averaging, which is not generally <|B_vector|>. Wind W_trace and W_perp use sqrt(2 k_B T / m_p), separately for proton trace beta and perpendicular gyroradius. The source proton parameters are bi-Maxwellian fit parameters and do not fully represent arbitrary beams, tails, nongyrotropy or an arbitrary distribution function. Alfvén speed uses proton-only mass density; no alpha abundance is inferred. Proton beta is not total beta because electron pressure is unavailable. Trace beta is neither parallel nor perpendicular beta and does not replace an anisotropy or stability analysis.\n\n` +
+    `Perpendicular proton gyroradius (sigma-speed convention): rho_p,perp,sigma = sqrt(k_B T_perp / m_p) / Omega_cp = W_perp / (sqrt(2) Omega_cp). With consistent constants and conventions, rho_p,perp,sigma / d_p = sqrt(beta_p,perp / 2); perpendicular beta is not separately reported here, and this scale ratio is not an independent physical-mode diagnostic.\n\n` +
+    `Formulas (existing Alfvenica calculation path):\n${formulas}\n\n` +
+    `Uncertainty: ${uncertainty.summary.proton_inertial_length.measurement_uncertainty.method}; only the nonlinear density-fit one-sigma component is available where source attributes and sigma are verified. Full measurement uncertainty remains unavailable. Magnetic-field one-sigma, fitted covariance, and calibration/systematic errors are unavailable. Interval variation is median/min/max over calculated retained samples; it is not instrument error. Sensitivity states are the full accepted window and two equal-duration halves; H0 and non-10 flags remain not assessed. No Monte Carlo.\n\n` +
+    `Software: Alfvenica development research workbench, base released application ${software.baseApplicationVersion}; source-set content SHA-256 ${identity.sha256} (${identity.kind}) covers only its listed files, source commit not claimed. Calculator core identity ${analysis.calculatorSourceIdentity.sha256} covers its separately listed files. Record the verified full Git commit and source manifest separately to identify the complete reviewed checkout. The base v1.1.0 software DOI is https://doi.org/${software.baseVersionDoi}; a Release 2 DOI is PENDING / AUTHOR REVIEW.\n\n` +
+    `Active warning IDs: ${warningIds.join(', ') || 'none'}. Model and source limitations remain recorded in the bundle.\n\n` +
+    `AUTHOR REVIEW REQUIRED: publication wording, citations, and scientific interpretation. This draft makes no physical-mode, turbulence, instability, novelty, or publication claim.\n`;
+}
+function createBundle({ csvText, metadata, sourceEvidence = null, intake, analysis, uncertainty, identity, software, runtime }) {
+  if (typeof csvText !== 'string' || !intake?.ok || !analysis?.ok || !uncertainty?.ok ||
+      !identity?.sha256 || !software?.baseApplicationVersion || !runtime?.name) {
+    return failure('INVALID_BUNDLE_INPUT', 'Successful Pass 3–5 results, prepared CSV, and source identity are required');
+  }
+  const metadataText = typeof metadata === 'string' ? metadata : JSON.stringify(metadata);
+  const reimported = Intake.importInterval(csvText, metadataText);
+  if (!reimported.ok || JSON.stringify(reimported.rows) !== JSON.stringify(intake.rows) ||
+      JSON.stringify(reimported.source) !== JSON.stringify(intake.source)) {
+    return failure('INCONSISTENT_PREPARED_INPUT', 'Embedded CSV and sidecar do not reconstruct the supplied intake');
+  }
+  const plot = plottingData(analysis), table = summaryTable(analysis, uncertainty);
+  return { ok: true, schema: { ...schema }, producer: {
+    component: 'Alfvenica Wind research workbench', status: 'DEVELOPMENT_UNRELEASED',
+    baseApplicationVersion: software.baseApplicationVersion, baseVersionDoi: software.baseVersionDoi,
+    sourceIdentity: identity, calculatorSourceIdentity: analysis.calculatorSourceIdentity,
+    runtime },
+  sourceDataManifest: { source: intake.source, sourceDigestStatus: intake.sourceDigestStatus,
+    sourceMetadataVerification: intake.sourceMetadataVerification,
+    sourceUncertaintyEvidenceStatus: uncertainty.sourceEvidenceStatus,
+    interval: intake.time.interval, inputSchema: intake.schema,
+    identityMeaning: 'Source checksum identifies bytes only; neither quality nor scientific correctness is established.' },
+  input: { preparedCsvText: csvText, metadata: JSON.parse(metadataText), sourceEvidence },
+  processing: { policies: JSON.parse(metadataText).processing, columnMap: intake.mappingTrace,
+    accounting: intake.summary, rows: intake.rows, retainedSampleIds: analysis.retainedSampleIds,
+    rejectedSampleIds: analysis.rejectedSampleIds, alignmentStatus: intake.alignmentStatus,
+    alignedPairCount: intake.alignedPairCount },
+  analysis, uncertainty, summaryTable: table, plottingData: plot,
+  scaleFigureSvg: scaleFigureSvg(plot, intake.time.interval),
+  methodsDraft: methodsDraft(intake, analysis, uncertainty, identity, software),
+  replay: { command: 'npm run replay:analysis -- analysis.json', comparison: { ...tolerance },
+    sourceDataVerification: 'NOT_RECOMPUTED_BY_REPLAY',
+    meaning: 'Computational reproduction and provenance comparison, not independent scientific validation.' } };
+}
+module.exports = Object.freeze({ schema, tolerance, labels, plottingData, plottingCsv,
+  summaryTable, summaryCsv, scaleFigureSvg, methodsDraft, createBundle });
+
+};
+
+function load(id) {
+  if (!factories[id]) throw new Error('Unknown Wind module: ' + id);
+  if (!cache[id]) {
+    const module = { exports: {} };
+    cache[id] = module;
+    factories[id](load, module, module.exports);
+  }
+  return cache[id].exports;
+}
+root.AlfvenicaResearch = Object.freeze({
+  Intake: load('./interval-import.js'),
+  Compatibility: load('./model-compatibility.js'),
+  Analysis: load('./interval-analysis.js'),
+  Sensitivity: load('./research-sensitivity.js'),
+  Uncertainty: load('./research-uncertainty.js'),
+  Bundle: load('./research-bundle.js'),
+  buildIdentity,
+  software: { baseApplicationVersion: root.AlfvenicaRelease.baseApplicationVersion,
+    baseVersionDoi: root.AlfvenicaRelease.baseVersionDoi },
+});
+})(globalThis);
+
+  </script>
+  <script>
+/* Local, bounded Wind workbench over the shared Pass 3–6 modules. */
+(function (root) {
+  'use strict';
+  const Research = root.AlfvenicaResearch;
+  if (!Research) throw new Error('Wind research modules did not load');
+  let area;
+  const find = name => area.querySelector(`[data-wind-${name}]`);
+  const doc = document;
+  const names = Research.Bundle.labels;
+  let current = null;
+  const fmt = value => Number.isFinite(value) ? Number(value.toPrecision(6)).toString() : 'unavailable';
+  function node(tag, text, className) {
+    const element = doc.createElement(tag);
+    if (text !== undefined) element.textContent = String(text);
+    if (className) element.className = className;
+    return element;
+  }
+  function table(headers, rows) {
+    const result = node('table', undefined, 'wind-table');
+    const head = node('thead'), heading = node('tr');
+    for (const label of headers) heading.append(node('th', label));
+    head.append(heading);
+    const body = node('tbody');
+    for (const row of rows) {
+      const tr = node('tr');
+      for (const item of row) tr.append(node('td', item === null || item === undefined ? 'unavailable' : item));
+      body.append(tr);
+    }
+    result.append(head, body);
+    return result;
+  }
+  function scrollTable(headers, rows) {
+    const wrapper = node('div', undefined, 'wind-table-scroll');
+    wrapper.append(table(headers, rows));
+    return wrapper;
+  }
+  function showStatus(message) { find('status').textContent = message; }
+  function download(filename, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = node('a');
+    a.href = url; a.download = filename;
+    doc.body.append(a); a.click(); a.remove();
+    root.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  function reasonText(counts) {
+    return Object.entries(counts).map(([reason, count]) => `${reasonLabel(reason)}: ${count}`).join('; ') || 'none';
+  }
+  function reasonLabel(reason) {
+    const labels = {
+      INVALID_UTC_TIMESTAMP: 'invalid UTC time', OUTSIDE_INTERVAL: 'outside selected interval',
+      DUPLICATE_TIMESTAMP: 'duplicate time', OUT_OF_ORDER_TIMESTAMP: 'out-of-order time',
+      DISALLOWED_FLAG: 'fit flag other than 10', INVALID_FLAG: 'invalid fit flag',
+      FILL_REQUIRED: 'fill value in a required field', MISSING_REQUIRED: 'missing required field',
+      NON_FINITE: 'non-finite value', INVALID_NUMBER: 'invalid number',
+      ARCHIVE_RANGE: 'outside archive valid range', NON_POSITIVE_DENSITY: 'non-positive density',
+      NON_POSITIVE_THERMAL_SPEED: 'non-positive thermal speed', ZERO_MAGNETIC_VECTOR: 'zero magnetic-field vector',
+      INVALID_SOURCE_ROW_INDEX: 'invalid source row index', DUPLICATE_SOURCE_ROW_INDEX: 'duplicate source row index',
+    };
+    return labels[reason] || reason.toLowerCase().replaceAll('_', ' ');
+  }
+  function statusLabel(status) {
+    const labels = {
+      available_fit_component: 'density fit precision available',
+      measurement_uncertainty_unavailable: 'measurement uncertainty unavailable',
+      invalid_source_sigma: 'invalid source fit sigma', not_calculated: 'not calculated',
+      not_assessed: 'not assessed',
+    };
+    return labels[status] || String(status).toLowerCase().replaceAll('_', ' ');
+  }
+  function statusText(counts) {
+    return Object.entries(counts).map(([status, count]) => `${statusLabel(status)}: ${count}`).join('; ') || 'none';
+  }
+  function renderIntake(intake, metadata) {
+    const source = intake.source, summary = intake.summary;
+    const sourceDetails = node('details', undefined, 'wind-source-details'), sourceSummary = node('summary', 'Technical source identity');
+    sourceDetails.append(sourceSummary, scrollTable(['Source field', 'Declared value'], [
+      ['Declared SHA-256', source.sha256 || 'not supplied'],
+      ['Digest meaning', `${source.digestScope}; ${intake.sourceDigestStatus}; file identity only`],
+    ]));
+    find('source').replaceChildren(scrollTable(['Source field', 'Declared value'], [
+      ['Mission / product', `${source.mission} / ${source.productId}`],
+      ['Product version / origin', `${source.productVersion} / ${source.dataOrigin === 'CDF_DERIVED' ? 'CDF-derived' : 'synthetic test data'}`],
+      ['Dataset DOI', source.datasetDoi], ['Source file', source.fileName],
+      ['UTC selection', `[${intake.time.interval.start}, ${intake.time.interval.end})`],
+      ['Time support', `${intake.time.meaning}; nominal ${intake.time.nominalSupportSeconds} s`],
+      ['Species / frame', 'H+ / GSE'],
+      ['Second-stream alignment', `No independent H0 pairing; aligned pairs ${intake.alignedPairCount === null ? 'not attempted' : intake.alignedPairCount}`],
+    ]), node('p', 'Source identity is declared in the prepared metadata; this browser does not recheck the CDF bytes.', 'wind-note'), sourceDetails);
+    find('qc').replaceChildren(scrollTable(['QC measure', 'Value'], [
+      ['Total / selected rows', `${summary.totalRows} / ${summary.selectedRows}`],
+      ['Retained / rejected', `${summary.retainedRows} / ${summary.rejectedRows}`],
+      ['Rejection reasons (overlapping)', reasonText(summary.allReasonCounts)],
+      ['Missing required-cell fraction', summary.missingFraction === null ? 'unavailable' : fmt(summary.missingFraction)],
+      ['Disallowed fit flags', summary.disallowedFlagCount],
+      ['Median retained start separation', summary.medianCadenceSeconds === null ? 'unavailable' : `${fmt(summary.medianCadenceSeconds)} s`],
+      ['Nominal gap count', summary.gaps.nominalGapCount],
+      ['Excess beyond nominal start separation', `${fmt(summary.gaps.totalExcessBeyondNominalSeconds)} s total; not verified uncovered time`],
+      ['Processing policy', metadata.processing.quality],
+    ]));
+    find('mapping').replaceChildren(table(['Prepared column', 'CDF variable', 'CSV unit', 'Species / frame'],
+      metadata.columns.map(column => [column.column, column.sourceVariable || 'prepared row index',
+        column.csvUnit, [column.species, column.frame].filter(Boolean).join(' / ') || 'not applicable'])));
+    find('rejections').replaceChildren(table(['Sample ID', 'UTC', 'Reasons'],
+      intake.rejectedRows.map(row => [row.sampleId, row.timestampUtc, row.rejectionReasons.map(reasonLabel).join(', ')])));
+    find('intake-panel').hidden = false;
+  }
+  function seriesSvg(series, unit, label) {
+    const calculated = series.map((item, index) => ({ index, item }))
+      .filter(entry => entry.item.calculationStatus === 'calculated' && Number.isFinite(entry.item.value));
+    if (!calculated.length) return null;
+    const values = calculated.map(entry => entry.item.value);
+    const min = Math.min(...values), max = Math.max(...values), span = max - min || Math.abs(max) || 1;
+    const point = ({ index, item }) => `${(45 + index * 620 / Math.max(1, series.length - 1)).toFixed(2)},${(120 - (item.value - min) * 88 / span).toFixed(2)}`;
+    const segments = [], run = [];
+    for (let index = 0; index < series.length; index++) {
+      const item = series[index];
+      if (item.calculationStatus === 'calculated' && Number.isFinite(item.value)) run.push(point({ index, item }));
+      else if (run.length) { segments.push([...run]); run.length = 0; }
+    }
+    if (run.length) segments.push(run);
+    const polylines = segments.map(points => `<polyline fill="none" stroke="#0e7c86" stroke-width="2" points="${points.join(' ')}"/>`).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 710 170" role="img" aria-label="${label} over ${calculated.length} calculated UTC samples, unit ${unit || 'dimensionless'}">` +
+      `<rect width="710" height="170" fill="#ffffff"/><g fill="#183247" font-family="Arial,sans-serif" font-size="12">` +
+      `<text x="45" y="19">${fmt(max)} ${unit}</text><text x="45" y="151">${fmt(min)} ${unit}</text>` +
+      `<line x1="45" y1="120" x2="665" y2="120" stroke="#9caab1"/>${polylines}</g></svg>`;
+  }
+  function renderSeries(analysis) {
+    const host = find('series'); host.replaceChildren();
+    for (const id of Research.Analysis.quantityIds) {
+      const series = analysis.series[id], title = names[id], unit = analysis.summary[id].unit;
+      const figure = node('figure', undefined, 'wind-series-figure');
+      figure.append(node('figcaption', `${title} · ${analysis.summary[id].calculatedCount}/${series.length} calculated · ${unit || 'dimensionless'} · H+`));
+      const graphic = seriesSvg(series, unit, title);
+      if (graphic) {
+        const holder = node('div', undefined, 'wind-chart'); holder.innerHTML = graphic; figure.append(holder);
+      } else figure.append(node('p', 'No compatible calculated samples.'));
+      const details = node('details'), summary = node('summary', 'Inspect UTC values, sample IDs, and warnings');
+      const scroll = node('div', undefined, 'wind-table-scroll');
+      scroll.append(table(['Sample ID', 'UTC', 'Value', 'Unit', 'Status', 'Compatibility', 'Warning IDs'],
+        series.map(item => [item.sampleId, item.timestampUtc, item.calculationStatus === 'calculated' ? fmt(item.value) : 'unavailable',
+          item.unit || 'dimensionless', item.calculationStatus, item.compatibility.status,
+          item.warning_ids.join(', ') || 'none'])));
+      details.append(summary, scroll); figure.append(details); host.append(figure);
+    }
+  }
+  function renderUncertainty(uncertainty) {
+    const host = find('uncertainty'); host.replaceChildren();
+    host.append(node('h4', 'Measurement / nonlinear-fit component'));
+    host.append(scrollTable(['Quantity', 'Fit-component status', 'Full measurement uncertainty', 'Method / sample'],
+      Research.Analysis.quantityIds.map(id => {
+        const first = uncertainty.series[id].find(item => item.calculationStatus === 'calculated');
+        const component = first?.measurement_uncertainty;
+        return [names[id], statusText(uncertainty.summary[id].measurement_uncertainty.statusCounts),
+          statusLabel(component?.fullMeasurementUncertaintyStatus || 'not_calculated'),
+          component?.status === 'available_fit_component' ? `${fmt(component.value)} ${component.unit} for first calculated sample; fit precision only` :
+            'unavailable; no zero error inferred'];
+      })));
+    host.append(node('h4', 'Within-interval variation'));
+    host.append(scrollTable(['Quantity', 'Calculated N', 'Median', 'Min', 'Max', 'Unit'],
+      Research.Analysis.quantityIds.map(id => {
+        const v = uncertainty.summary[id].interval_variation;
+        return [names[id], v.calculatedCount, fmt(v.median), fmt(v.min), fmt(v.max), v.unit || 'dimensionless'];
+      })));
+    host.append(node('p', 'These distributions describe variation among calculated retained samples, not measurement error.'));
+    host.append(node('h4', 'Processing-choice sensitivity'));
+    host.append(scrollTable(['Window state', 'Status', 'UTC start', 'UTC end', 'Retained N'],
+      uncertainty.processingSensitivity.variants.map(variant => [statusLabel(variant.stateId), statusLabel(variant.status),
+        variant.start, variant.end, variant.sourceSampleIds.length])));
+    host.append(node('p', 'H0 magnetic-field comparison and retention of fit flags other than 10 remain not assessed. No independent H0 pairing was performed.'));
+    host.append(node('h4', 'Model/composition limitations'));
+    host.append(node('p', 'Model sensitivity has not been assessed. Proton-only Alfvén-speed mass density is an approximation; electron pressure for total beta and measured alpha abundance are unavailable. Calibration error and fitted covariance are unavailable.'));
+  }
+  function renderResults(bundle) {
+    const { analysis, uncertainty } = bundle;
+    const q = analysis.intakeSummary;
+    find('results-qc').textContent = `${q.retainedRows}/${q.totalRows} prepared rows retained; ${q.rejectedRows} rejected (${reasonText(q.allReasonCounts)}). fit_flag=10 only. Nominal gap count ${q.gaps.nominalGapCount}; no independent H0 alignment. Figures and statistics use calculated retained rows only.`;
+    find('summary').replaceChildren(table(['H+ quantity', 'Formula', 'Unit', 'Calculated / retained', 'Median', 'Min', 'Max', 'Compatibility / assumption', 'Measurement status'],
+      bundle.summaryTable.map(row => [row.quantity, root.PlasmaFormulaRegistry?.formulas.find(formula => formula.id === row.formulaId)?.name || row.formulaId, row.unit || 'dimensionless',
+        `${row.calculatedCount}/${row.retainedRows}`, fmt(row.median), fmt(row.min), fmt(row.max),
+        `${row.incompatibleCount} incompatible; ${row.notAssessedCount} not assessed; ${row.assumption || 'see row series'}`,
+        statusText(row.measurementStatusCounts)])));
+    renderSeries(analysis);
+    find('figure').innerHTML = bundle.scaleFigureSvg;
+    const figureConvention = [...find('figure').querySelectorAll('svg text')].find(text => text.textContent.startsWith('Unit: m · W_perp='));
+    if (figureConvention) figureConvention.textContent = 'Unit: m · Perpendicular gyroradius uses one-component thermal speed (W⊥/√2).';
+    renderUncertainty(uncertainty);
+    renderExports(bundle);
+    find('results').hidden = false;
+  }
+  function renderExports(bundle) {
+    const host = find('exports'); host.replaceChildren();
+    const files = [
+      ['analysis.json', JSON.stringify(bundle, null, 2), 'application/json'],
+      ['prepared.csv', bundle.input.preparedCsvText, 'text/csv'],
+      ['metadata.json', JSON.stringify(bundle.input.metadata, null, 2), 'application/json'],
+      ['summary.csv', Research.Bundle.summaryCsv(bundle.summaryTable), 'text/csv'],
+      ['plotting-data.csv', Research.Bundle.plottingCsv(bundle.plottingData), 'text/csv'],
+      ['figure.svg', bundle.scaleFigureSvg, 'image/svg+xml'],
+      ['methods-draft.md', bundle.methodsDraft, 'text/markdown'],
+      ['README-replay.txt', `${bundle.replay.command}\nRun from a checkout containing this development workbench. Matching output is computational reproduction, not scientific validation. Source CDF bytes are not rechecked by replay.\n`, 'text/plain'],
+    ];
+    if (bundle.input.sourceEvidence) files.push(['fit-attributes.json', JSON.stringify(bundle.input.sourceEvidence, null, 2), 'application/json']);
+    for (const [filename, content, type] of files) {
+      const button = node('button', `Download ${filename}`, 'secondary-button');
+      button.type = 'button'; button.addEventListener('click', () => download(filename, content, type));
+      host.append(button);
+    }
+  }
+  async function importFiles() {
+    const csvFile = find('csv').files[0], metadataFile = find('metadata').files[0], evidenceFile = find('evidence').files[0];
+    current = null; find('intake-panel').hidden = true; find('results').hidden = true;
+    if (!csvFile || !metadataFile) { showStatus('Choose both a prepared CSV and its matching JSON sidecar.'); return; }
+    if (csvFile.size > Research.Intake.limits.csvBytes || metadataFile.size > Research.Intake.limits.metadataBytes ||
+        evidenceFile && evidenceFile.size > Research.Intake.limits.metadataBytes) {
+      showStatus('Input exceeds the documented local byte limit.'); return;
+    }
+    try {
+      const csvText = await csvFile.text(), metadataText = await metadataFile.text();
+      const evidence = evidenceFile ? JSON.parse(await evidenceFile.text()) : null;
+      const metadata = JSON.parse(metadataText);
+      const intake = Research.Intake.importInterval(csvText, metadataText);
+      if (!intake.ok) { showStatus(`Import refused: ${intake.error.code} — ${intake.error.message}`); return; }
+      current = { csvText, metadata, evidence, intake };
+      renderIntake(intake, metadata);
+      showStatus(`Imported locally: ${intake.summary.retainedRows} retained, ${intake.summary.rejectedRows} rejected. Review QC and assumptions before analysis.`);
+    } catch (cause) { showStatus(`Import refused: ${cause.message}`); }
+  }
+  function runAnalysis() {
+    if (!current) { showStatus('Import and inspect prepared files first.'); return; }
+    try {
+      const { intake, csvText, metadata, evidence } = current;
+      const analysis = Research.Analysis.analyze(intake);
+      if (!analysis.ok) { showStatus(`Analysis refused: ${analysis.error.code}`); return; }
+      const uncertainty = Research.Uncertainty.evaluate(intake, analysis, evidence);
+      if (!uncertainty.ok) { showStatus(`Uncertainty assessment refused: ${uncertainty.error.code}`); return; }
+      const bundle = Research.Bundle.createBundle({ csvText, metadata, sourceEvidence: evidence, intake,
+        analysis, uncertainty, identity: Research.buildIdentity, software: Research.software,
+        runtime: { name: 'Browser', version: 'UNAVAILABLE_NOT_EMBEDDED' } });
+      if (!bundle.ok) { showStatus(`Bundle refused: ${bundle.error.code}`); return; }
+      current.bundle = bundle;
+      renderResults(bundle);
+      showStatus(`Analysis complete: ${analysis.summary.proton_inertial_length.calculatedCount} proton inertial-length samples. Review applicability, uncertainty, and exports below.`);
+    } catch (cause) { showStatus(`Analysis failed safely: ${cause.message}`); }
+  }
+  function init() {
+    area = document.querySelector('[data-wind-workbench]');
+    if (!area) throw new Error('Wind workbench section is missing');
+    find('import').addEventListener('click', importFiles);
+    find('run').addEventListener('click', runAnalysis);
+  }
+  root.AlfvenicaWindWorkbench = Object.freeze({ init });
+}(globalThis));
+
+  </script>
+  <script>
 (function () {
   'use strict';
   const Meta = window.AlfvenicaRelease;
@@ -3779,7 +5293,7 @@ button{color:inherit}
     get(key, fallback) { try { return localStorage.getItem(key) || fallback; } catch (_) { return fallback; } },
     set(key, value) { try { localStorage.setItem(key, value); } catch (_) { /* local file or privacy mode */ } },
   };
-  const validViews = new Set(['calculator', 'plots', 'examples', 'validation', 'notation', 'about']);
+  const validViews = new Set(['calculator', 'plots', 'wind', 'examples', 'validation', 'notation', 'about']);
   const hellingerFormulaIds = new Set([
     'hellinger-proton-cyclotron',
     'hellinger-mirror',
@@ -4042,11 +5556,19 @@ button{color:inherit}
   }
 
   function symbolUnitSummary(symbol) {
-    const parts = [symbol.dimensionless ? 'Dimensionless (1)' : `Canonical SI: ${symbol.canonicalSiUnit}`];
-    if (symbol.productionUnit !== symbol.canonicalSiUnit) parts.push(`calculation boundary: ${symbol.productionUnit}`);
-    const alternateUnits = symbol.acceptedDisplayUnits.filter(unit => unit !== symbol.canonicalSiUnit && unit !== symbol.productionUnit);
-    if (alternateUnits.length) parts.push(`displays: ${alternateUnits.join(', ')}`);
+    if (symbol.quantityType === 'temperature') return 'Display units: eV, K · SI temperature unit: K';
+    const parts = [symbol.dimensionless ? 'Dimensionless (1)' : `SI unit: ${symbol.canonicalSiUnit}`];
+    const alternateUnits = symbol.acceptedDisplayUnits.filter(unit => unit !== symbol.canonicalSiUnit);
+    if (alternateUnits.length) parts.push(`Other display units: ${alternateUnits.join(', ')}`);
     return parts.join(' · ');
+  }
+
+  function symbolDefinitionForDisplay(symbol) {
+    const descriptions = {
+      'vacuum-permeability': 'Magnetic permeability of vacuum used in the SI equations.',
+      'vacuum-permittivity': 'Electric permittivity of vacuum used in the SI equations.',
+    };
+    return descriptions[symbol.id] || symbol.definition;
   }
 
   function symbolConventionNotes(symbol) {
@@ -4058,18 +5580,23 @@ button{color:inherit}
       notes.push(species);
     }
     for (const item of symbol.indexMeaning) notes.push(`Index ${item.rendered}: ${item.meaning}`);
-    notes.push(...symbol.conventionNotes);
-    if (symbol.scope !== 'global') notes.push(`Scope: ${readableSemanticToken(symbol.scope)}`);
-    if (symbol.reviewStatus !== 'CONFIRMED_IMPLEMENTATION') notes.push(Symbols.reviewStatuses[symbol.reviewStatus]);
+    const clearerNotes = {
+      'The production relation is m_i = mu m_p.': 'Selected-ion mass follows mᵢ = μmₚ.',
+      'Production inputs store the energy-equivalent k_B T in eV.': 'Temperature in eV represents the energy-equivalent k_B T.',
+    };
+    notes.push(...symbol.conventionNotes.map(note => clearerNotes[note] || note));
+    if (symbol.scope === 'formula-local') notes.push('Meaning specific to this equation.');
+    if (symbol.reviewStatus === 'REVIEW_PENDING') notes.push('Notation or convention remains under review.');
+    if (symbol.reviewStatus === 'QUARANTINED_SCIENCE') notes.push('Scientific convention remains unresolved; this description does not validate the formula.');
     return notes;
   }
 
   function formulaRoleSummary(symbol, use) {
     const roles = [];
     if (use.roles.includes('input')) roles.push('Input');
-    if (use.roles.includes('numeric-output')) roles.push('Numeric output');
+    if (use.roles.includes('numeric-output')) roles.push('Calculated result');
     if (use.roles.includes('equation') && !use.roles.some(role => role === 'input' || role === 'numeric-output')) {
-      roles.push({ constant:'Constant', derived:'Derived quantity', index:'Index', 'formula-local':'Formula-local equation term' }[symbol.scope] || 'Equation quantity');
+      roles.push({ constant:'Constant', derived:'Derived quantity', index:'Index', 'formula-local':'Equation term' }[symbol.scope] || 'Equation quantity');
     }
     const localLabels = use.localLabels.filter(label => label && Search.normalizeText(label) !== Search.normalizeText(symbol.canonicalName));
     return { roles, localLabels };
@@ -4078,9 +5605,9 @@ button{color:inherit}
   function formulaSymbolRow(resolved) {
     const { symbol, use } = resolved;
     const role = formulaRoleSummary(symbol, use);
-    const roleNote = role.localLabels.length ? `<span class="symbol-local-note">Local role: ${escapeXml(role.localLabels.join(', '))}</span>` : '';
+    const roleNote = role.localLabels.length ? `<span class="symbol-local-note">Used here as: ${escapeXml(role.localLabels.join(', '))}</span>` : '';
     const conventionNotes = symbolConventionNotes(symbol);
-    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-role">${escapeXml(role.roles.join(' · '))}</span>${roleNote}</td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span>${conventionNotes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('')}</td></tr>`;
+    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbolDefinitionForDisplay(symbol))}</span></td><td><span class="symbol-role">${escapeXml(role.roles.join(' · '))}</span>${roleNote}</td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span>${conventionNotes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('')}</td></tr>`;
   }
 
   function renderSymbolsAndDefinitions(formula) {
@@ -4089,18 +5616,24 @@ button{color:inherit}
     if (!body) throw new Error('Symbols & Definitions container is missing');
     body.innerHTML = resolved.map(formulaSymbolRow).join('');
     const status = document.querySelector('[data-symbol-definitions-status]');
-    status.textContent = `${resolved.length} canonical definition${resolved.length === 1 ? '' : 's'}, deduplicated by semantic ID.`;
+    status.textContent = 'Definitions shown for this calculator.';
   }
 
   function notationSymbolCard(symbol) {
     const notes = symbolConventionNotes(symbol);
-    return `<article class="notation-symbol-card" data-semantic-id="${escapeXml(symbol.id)}"><div class="notation-symbol-heading"><span class="notation-glyph">${escapeXml(symbol.unicode)}</span><strong>${escapeXml(symbol.canonicalName)}</strong></div><p>${escapeXml(symbol.definition)}</p><p class="notation-symbol-meta">${escapeXml(symbolUnitSummary(symbol))}</p>${notes.length ? `<p class="notation-symbol-note">${escapeXml(notes.join(' · '))}</p>` : ''}</article>`;
+    return `<article class="notation-symbol-card" data-semantic-id="${escapeXml(symbol.id)}"><div class="notation-symbol-heading"><span class="notation-glyph">${escapeXml(symbol.unicode)}</span><strong>${escapeXml(symbol.canonicalName)}</strong></div><p>${escapeXml(symbolDefinitionForDisplay(symbol))}</p><p class="notation-symbol-meta">${escapeXml(symbolUnitSummary(symbol))}</p>${notes.length ? `<p class="notation-symbol-note">${escapeXml(notes.join(' · '))}</p>` : ''}</article>`;
   }
 
   function renderNotationSections() {
     const container = document.querySelector('[data-notation-sections]');
     if (!container) throw new Error('Notation sections container is missing');
-    container.innerHTML = Symbols.notationSections.map(section => `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(section.title)}</h2><p>${escapeXml(section.summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`).join('');
+    container.innerHTML = Symbols.notationSections.map(section => {
+      const title = section.id === 'calculation-boundary' ? 'Calculation and display units' : section.title;
+      const summary = section.id === 'calculation-boundary'
+        ? 'Unit choices change how values are displayed. Temperature entered in eV represents the energy-equivalent k_B T; the SI temperature unit is kelvin. Values are converted consistently for each calculation.'
+        : section.summary;
+      return `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(title)}</h2><p>${escapeXml(summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`;
+    }).join('');
   }
 
   function renderUnitSystemGuide() {
@@ -4115,7 +5648,7 @@ button{color:inherit}
 
   function glossaryRow(symbol) {
     const notes = symbolConventionNotes(symbol);
-    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
+    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbolDefinitionForDisplay(symbol))}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
   }
 
   function renderSymbolGlossary() {
@@ -4125,7 +5658,7 @@ button{color:inherit}
     if (!input || !body || !status) throw new Error('Symbol glossary controls are missing');
     const matches = Search.findSymbolMatches(Symbols, input.value);
     body.innerHTML = matches.map(glossaryRow).join('');
-    status.textContent = `${matches.length} of ${Object.keys(Symbols.symbols).length} canonical symbols shown.`;
+    status.textContent = `${matches.length} of ${Object.keys(Symbols.symbols).length} symbols shown.`;
   }
 
   function renderNotation() {
@@ -4190,9 +5723,9 @@ button{color:inherit}
       const observed = warning.conditionEvaluated && Number.isFinite(warning.conditionEvaluated.actual)
         ? `<span class="warning-observed">Observed: ${escapeXml(formatNumber(warning.conditionEvaluated.actual, 6))}</span>`
         : '';
-      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong><span>${escapeXml(warning.id)}</span></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p></details></article>`;
+      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p><p>Warning ID: ${escapeXml(warning.id)}</p></details></article>`;
     }).join('');
-    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong><span>${escapeXml(diagnostic.id)}</span></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
+    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
     list.innerHTML = warningHtml + diagnosticHtml;
     container.hidden = warnings.length === 0 && diagnostics.length === 0;
   }
@@ -4799,27 +6332,26 @@ button{color:inherit}
 
   function renderValidation() {
     const tests = Validation.run();
-    const passed = tests.filter(t => t.pass).length;
-    const groupDefinitions = Object.values(Validation.validationClasses);
-    const classCounts = Object.fromEntries(groupDefinitions.map(definition => [definition.id, tests.filter(test => test.validationClass === definition.id).length]));
-    const countSummary = groupDefinitions.map(definition => `${definition.id} ${classCounts[definition.id]}`).join(' · ');
-    $('validationSummary').innerHTML = `<strong>${passed}/${tests.length} classified validation records passed</strong><span>${countSummary}</span>`;
+    const failed = tests.filter(test => !test.pass);
+    const presentation = {
+      A_REFERENCE: ['Reference comparisons', 'Published plasma-parameter coefficients are compared with independently generated values from the NRL Plasma Formulary and CODATA constants.'],
+      B_IDENTITY: ['Analytical consistency', 'Stated relations and limiting cases are checked directly. Additional scaling checks are documented in the public test suite.'],
+      C_UNIT: ['Units and dimensions', 'The electronvolt-to-kelvin conversion is checked against an independent SI anchor. Units and conventions are stated with each calculation.'],
+      E_DOMAIN: ['Applicability checks', 'Selected physical and mathematical boundaries are exercised to verify that the corresponding warnings appear. Other applicability limits still require scientific judgment.'],
+      F_REGRESSION: ['Numerical consistency', 'Fixed cases and execution checks detect unintended software changes. They are not independent scientific benchmarks.'],
+    };
+    $('validationSummary').innerHTML = `<div class="validation-result${failed.length ? ' validation-result-issue' : ''}"><strong>${failed.length ? `${failed.length} validation check${failed.length === 1 ? '' : 's'} need review` : 'Checks shown here meet their stated criteria'}</strong><span>${failed.length ? 'Inspect the affected records and their scientific scope before relying on the results.' : 'The categories below describe what each check supports and where its evidence stops.'}</span>${failed.length ? `<ul>${failed.map(test => `<li>${escapeXml(test.name)}</li>`).join('')}</ul>` : ''}</div><div class="validation-overview">${Object.entries(presentation).map(([id, [title, description]]) => { const groupFailed = tests.some(test => test.validationClass === id && !test.pass); return `<article class="validation-overview-item"><h2>${title}</h2><p>${description}</p>${groupFailed ? '<strong class="status-fail">Check needs review</strong>' : ''}</article>`; }).join('')}</div>`;
 
-    const firstNonEmptyClass = groupDefinitions.find(definition => classCounts[definition.id] > 0)?.id;
-    $('validationGroups').innerHTML = groupDefinitions.map(definition => {
-      const group = tests.filter(test => test.validationClass === definition.id);
-      const groupPassed = group.filter(test => test.pass).length;
-      const rows = group.length
-        ? group.map(test => {
-          const basis = Validation.evidenceBases[test.evidenceBasis];
-          return `<tr><td>${test.name}<br><span class="small-text">Evidence basis: ${basis.label}. ${test.source}<br>Tolerance: ${test.toleranceRationale}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`;
-        }).join('')
-        : '<tr><td colspan="5"><span class="small-text">No current in-browser validation record is assigned to this class.</span></td></tr>';
-      return `<details class="validation-group"${definition.id === firstNonEmptyClass ? ' open' : ''}><summary><span><span class="validation-group-title">${definition.id} — ${definition.label}</span><br><span class="validation-group-summary">${definition.description}</span></span><span class="validation-group-summary">${group.length ? `${groupPassed}/${group.length} passed` : '0 records'}</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Check and evidence basis</th><th>Computed</th><th>Expected</th><th>Relative difference</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+    const comparisons = [
+      ['A_REFERENCE', 'Reference comparisons'],
+      ['C_UNIT', 'Unit conversion'],
+    ];
+    $('validationGroups').innerHTML = comparisons.map(([validationClass, title]) => {
+      const group = tests.filter(test => test.validationClass === validationClass);
+      if (!group.length) return '';
+      const rows = group.map(test => `<tr><td>${escapeXml(test.name)}${test.pass ? '' : '<br><strong class="status-fail">Needs review</strong>'}<br><span class="small-text">${escapeXml(test.source)}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td></tr>`).join('');
+      return `<section class="validation-group"><h3 class="validation-group-title">${title}</h3><p class="validation-scroll-hint">Scroll sideways to see the comparison values.</p><div class="table-wrap"><table class="validation-table"><thead><tr><th>Comparison and source</th><th>Calculated</th><th>Reference</th><th>Relative difference</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
     }).join('');
-
-    const smoke = tests.find(test => test.evidenceBasis === 'EXECUTION_SMOKE');
-    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation and provenance controls</h2><p>F_REGRESSION checks guard implementation behaviour. P_PROVENANCE checks detect artifact changes. Neither class is independent evidence that a formula is scientifically correct.</p><div class="integrity-grid"><div class="integrity-item"><strong>F_REGRESSION · ${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error; this is an execution-only smoke result</span></div><div class="integrity-item"><strong>F_REGRESSION · ${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values; separate D_PROPERTY scaling checks run in the development test suite</span></div><div class="integrity-item"><strong>P_PROVENANCE · SHA-256</strong><span>the physics-core hash is pinned in development tests as a change detector, not as scientific correctness evidence</span></div></div>`;
   }
 
   function applyTheme() {
@@ -4841,6 +6373,7 @@ button{color:inherit}
     renderPlotControls();
     renderPlotStateInputs();
     bindPlotEvents();
+    window.AlfvenicaWindWorkbench.init();
     document.querySelector('[data-symbol-glossary-search]').addEventListener('input', renderSymbolGlossary);
     setView(state.view, { updateUrl: false, scroll: false });
 
@@ -4904,6 +6437,7 @@ button{color:inherit}
       <nav class="top-nav" aria-label="Primary">
         <button class="nav-button active" type="button" data-view="calculator">Calculator</button>
         <button class="nav-button" type="button" data-view="plots">Plots</button>
+        <button class="nav-button" type="button" data-view="wind">Wind workbench</button>
         <button class="nav-button" type="button" data-view="examples">Examples</button>
         <button class="nav-button" type="button" data-view="validation">Validation</button>
         <button class="nav-button" type="button" data-view="notation">Notation</button>
@@ -5006,7 +6540,7 @@ button{color:inherit}
               <div class="symbol-definitions-heading">
                 <div>
                   <h3>Symbols &amp; Definitions</h3>
-                  <p>Canonical meanings are resolved from the shared semantic-symbol registry for this calculator.</p>
+                  <p>Meanings, units, and conventions used by this calculator.</p>
                 </div>
                 <p class="symbol-definitions-status" data-symbol-definitions-status aria-live="polite"></p>
               </div>
@@ -5059,7 +6593,7 @@ button{color:inherit}
         <header class="page-header">
           <p class="eyebrow">Reproducible visualisation</p>
           <h1 id="plotsHeading">Scale ordering and parameter dependence.</h1>
-          <p>The plots are evaluated directly from the same physics core used by the calculators. They show the implemented equations exactly at the sampled points; physical applicability remains limited by the assumptions of each model.</p>
+          <p>The plots use the same equations as the calculators, evaluated at each sampled point. Physical applicability remains limited by the assumptions of each model.</p>
         </header>
 
         <section class="plot-state-panel" aria-labelledby="plotStateHeading">
@@ -5153,6 +6687,60 @@ button{color:inherit}
       </div>
     </section>
 
+    <section class="view wind-workbench" data-view-section="wind" data-wind-workbench aria-label="Wind interval workbench">
+      <div class="page-column wind-page">
+        <header class="page-header">
+          <p class="eyebrow">Development research workflow · WI_H1_SWE only</p>
+          <h1>Wind interval workbench</h1>
+          <p>Import a prepared local Wind CSV and its matching JSON sidecar, inspect exclusions and assumptions, then calculate the four supported proton quantities. Files stay in this browser until you download them.</p>
+        </header>
+        <section class="wind-panel" aria-label="Local import">
+          <h2>1. Import prepared files</h2>
+          <div class="wind-file-grid">
+            <label>Prepared CSV <input type="file" accept=".csv,text/csv" data-wind-csv></label>
+            <label>Matching JSON sidecar <input type="file" accept=".json,application/json" data-wind-metadata></label>
+            <label>Verified CDF fit-attribute JSON (optional) <input type="file" accept=".json,application/json" data-wind-evidence></label>
+          </div>
+          <p class="wind-note">The optional evidence file enables only the density-fit component of proton inertial-length uncertainty when it matches the accepted CDF identity. It does not establish full measurement error.</p>
+          <button type="button" class="primary-button" data-wind-import>Inspect import and quality checks</button>
+          <p class="wind-status" data-wind-status role="status" aria-live="polite">Choose local files to begin.</p>
+        </section>
+        <section class="wind-panel" data-wind-intake-panel hidden aria-label="Source, mapping and quality control">
+          <h2>2. Inspect source and quality control</h2>
+          <div data-wind-source></div>
+          <div data-wind-qc></div>
+          <h3>Explicit source-column mapping</h3>
+          <div class="wind-table-scroll" data-wind-mapping></div>
+          <h3>Rejected source rows</h3>
+          <div class="wind-table-scroll" data-wind-rejections></div>
+          <h3>Declared processing and assumptions</h3>
+          <ul class="wind-assumptions">
+            <li>H⁺ number density and <code>fit_flag=10</code> only; rejected rows never enter a formula.</li>
+            <li>WI_H1_SWE co-reported GSE mean-field components stay paired to their proton spectrum. No independent H0 alignment is performed.</li>
+            <li>Wind trace and perpendicular speeds use W<sub>trace</sub> = √(2kT<sub>trace</sub>/m<sub>p</sub>) and W<sub>⊥</sub> = √(2kT<sub>⊥</sub>/m<sub>p</sub>) separately. Trace speed is never substituted for perpendicular speed.</li>
+            <li>Beta is proton beta; electron pressure for total beta is unavailable. Alfvén speed assumes proton-only mass density, not measured total composition.</li>
+            <li>Nominal 92-second support is declared; exact per-spectrum endpoints and calibration/covariance errors are not established.</li>
+          </ul>
+          <button type="button" class="primary-button" data-wind-run>Analyze interval</button>
+        </section>
+        <section class="wind-panel" data-wind-results hidden aria-label="Wind analysis results">
+          <h2>3. Review results and limitations</h2>
+          <p class="wind-note" data-wind-results-qc></p>
+          <div class="wind-table-scroll" data-wind-summary></div>
+          <h3>Row-by-row series</h3>
+          <div data-wind-series></div>
+          <h3>Numerical scale ordering</h3>
+          <div class="wind-figure" data-wind-figure></div>
+          <p class="wind-note"><strong>Scale proximity or ordering alone does not identify a physical mode.</strong> The figure uses only proton inertial length and perpendicular proton gyroradius in metres.</p>
+          <h3>Uncertainty and robustness remain separate</h3>
+          <div data-wind-uncertainty></div>
+          <h3>Export local replay materials</h3>
+          <p class="wind-note">Download <code>analysis.json</code> for complete local replay. Companion files provide editable numbers, the figure, and a fact-only Methods draft. Uploaded rows are never placed in the page URL.</p>
+          <div class="wind-export-actions" data-wind-exports></div>
+        </section>
+      </div>
+    </section>
+
     <section id="examplesView" class="view" aria-labelledby="examplesHeading">
       <div class="page-column">
         <header class="page-header">
@@ -5171,22 +6759,25 @@ button{color:inherit}
     <section id="validationView" class="view" aria-labelledby="validationHeading">
       <div class="page-column">
         <header class="page-header">
-          <p class="eyebrow">Semantic evidence taxonomy</p>
-          <h1 id="validationHeading">Classified validation evidence</h1>
-          <p>Every in-browser record has one explicit semantic class. Independent benchmarks, identities, unit checks, scientific properties, domain guardrails, regressions, and provenance controls are distinguished rather than treated as equivalent evidence.</p>
+          <p class="eyebrow">Scientific evidence</p>
+          <h1 id="validationHeading">How the calculations are checked</h1>
+          <p>Reference comparisons, analytical relations, units, and applicability limits provide different kinds of support. Software consistency and source identity are checked separately; neither establishes that a physical model applies to a particular observation.</p>
         </header>
-        <div class="release-status" role="group" aria-label="Release provenance">
-          <span><strong>Version</strong> 1.1.0</span>
-          <span><strong>Released</strong> 22 August 2026</span>
-          <span><strong>Source provenance</strong> immutable Git tag <code>v1.1.0</code>; browser source-commit field remains unavailable rather than fabricated</span>
-          <span><strong>Physics-core provenance</strong> v1.0.0 baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>; v1.1.0 core includes the approved SD-10 correction</span>
-        </div>
         <div id="validationSummary" class="validation-summary"></div>
-        <div id="validationGroups" class="validation-groups"></div>
-        <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
+        <section id="implementationIntegrity" class="integrity-card" aria-label="Additional checks">
+          <h2>Additional checks</h2>
+          <p>Additional implementation, regression, and provenance checks are documented in the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a> and <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">public test suite</a>. They detect software changes but do not independently validate a physical model.</p>
+        </section>
+        <details class="validation-technical">
+          <summary>Technical validation details</summary>
+          <div class="validation-technical-content">
+            <p>Selected numerical comparisons at stated reference inputs are shown below. The <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a> and <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">public tests</a> retain the complete evidence record, methods, and limitations.</p>
+            <div id="validationGroups" class="validation-groups"></div>
+          </div>
+        </details>
         <div class="method-note">
-          <h2>Interpretation</h2>
-          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; E_DOMAIN exercises a defensible implemented applicability boundary; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability beyond the specifically exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
+          <h2>Limits of these checks</h2>
+          <p>Reference values and unit conversions have independent anchors. Analytical relations test stated identities; applicability checks exercise specific implemented boundaries. Fixed regression cases and execution checks detect unintended software changes, but are not independent scientific benchmarks. These checks do not establish model applicability beyond the exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
       </div>
@@ -5195,25 +6786,25 @@ button{color:inherit}
     <section class="view" data-view-section="notation" aria-label="Notation and conventions">
       <div class="page-column notation-page">
         <header class="page-header">
-          <p class="eyebrow">Canonical semantic notation</p>
+          <p class="eyebrow">Symbols and units</p>
           <h1>Notation &amp; Conventions</h1>
-          <p>Project-wide notation, units, species meanings, and convention notes are generated from the same canonical registry used by every calculator.</p>
+          <p>Definitions, units, species meanings, and conventions used throughout Alfvenica.</p>
         </header>
         <div class="notation-sections" data-notation-sections></div>
         <section class="unit-system-guide" aria-label="Display unit systems">
           <div class="unit-system-guide-heading">
-            <p class="eyebrow">Display boundary</p>
+            <p class="eyebrow">Unit display</p>
             <h2>Unit-system selectors</h2>
-            <p>All selectors convert presentation around the same canonical calculator values. They do not select a different physics implementation.</p>
+            <p>Unit choices change how values are displayed; the calculated physical quantities remain the same.</p>
           </div>
           <div class="unit-system-grid" data-unit-system-guide></div>
         </section>
         <section class="symbol-glossary" aria-label="Searchable symbol glossary">
           <div class="glossary-heading">
             <div>
-              <p class="eyebrow">Complete registry</p>
+              <p class="eyebrow">Symbols and meanings</p>
               <h2>Searchable symbol glossary</h2>
-              <p>Search rendered symbols, plain forms, canonical names, semantic IDs, and concise aliases.</p>
+              <p>Search symbols, names, and common aliases.</p>
             </div>
             <label class="glossary-search-label">Search symbols
               <input class="search-input" data-symbol-glossary-search type="search" placeholder="e.g. μ, mu, beta, Debye length" autocomplete="off">
@@ -5222,7 +6813,7 @@ button{color:inherit}
           <p class="search-status" data-symbol-glossary-status aria-live="polite"></p>
           <div class="symbol-table-wrap glossary-table-wrap">
             <table class="symbol-table glossary-table">
-              <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>Canonical/display units</th><th>Species and convention</th></tr></thead>
+              <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>SI and display units</th><th>Species and convention</th></tr></thead>
               <tbody data-symbol-glossary-body></tbody>
             </table>
           </div>
@@ -5248,11 +6839,11 @@ button{color:inherit}
           </section>
           <section>
             <h2>Design, units, and privacy</h2>
-            <p>Calculations and plots run locally through one canonical SI physics core; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
+            <p>Calculations and plots run locally with explicit unit conventions; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices change how results are shown; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Each calculator states its assumptions and references.</p>
           </section>
           <section>
             <h2>Scientific basis and validation evidence</h2>
-            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. The current in-browser evidence includes six independently generated A_REFERENCE coefficient anchors and one C_UNIT conversion anchor; identities and regression or implementation checks remain separately classified. Development-only scaling checks and the P_PROVENANCE core hash are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
+            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. In-browser checks include independently anchored coefficient comparisons and a unit conversion, alongside analytical, applicability, and numerical consistency checks. Development scaling tests and software integrity checks are documented separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
           </section>
           <section>
             <h2>Scope and limitations</h2>
@@ -5260,19 +6851,19 @@ button{color:inherit}
           </section>
           <section>
             <h2>AI-assisted development</h2>
-            <p>ChatGPT, Claude, Gemini, DeepSeek, and Kimi assisted parts of coding, documentation, testing, and critical review. Their outputs were not accepted as scientific authority: formulas, assumptions, units, and numerical behaviour were reviewed using the applicable sources, analytical limits, and classified automated evidence available for each item. Not every calculator has an independent external benchmark. Final responsibility for the scientific content and implementation remains with the author.</p>
+            <p>ChatGPT and Anthropic Claude assisted with software development, documentation, testing, and technical consistency checks. All AI-assisted outputs incorporated into Alfvenica were reviewed and verified by the author against the source code, scientific references, and numerical tests, as applicable.</p>
           </section>
           <section>
             <h2>Collaboration and feedback</h2>
             <p>Alfvenica is under continuing development. Scientific corrections, independent benchmarks, documentation improvements, code contributions, feedback, and genuine research collaboration are welcome. <a href="https://github.com/mkchettri8/alfvenica/issues/new?template=scientific_correction.yml">Report a scientific issue</a> or read the <a href="https://github.com/mkchettri8/alfvenica/blob/main/CONTRIBUTING.md">contribution guide</a>.</p>
           </section>
           <aside class="about-identity" aria-label="Project identity">
-            <p class="about-author-note">Alfvenica · Developed and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a><br>Version 1.1.0 · Released 22 August 2026 · Immutable source tag <a href="https://github.com/mkchettri8/alfvenica/releases/tag/v1.1.0">v1.1.0</a><br>Archived on Zenodo · DOI: <a href="https://doi.org/10.5281/zenodo.22061119">10.5281/zenodo.22061119</a></p>
+            <p class="about-author-note">Alfvenica · Developed and maintained by <a href="https://mkchettri.in/">Mani K Chettri</a><br>Version 2.0.0 · Released 30 September 2026 · Source tag <a href="https://github.com/mkchettri8/alfvenica/releases/tag/v2.0.0">v2.0.0</a><br>Version DOI pending</p>
           </aside>
         </div>
         <section class="citation-box">
           <h2>Suggested citation</h2>
-          <p id="citationText">Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em> (Version 1.1.0) [Computer software]. Zenodo. <a href="https://doi.org/10.5281/zenodo.22061119">https://doi.org/10.5281/zenodo.22061119</a></p>
+          <p id="citationText">Chettri, M. K. (2026). <em>Alfvenica: Interactive Space Plasma Toolkit</em> (Version 2.0.0) [Computer software]. <a href="https://github.com/mkchettri8/alfvenica">https://github.com/mkchettri8/alfvenica</a></p>
           <div class="citation-actions">
             <button id="copyCitation" class="secondary-button" type="button">Copy citation</button>
             <button id="copyBibtex" class="secondary-button" type="button">Copy BibTeX</button>

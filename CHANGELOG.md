@@ -2,6 +2,22 @@
 
 All notable changes to Alfvenica are recorded here.
 
+## 2.0.0 — 2026-09-30
+
+### Wind research pathway and reproducibility
+
+- Added a reproducible Wind `WI_H1_SWE` H1 workflow for two tested intervals,
+  with explicit source identities, fit-flag quality handling, and row accounting.
+- Added replayable analysis bundles with calculation, implementation-provenance,
+  and runtime comparison outcomes.
+- Kept nonlinear density-fit precision, interval variation, and equal-time
+  sensitivity separate from unavailable full measurement uncertainty.
+- Improved the research-facing calculator and Wind workbench presentation and
+  expanded reproduction instructions, source conventions, and known limits.
+
+The designated release source tag is `v2.0.0`. A version-specific DOI is pending. The
+v1.1.0 DOI below identifies only the previous release.
+
 ## 1.1.0 — 2026-08-22
 
 ### Publication and scientific hardening

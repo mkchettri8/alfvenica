@@ -82,10 +82,10 @@ assert.match(html, /Reference values and unit conversions have independent ancho
 assert.match(html, /Technical validation details/, 'Advanced validation evidence is not available');
 assert.match(html, /complete evidence record, methods, and limitations/, 'Full scientific evidence route is not disclosed');
 assert.doesNotMatch(html, /\b(?:A_REFERENCE|B_IDENTITY|C_UNIT|D_PROPERTY|E_DOMAIN|F_REGRESSION|P_PROVENANCE)\b/, 'Internal validation codes are visible in public HTML');
-assert.match(html, /Version 1\.1\.0 · Released 22 August 2026/, 'v1.1.0 release identity is missing');
-assert.doesNotMatch(html, /DOI pending/i, 'Current public UI still shows DOI-pending wording');
-assert.doesNotMatch(html, /release candidate/i, 'Current UI still describes v1.1.0 as a release candidate');
-assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v1.1.0 tag is pending');
+assert.match(html, /Version 2\.0\.0 · Released 30 September 2026/, 'v2.0.0 release identity is missing');
+assert.match(html, /Version DOI pending/, 'Unminted v2.0.0 DOI is not identified as pending');
+assert.doesNotMatch(html, /release candidate/i, 'Current UI describes v2.0.0 as a release candidate');
+assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v2.0.0 tag is pending');
 assert.doesNotMatch(html, /<strong>Last validated<\/strong>/, 'Ambiguous last-validated release label remains');
 assert.doesNotMatch(html, /Evidence record date|evidence record dated/i, 'Invented evidence-record date remains');
 assert.doesNotMatch(packageMetadata.description, /^Validated\b/i, 'package.json overstates validation status');
@@ -114,8 +114,8 @@ assert.equal(Meta.constantsRevision, 'NIST CODATA 2022', 'Constants revision met
 assert.equal(Meta.sourceCommit, null, 'An unverified source commit is exposed');
 assert.equal(Meta.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED', 'Unavailable source commit is not explicit');
 assert.equal(Meta.releaseStatus, 'RELEASED', 'Released status is missing');
-assert.equal(Meta.releaseDate, '2026-08-22', 'Release date is missing');
-assert.equal(Meta.releaseTag, 'v1.1.0', 'Release tag is missing');
+assert.equal(Meta.releaseDate, '2026-09-30', 'Release date is missing');
+assert.equal(Meta.releaseTag, 'v2.0.0', 'Release tag is missing');
 const decisionLog = fs.readFileSync(path.join(root, 'SCIENTIFIC_DECISION_LOG.md'), 'utf8');
 for (let index = 1; index <= 10; index += 1) assert.match(decisionLog, new RegExp(`SD-${String(index).padStart(2, '0')}`), `Scientific decision SD-${index} missing`);
 for (const field of ['Calculator/formula ID', 'Production functions', 'Current implementation', 'Current reference metadata', 'Why quarantined', 'Decision required', 'Would a scientific change alter results?', 'Affected surfaces', 'Source needed', 'Priority', 'Recommended action']) {
@@ -137,8 +137,9 @@ for (const [id,status] of Object.entries(pass2Statuses)) {
 assert.doesNotMatch(decisionLog, /\*\*Status:\*\* `OPEN`/, 'A scientific decision remains open');
 const citationCff = fs.readFileSync(path.join(root, 'CITATION.cff'), 'utf8');
 assert.match(citationCff, new RegExp(`version: ${Meta.version.replace(/\./g, '\\.')}`), 'CITATION.cff version mismatch');
-assert.match(citationCff, /^date-released: 2026-08-22$/m, 'CITATION.cff release date mismatch');
-assert.match(citationCff, /^doi: "10\.5281\/zenodo\.22061119"$/m, 'CITATION.cff version DOI mismatch');
+assert.match(citationCff, /^date-released: 2026-09-30$/m, 'CITATION.cff release date mismatch');
+assert.doesNotMatch(citationCff, /^doi:/m, 'Unminted v2.0.0 version DOI was invented');
+assert.match(citationCff, /version-specific DOI is pending/, 'CITATION.cff omits pending DOI status');
 assert.equal(packageMetadata.version, Meta.version, 'package.json version mismatch');
 assert.match(fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8'), new RegExp(`## ${Meta.version.replace(/\./g, '\\.')}`), 'Changelog version missing');
 const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
@@ -150,10 +151,10 @@ assert.equal(jsonLd.dateModified, Meta.validationDate, 'JSON-LD audit date misma
 const identityMatch = html.match(/<aside class="about-identity"[^>]*>([\s\S]*?)<\/aside>/);
 assert.ok(identityMatch, 'Understated project identity presentation missing');
 const identityHtml = identityMatch[1];
-assert.equal(plainText(identityHtml), 'Alfvenica · Developed and maintained by Mani K Chettri Version 1.1.0 · Released 22 August 2026 · Immutable source tag v1.1.0 Archived on Zenodo · DOI: 10.5281/zenodo.22061119', 'About identity/release text differs from the approved wording');
+assert.equal(plainText(identityHtml), 'Alfvenica · Developed and maintained by Mani K Chettri Version 2.0.0 · Released 30 September 2026 · Source tag v2.0.0 Version DOI pending', 'About identity/release text differs from the approved wording');
 assert.match(identityHtml, /<a href="https:\/\/mkchettri\.in\/">Mani K Chettri<\/a>/, 'Maintainer website link missing or incorrect');
-assert.match(identityHtml, /<a href="https:\/\/github\.com\/mkchettri8\/alfvenica\/releases\/tag\/v1\.1\.0">v1\.1\.0<\/a>/, 'Immutable source-tag link missing or incorrect');
-assert.match(identityHtml, /<a href="https:\/\/doi\.org\/10\.5281\/zenodo\.22061119">10\.5281\/zenodo\.22061119<\/a>/, 'Zenodo DOI link missing or incorrect');
+assert.match(identityHtml, /<a href="https:\/\/github\.com\/mkchettri8\/alfvenica\/releases\/tag\/v2\.0\.0">v2\.0\.0<\/a>/, 'Source-tag link missing or incorrect');
+assert.doesNotMatch(identityHtml, /22061119/, 'v1.1.0 DOI is presented as the v2.0.0 DOI');
 const footerMatch = html.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/);
 assert.ok(footerMatch, 'Global footer missing');
 assert.equal(plainText(footerMatch[1]), 'Alfvenica · Developed and maintained by Mani K Chettri', 'Global footer differs from the approved authorship line');

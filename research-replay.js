@@ -51,7 +51,7 @@ function replay(bundle) {
     current = Bundle.createBundle({ csvText: bundle.input.preparedCsvText,
       metadata: bundle.input.metadata, sourceEvidence: bundle.input.sourceEvidence,
       intake, analysis, uncertainty, identity: Identity.sourceIdentity(),
-      software: { baseApplicationVersion: Meta.version, baseVersionDoi: Meta.versionDoi },
+      software: { baseApplicationVersion: Meta.baseApplicationVersion, baseVersionDoi: Meta.baseVersionDoi },
       runtime: { name: 'Node.js', version: process.version } });
     if (!current.ok) return failure('INVALID_PREPARED_INPUT', current.error.message);
   } catch (cause) { return failure('INVALID_BUNDLE', cause.message); }

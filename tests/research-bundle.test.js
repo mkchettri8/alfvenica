@@ -18,7 +18,7 @@ const intake = Intake.importInterval(csv, metadata);
 const analysis = Analysis.analyze(intake);
 const uncertainty = Uncertainty.evaluate(intake, analysis);
 const identity = Identity.sourceIdentity();
-const software = { baseApplicationVersion: Meta.version, baseVersionDoi: Meta.versionDoi };
+const software = { baseApplicationVersion: Meta.baseApplicationVersion, baseVersionDoi: Meta.baseVersionDoi };
 const nodeBundle = Bundle.createBundle({ csvText: csv, metadata, intake, analysis, uncertainty,
   identity, software, runtime: { name: 'Node.js', version: process.version } });
 assert.equal(nodeBundle.ok, true);

@@ -68,10 +68,10 @@ for (const [formulaIndex, item] of Registry.formulas.entries()) {
   assert.equal(record.exportedAt, timestamp, `${item.id}: timestamp changed`);
   assert.equal(new Date(record.exportedAt).toISOString(), record.exportedAt, `${item.id}: invalid ISO timestamp`);
   assert.equal(record.application.name, 'Alfvenica', `${item.id}: application name missing`);
-  assert.equal(record.application.version, '1.1.0', `${item.id}: package version missing`);
+  assert.equal(record.application.version, '2.0.0', `${item.id}: package version missing`);
   assert.equal(record.application.releaseStatus, 'RELEASED', `${item.id}: released status missing`);
-  assert.equal(record.application.releaseDate, '2026-08-22', `${item.id}: release date missing`);
-  assert.equal(record.application.releaseTag, 'v1.1.0', `${item.id}: release tag missing`);
+  assert.equal(record.application.releaseDate, '2026-09-30', `${item.id}: release date missing`);
+  assert.equal(record.application.releaseTag, 'v2.0.0', `${item.id}: release tag missing`);
   assert.equal(record.application.build.sourceCommit, null, `${item.id}: unverified source commit was claimed`);
   assert.equal(record.application.build.sourceCommitStatus, 'UNAVAILABLE_NOT_EMBEDDED', `${item.id}: unavailable source commit is not explicit`);
   assert.equal(record.application.physicsCore.sha256, Meta.physicsCoreSha256, `${item.id}: physics-core provenance mismatch`);

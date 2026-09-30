@@ -28,7 +28,7 @@ if (!csvPath || !metadataPath || !evidencePath || !outputDirectory || process.ar
     if (!uncertainty.ok) throw new Error(`${uncertainty.error.code}: ${uncertainty.error.message}`);
     const bundle = Bundle.createBundle({ csvText, metadata, sourceEvidence, intake, analysis, uncertainty,
       identity: Identity.sourceIdentity(),
-      software: { baseApplicationVersion: Meta.version, baseVersionDoi: Meta.versionDoi },
+      software: { baseApplicationVersion: Meta.baseApplicationVersion, baseVersionDoi: Meta.baseVersionDoi },
       runtime: { name: 'Node.js', version: process.version } });
     if (!bundle.ok) throw new Error(`${bundle.error.code}: ${bundle.error.message}`);
     fs.mkdirSync(outputDirectory, { recursive: true });

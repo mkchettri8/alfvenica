@@ -30,18 +30,20 @@ assert.deepEqual(v2.record.replay.producer, {
   component: 'Alfvenica research runner',
   status: 'DEVELOPMENT_UNRELEASED',
   recordSchema: { name: 'org.alfvenica.reproducible-calculation-record', version: '2.0.0' },
-  baseApplicationVersion: '1.1.0',
+  baseApplicationVersion: '2.0.0',
   historicalReleaseMembership: 'NOT_PART_OF_BASE_RELEASE',
 });
 assert.equal(Runner.replay(JSON.parse(JSON.stringify(v2.record))).status, 'MATCH');
 assert.equal(Runner.replay(v2.record).runtime_match, true);
 const savedWindExample = require('../examples/wind_pilot/pass2_proton_beta_record.json');
 const savedReport = Runner.replay(savedWindExample);
-assert.equal(savedReport.match, true);
+assert.equal(savedReport.match, false);
 assert.equal(savedReport.calculation_match, true);
-assert.equal(savedReport.implementation_provenance_match, true);
+assert.equal(savedReport.implementation_provenance_match, false);
 assert.equal(savedReport.environment_match, savedWindExample.replay.runtime.version === process.version);
-assert.equal(savedReport.status, savedReport.environment_match ? 'MATCH' : 'MATCH_ENVIRONMENT_DIFFERS');
+assert.equal(savedReport.status, 'PROVENANCE_MISMATCH');
+assert.equal(savedReport.application_version_match, false);
+assert.equal(savedReport.source_identity_match, false);
 const v1 = Exporter.createRecord({ formula: Registry.formulas.find(item => item.id === 'species-beta'), canonicalInputs: beta.canonical_inputs, exportedAt: '2020-01-01T16:00:34.499Z' });
 const oldReport = Runner.replay(v1);
 assert.equal(oldReport.status, 'MATCH');
