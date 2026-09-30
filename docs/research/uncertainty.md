@@ -16,6 +16,8 @@ Pass 7 also checked these same fit-attribute meanings in the manifest-listed `wi
 
 All three are from nonlinear fitting of the ion current distribution. The accepted Pass 3 optional columns already retain them and normalize them to m⁻³ or m s⁻¹ with a conversion trace; no intake schema change is needed. These source fields describe **fit precision only**. They do not establish instrument calibration or systematic uncertainty, an error in the co-reported magnetic field, or covariance among fitted parameters. `Ang_dev` and `dev` describe within-measurement field variation; they are not substituted for magnetic-field one-sigma.
 
+The audit observed many thermal-speed fit-sigma values of exactly **1.000 km/s** in the original CDFs. The cause of that repetition is unresolved; it is not attributed here to a floor, clamp, quantization rule or instrument behaviour. The CDF describes these fields as one-sigma fit uncertainties. The trace- and perpendicular-speed sigma fields remain contextual only in this pathway and are not propagated into any supported output uncertainty.
+
 ## Propagation and refusal
 
 For a Pass 4 calculated proton inertial length `d_p`, positive proton density `n_p`, and a finite nonnegative verified one-sigma density fit value `σ_n`, the sole propagated component is the first-order derivative magnitude

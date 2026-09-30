@@ -18,6 +18,10 @@ The July file has `fit_flag` counts 10:57, 9:2, 3:3, 2:10. All 15 non-10 rows ar
 
 The percentages compare **descriptive medians of different accepted rows**; they are not paired changes, confidence intervals or physical-regime claims. January/July median retained start separations were 99.244/99.953 s. Nominal start-separation counts above the declared 92 s were 72/56; July's largest excess was 604.548 s after flag exclusion. These are not verified uncovered integration times. The July equal-time sensitivity halves retained 34 and 23 rows; January retained 36 and 37. Verified source fit attributes allowed a nonlinear-fit-derived inertial-length component on 73/57 rows, respectively; **full** measurement uncertainty remained unavailable on every row. Covariance and calibrated field uncertainty were not inferred.
 
+The **perpendicular proton gyroradius (sigma-speed convention)** is `rho_p,perp,sigma = sqrt(k_B T_perp / m_p) / Omega_cp = W_perp / (sqrt(2) Omega_cp)`. With consistent constants and conventions, `rho_p,perp,sigma / d_p = sqrt(beta_p,perp / 2)`. The plotted scale ratio is therefore related to perpendicular beta, not an independent physical-mode diagnostic. The reported trace beta is neither parallel nor perpendicular beta and is not an anisotropy or stability analysis. The source proton moments are bi-Maxwellian fit parameters, which do not fully describe arbitrary beams, tails, nongyrotropy or an arbitrary distribution function.
+
+The field input is the magnitude of the H1 co-reported mean GSE vector. In general, `|⟨B_vector⟩|` differs from `⟨|B_vector|⟩`; this pathway uses the former and does not infer finer-time magnetic structure. The source product's [documented screening limits](https://cdaweb.gsfc.nasa.gov/misc/NotesW.html) are Mach number at least 1.5, fit chi-square/dof at most 100000, bow-shock distance at least 5 Earth radii, and fitted-parameter fractional uncertainty at most 70%. Alfvenica did not independently impose these four limits on the prepared rows.
+
 ## Reproduce the contrasting case locally
 
 The contrast CDF must be the exact public file in the [manifest](../../examples/wind_pilot/manifest.json). `--contrast` selects only that frozen Pass 1 window and source identity; the default commands remain the January pathway. No downloader or H0 alignment is involved.
@@ -29,11 +33,11 @@ npm run create:analysis -- contrast.csv contrast-metadata.json contrast-fit-attr
 npm run replay:analysis -- contrast-output/analysis.json
 ```
 
-Both locally generated bundles replayed `MATCH` under the generating Node runtime. The separate `SOURCE_SET_SHA256` and source-CDF hashes identify software and data **bytes**, not scientific correctness. A second researcher must still retrieve and reproduce the primary table and figure independently.
+Both locally generated bundles replayed `MATCH` under the generating Node runtime. The `SOURCE_SET_SHA256` hashes identify only their listed software-file subsets; the source-CDF hashes identify data bytes. Neither establishes scientific correctness. The verified full Git commit plus source manifest identifies the complete reviewed checkout. A second researcher must still retrieve and reproduce the primary table and figure independently.
 
 ## When to use this pathway
 
-Use it for a **short, already-prepared Wind `WI_H1_SWE` interval** whose CDF version, variable meanings, GSE co-reported field, UTC spectrum-start times, fit flags, fill/range attributes and source identity have been checked. It returns proton trace beta, proton inertial length, perpendicular-convention proton gyroradius and **proton-only** Alfvén speed, with row exclusions and model assumptions visible. Use the Pass 3 sidecar for any further version only after an equivalent archive-attribute review; the two scripts above intentionally recognize only the frozen Pass 1 files.
+Use it for a **short, already-prepared Wind `WI_H1_SWE` interval** whose CDF version, variable meanings, GSE co-reported field, UTC spectrum-start times, fit flags, fill/range attributes and source identity have been checked. It returns proton trace beta, proton inertial length, perpendicular proton gyroradius in the sigma-speed convention and **proton-only** Alfvén speed, with row exclusions and model assumptions visible. Parallel speed, alpha density and field-variation context may be present in the source product but are not imported or validated by this pathway. The two scripts above intentionally recognize only the frozen Pass 1 Wind H1 files; a different source/version requires its own reviewed route.
 
 Do not use this output as total beta, measured total mass density, a calibrated error bar, a vector turbulence/Walén diagnostic, or a KAW, instability, reconnection or dissipation identification. Do not substitute H0 MFI without a verified timing/aggregation rule. The [known limits](known_limits.md) state the remaining boundaries.
 

@@ -1,6 +1,6 @@
 """Continue an exported Wind analysis in Python without reimplementing physics.
 
-Requires an existing local analysis.json and plotting-data.csv export. Pandas and
+Requires an existing local analysis.json export. Pandas and
 Matplotlib are optional notebook-side tools, not Alfvenica web dependencies.
 """
 import argparse
@@ -23,7 +23,7 @@ def main():
     if record.get("schema") != {"name": "org.alfvenica.wind-analysis-bundle", "version": "1.0.0"}:
         raise ValueError("Unsupported analysis bundle")
     import pandas as pd  # Optional continuation dependency, not a web runtime dependency.
-    table = pd.read_csv(bundle.with_name("plotting-data.csv"))
+    table = pd.DataFrame(record["plottingData"])
     print(table[["timestampUtc", "proton_inertial_length", "proton_gyroradius_perp_sigma"]].head())
     if args.plot:
         import matplotlib.pyplot as plt

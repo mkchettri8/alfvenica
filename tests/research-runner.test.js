@@ -36,7 +36,12 @@ assert.deepEqual(v2.record.replay.producer, {
 assert.equal(Runner.replay(JSON.parse(JSON.stringify(v2.record))).status, 'MATCH');
 assert.equal(Runner.replay(v2.record).runtime_match, true);
 const savedWindExample = require('../examples/wind_pilot/pass2_proton_beta_record.json');
-assert.equal(Runner.replay(savedWindExample).status, 'MATCH');
+const savedReport = Runner.replay(savedWindExample);
+assert.equal(savedReport.match, true);
+assert.equal(savedReport.calculation_match, true);
+assert.equal(savedReport.implementation_provenance_match, true);
+assert.equal(savedReport.environment_match, savedWindExample.replay.runtime.version === process.version);
+assert.equal(savedReport.status, savedReport.environment_match ? 'MATCH' : 'MATCH_ENVIRONMENT_DIFFERS');
 const v1 = Exporter.createRecord({ formula: Registry.formulas.find(item => item.id === 'species-beta'), canonicalInputs: beta.canonical_inputs, exportedAt: '2020-01-01T16:00:34.499Z' });
 const oldReport = Runner.replay(v1);
 assert.equal(oldReport.status, 'MATCH');
@@ -96,6 +101,12 @@ assert.equal(runtimeReport.match, true);
 assert.equal(runtimeReport.calculation_match, true);
 assert.equal(runtimeReport.implementation_provenance_match, true);
 assert.equal(runtimeReport.environment_match, false);
+const changedRuntimeInput = JSON.parse(JSON.stringify(changedRuntime));
+changedRuntimeInput.calculation.inputs.find(item => item.key === 'B').internal.value *= 2;
+assert.equal(Runner.replay(changedRuntimeInput).status, 'MISMATCH');
+const changedRuntimeSource = JSON.parse(JSON.stringify(changedRuntime));
+changedRuntimeSource.replay.sourceIdentity.sha256 = '0'.repeat(64);
+assert.equal(Runner.replay(changedRuntimeSource).status, 'PROVENANCE_MISMATCH');
 for (const field of ['semanticId', 'unit']) {
   const alteredState = JSON.parse(JSON.stringify(v2.record));
   alteredState.reproduction.deterministicState.canonicalInputs[0][field] = 'incorrect-' + field;

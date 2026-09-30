@@ -43,6 +43,12 @@ assert.match(nodeBundle.methodsDraft, /Release 2 DOI is PENDING \/ AUTHOR REVIEW
 assert.match(nodeBundle.methodsDraft, /AUTHOR REVIEW REQUIRED/);
 assert.match(nodeBundle.methodsDraft, /Proton beta is not total beta/);
 assert.match(nodeBundle.methodsDraft, /proton-only mass density/);
+assert.match(nodeBundle.methodsDraft, /Perpendicular proton gyroradius \(sigma-speed convention\): rho_p,perp,sigma = sqrt\(k_B T_perp \/ m_p\) \/ Omega_cp = W_perp \/ \(sqrt\(2\) Omega_cp\)/);
+assert.match(nodeBundle.methodsDraft, /rho_p,perp,sigma \/ d_p = sqrt\(beta_p,perp \/ 2\)/);
+assert.match(nodeBundle.methodsDraft, /source proton parameters are bi-Maxwellian fit parameters/);
+assert.match(nodeBundle.methodsDraft, /source-set content SHA-256 .* covers only its listed files/);
+assert.equal(nodeBundle.summaryTable.find(row => row.quantityId === 'proton_gyroradius_perp_sigma').quantity,
+  'Perpendicular proton gyroradius (sigma-speed convention)');
 assert.equal(Replay.replay(nodeBundle).status, 'MATCH');
 const changedResult = copy(nodeBundle);
 changedResult.analysis.series.proton_inertial_length[0].value *= 1.01;
