@@ -51,7 +51,6 @@ assert.match(appSource, /\[Object\.keys\(legacyPlotStateMetadataSemanticIds\)\[0
 assert.doesNotMatch(formulaSource, /Ion mass number/i, 'Formula input metadata still exposes the incorrect mu term');
 assert.doesNotMatch(html, /Ion mass number/i, 'Public HTML still exposes the incorrect mu term');
 assert.match(appSource, /Reduced-model regime: kinetic-Alfvén ordering/, 'Cautious KAW ordering label missing');
-assert.match(appSource, /P_PROVENANCE/, 'Provenance controls are not labelled in the validation UI');
 assert.doesNotMatch(appSource, /Numerically verified against reference values/, 'Old independent-reference wording remains in the validation UI');
 
 for (const file of requiredFiles) {
@@ -79,10 +78,11 @@ assert.match(html, /JSON record includes canonical inputs and outputs, formula p
 assert.match(html, /data-plot-mass-ratio-label/, 'Plot mass-ratio name is not registry-driven');
 assert.match(html, /data-plot-mass-ratio-relation/, 'Plot mass-ratio relation is not registry-driven');
 assert.doesNotMatch(html, /mkchettri\.in\/alfvenica/, 'Obsolete visible citation URL remains');
-assert.match(html, /six source-anchored A_REFERENCE coefficient comparators and one C_UNIT conversion anchor/, 'Independent in-browser evidence inventory is not disclosed');
-assert.match(html, /P_PROVENANCE identifies artifacts but is not correctness evidence/, 'Provenance limitation is not disclosed');
-assert.match(html, /<strong>Version<\/strong> 1\.1\.0/, 'v1.1.0 version is missing');
-assert.match(html, /<strong>Released<\/strong> 22 August 2026/, 'Release date is missing');
+assert.match(html, /Reference values and unit conversions have independent anchors/, 'Independent in-browser evidence scope is not disclosed');
+assert.match(html, /Technical validation details/, 'Advanced validation evidence is not available');
+assert.match(html, /complete evidence record, methods, and limitations/, 'Full scientific evidence route is not disclosed');
+assert.doesNotMatch(html, /\b(?:A_REFERENCE|B_IDENTITY|C_UNIT|D_PROPERTY|E_DOMAIN|F_REGRESSION|P_PROVENANCE)\b/, 'Internal validation codes are visible in public HTML');
+assert.match(html, /Version 1\.1\.0 · Released 22 August 2026/, 'v1.1.0 release identity is missing');
 assert.doesNotMatch(html, /DOI pending/i, 'Current public UI still shows DOI-pending wording');
 assert.doesNotMatch(html, /release candidate/i, 'Current UI still describes v1.1.0 as a release candidate');
 assert.doesNotMatch(html, /tag[^<\n]*pending/i, 'Current UI says the v1.1.0 tag is pending');

@@ -44,22 +44,50 @@
     root.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   function reasonText(counts) {
-    return Object.entries(counts).map(([reason, count]) => `${reason}: ${count}`).join('; ') || 'none';
+    return Object.entries(counts).map(([reason, count]) => `${reasonLabel(reason)}: ${count}`).join('; ') || 'none';
+  }
+  function reasonLabel(reason) {
+    const labels = {
+      INVALID_UTC_TIMESTAMP: 'invalid UTC time', OUTSIDE_INTERVAL: 'outside selected interval',
+      DUPLICATE_TIMESTAMP: 'duplicate time', OUT_OF_ORDER_TIMESTAMP: 'out-of-order time',
+      DISALLOWED_FLAG: 'fit flag other than 10', INVALID_FLAG: 'invalid fit flag',
+      FILL_REQUIRED: 'fill value in a required field', MISSING_REQUIRED: 'missing required field',
+      NON_FINITE: 'non-finite value', INVALID_NUMBER: 'invalid number',
+      ARCHIVE_RANGE: 'outside archive valid range', NON_POSITIVE_DENSITY: 'non-positive density',
+      NON_POSITIVE_THERMAL_SPEED: 'non-positive thermal speed', ZERO_MAGNETIC_VECTOR: 'zero magnetic-field vector',
+      INVALID_SOURCE_ROW_INDEX: 'invalid source row index', DUPLICATE_SOURCE_ROW_INDEX: 'duplicate source row index',
+    };
+    return labels[reason] || reason.toLowerCase().replaceAll('_', ' ');
+  }
+  function statusLabel(status) {
+    const labels = {
+      available_fit_component: 'density fit precision available',
+      measurement_uncertainty_unavailable: 'measurement uncertainty unavailable',
+      invalid_source_sigma: 'invalid source fit sigma', not_calculated: 'not calculated',
+      not_assessed: 'not assessed',
+    };
+    return labels[status] || String(status).toLowerCase().replaceAll('_', ' ');
+  }
+  function statusText(counts) {
+    return Object.entries(counts).map(([status, count]) => `${statusLabel(status)}: ${count}`).join('; ') || 'none';
   }
   function renderIntake(intake, metadata) {
     const source = intake.source, summary = intake.summary;
-    find('source').replaceChildren(table(['Source field', 'Declared value'], [
-      ['Mission / product', `${source.mission} / ${source.productId}`],
-      ['Product version / origin', `${source.productVersion} / ${source.dataOrigin}`],
-      ['Dataset DOI', source.datasetDoi], ['Source file', source.fileName],
+    const sourceDetails = node('details', undefined, 'wind-source-details'), sourceSummary = node('summary', 'Technical source identity');
+    sourceDetails.append(sourceSummary, scrollTable(['Source field', 'Declared value'], [
       ['Declared SHA-256', source.sha256 || 'not supplied'],
       ['Digest meaning', `${source.digestScope}; ${intake.sourceDigestStatus}; file identity only`],
+    ]));
+    find('source').replaceChildren(scrollTable(['Source field', 'Declared value'], [
+      ['Mission / product', `${source.mission} / ${source.productId}`],
+      ['Product version / origin', `${source.productVersion} / ${source.dataOrigin === 'CDF_DERIVED' ? 'CDF-derived' : 'synthetic test data'}`],
+      ['Dataset DOI', source.datasetDoi], ['Source file', source.fileName],
       ['UTC selection', `[${intake.time.interval.start}, ${intake.time.interval.end})`],
       ['Time support', `${intake.time.meaning}; nominal ${intake.time.nominalSupportSeconds} s`],
       ['Species / frame', 'H+ / GSE'],
-      ['Second-stream alignment', `${intake.alignmentStatus}; aligned pairs ${intake.alignedPairCount === null ? 'not attempted' : intake.alignedPairCount}`],
-    ]));
-    find('qc').replaceChildren(table(['QC measure', 'Value'], [
+      ['Second-stream alignment', `No independent H0 pairing; aligned pairs ${intake.alignedPairCount === null ? 'not attempted' : intake.alignedPairCount}`],
+    ]), node('p', 'Source identity is declared in the prepared metadata; this browser does not recheck the CDF bytes.', 'wind-note'), sourceDetails);
+    find('qc').replaceChildren(scrollTable(['QC measure', 'Value'], [
       ['Total / selected rows', `${summary.totalRows} / ${summary.selectedRows}`],
       ['Retained / rejected', `${summary.retainedRows} / ${summary.rejectedRows}`],
       ['Rejection reasons (overlapping)', reasonText(summary.allReasonCounts)],
@@ -70,11 +98,11 @@
       ['Excess beyond nominal start separation', `${fmt(summary.gaps.totalExcessBeyondNominalSeconds)} s total; not verified uncovered time`],
       ['Processing policy', metadata.processing.quality],
     ]));
-    find('mapping').replaceChildren(table(['Prepared column', 'CDF variable', 'Semantic ID', 'CSV unit', 'Species / frame'],
-      metadata.columns.map(column => [column.column, column.sourceVariable || 'prepared row index', column.semanticId,
+    find('mapping').replaceChildren(table(['Prepared column', 'CDF variable', 'CSV unit', 'Species / frame'],
+      metadata.columns.map(column => [column.column, column.sourceVariable || 'prepared row index',
         column.csvUnit, [column.species, column.frame].filter(Boolean).join(' / ') || 'not applicable'])));
     find('rejections').replaceChildren(table(['Sample ID', 'UTC', 'Reasons'],
-      intake.rejectedRows.map(row => [row.sampleId, row.timestampUtc, row.rejectionReasons.join(', ')])));
+      intake.rejectedRows.map(row => [row.sampleId, row.timestampUtc, row.rejectionReasons.map(reasonLabel).join(', ')])));
     find('intake-panel').hidden = false;
   }
   function seriesSvg(series, unit, label) {
@@ -123,8 +151,8 @@
       Research.Analysis.quantityIds.map(id => {
         const first = uncertainty.series[id].find(item => item.calculationStatus === 'calculated');
         const component = first?.measurement_uncertainty;
-        return [names[id], JSON.stringify(uncertainty.summary[id].measurement_uncertainty.statusCounts),
-          component?.fullMeasurementUncertaintyStatus || 'not_calculated',
+        return [names[id], statusText(uncertainty.summary[id].measurement_uncertainty.statusCounts),
+          statusLabel(component?.fullMeasurementUncertaintyStatus || 'not_calculated'),
           component?.status === 'available_fit_component' ? `${fmt(component.value)} ${component.unit} for first calculated sample; fit precision only` :
             'unavailable; no zero error inferred'];
       })));
@@ -137,23 +165,25 @@
     host.append(node('p', 'These distributions describe variation among calculated retained samples, not measurement error.'));
     host.append(node('h4', 'Processing-choice sensitivity'));
     host.append(scrollTable(['Window state', 'Status', 'UTC start', 'UTC end', 'Retained N'],
-      uncertainty.processingSensitivity.variants.map(variant => [variant.stateId, variant.status,
+      uncertainty.processingSensitivity.variants.map(variant => [statusLabel(variant.stateId), statusLabel(variant.status),
         variant.start, variant.end, variant.sourceSampleIds.length])));
-    host.append(node('p', 'H0 magnetic-field comparison and non-10 fit-flag retention remain not_assessed. No independent H0 pairing was performed.'));
+    host.append(node('p', 'H0 magnetic-field comparison and retention of fit flags other than 10 remain not assessed. No independent H0 pairing was performed.'));
     host.append(node('h4', 'Model/composition limitations'));
-    host.append(node('p', 'Model sensitivity: not_assessed. Proton-only Alfvén-speed mass density is an approximation; electron pressure for total beta and measured alpha abundance are unavailable. Calibration error and fitted covariance are unavailable.'));
+    host.append(node('p', 'Model sensitivity has not been assessed. Proton-only Alfvén-speed mass density is an approximation; electron pressure for total beta and measured alpha abundance are unavailable. Calibration error and fitted covariance are unavailable.'));
   }
   function renderResults(bundle) {
     const { analysis, uncertainty } = bundle;
     const q = analysis.intakeSummary;
     find('results-qc').textContent = `${q.retainedRows}/${q.totalRows} prepared rows retained; ${q.rejectedRows} rejected (${reasonText(q.allReasonCounts)}). fit_flag=10 only. Nominal gap count ${q.gaps.nominalGapCount}; no independent H0 alignment. Figures and statistics use calculated retained rows only.`;
     find('summary').replaceChildren(table(['H+ quantity', 'Formula', 'Unit', 'Calculated / retained', 'Median', 'Min', 'Max', 'Compatibility / assumption', 'Measurement status'],
-      bundle.summaryTable.map(row => [row.quantity, row.formulaId, row.unit || 'dimensionless',
+      bundle.summaryTable.map(row => [row.quantity, root.PlasmaFormulaRegistry?.formulas.find(formula => formula.id === row.formulaId)?.name || row.formulaId, row.unit || 'dimensionless',
         `${row.calculatedCount}/${row.retainedRows}`, fmt(row.median), fmt(row.min), fmt(row.max),
         `${row.incompatibleCount} incompatible; ${row.notAssessedCount} not assessed; ${row.assumption || 'see row series'}`,
-        JSON.stringify(row.measurementStatusCounts)])));
+        statusText(row.measurementStatusCounts)])));
     renderSeries(analysis);
     find('figure').innerHTML = bundle.scaleFigureSvg;
+    const figureConvention = [...find('figure').querySelectorAll('svg text')].find(text => text.textContent.startsWith('Unit: m · W_perp='));
+    if (figureConvention) figureConvention.textContent = 'Unit: m · Perpendicular gyroradius uses one-component thermal speed (W⊥/√2).';
     renderUncertainty(uncertainty);
     renderExports(bundle);
     find('results').hidden = false;

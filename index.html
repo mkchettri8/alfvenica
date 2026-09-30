@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and classified validation evidence.">
+  <meta name="description" content="Alfvenica is a unit-explicit calculator, plotting environment, and reference for space and astrophysical plasma physics, with documented assumptions, sources, and validation evidence.">
   <meta name="author" content="Mani K Chettri">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#f6f8f9">
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://alfvenica.org/">
   <meta property="og:title" content="Alfvenica — Space Plasma Toolkit">
-  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.">
+  <meta property="og:description" content="A unit-explicit toolkit for space and astrophysical plasma calculations, interpretation, plotting, and validation evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alfvenica.org/">
   <title>Alfvenica — Space Plasma Toolkit</title>
@@ -35,7 +35,7 @@
     "dateModified": "2026-08-22",
     "isAccessibleForFree": true,
     "license": "https://opensource.org/licenses/MIT",
-    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and classified validation evidence.",
+    "description": "An open-source, unit-explicit browser toolkit for space and astrophysical plasma calculations, interpretation, plotting, and validation evidence.",
     "keywords": ["space plasma physics", "plasma calculator", "kinetic Alfvén waves", "heliophysics", "research software"],
     "author": {
       "@type": "Person",
@@ -181,7 +181,7 @@
               <div class="symbol-definitions-heading">
                 <div>
                   <h3>Symbols &amp; Definitions</h3>
-                  <p>Canonical meanings are resolved from the shared semantic-symbol registry for this calculator.</p>
+                  <p>Meanings, units, and conventions used by this calculator.</p>
                 </div>
                 <p class="symbol-definitions-status" data-symbol-definitions-status aria-live="polite"></p>
               </div>
@@ -234,7 +234,7 @@
         <header class="page-header">
           <p class="eyebrow">Reproducible visualisation</p>
           <h1 id="plotsHeading">Scale ordering and parameter dependence.</h1>
-          <p>The plots are evaluated directly from the same physics core used by the calculators. They show the implemented equations exactly at the sampled points; physical applicability remains limited by the assumptions of each model.</p>
+          <p>The plots use the same equations as the calculators, evaluated at each sampled point. Physical applicability remains limited by the assumptions of each model.</p>
         </header>
 
         <section class="plot-state-panel" aria-labelledby="plotStateHeading">
@@ -333,7 +333,7 @@
         <header class="page-header">
           <p class="eyebrow">Development research workflow · WI_H1_SWE only</p>
           <h1>Wind interval workbench</h1>
-          <p>Import a prepared local Wind CSV and its explicit JSON sidecar, inspect exclusions and assumptions, then run the accepted four-quantity analysis. Files stay in this browser until you download them.</p>
+          <p>Import a prepared local Wind CSV and its matching JSON sidecar, inspect exclusions and assumptions, then calculate the four supported proton quantities. Files stay in this browser until you download them.</p>
         </header>
         <section class="wind-panel" aria-label="Local import">
           <h2>1. Import prepared files</h2>
@@ -343,7 +343,7 @@
             <label>Verified CDF fit-attribute JSON (optional) <input type="file" accept=".json,application/json" data-wind-evidence></label>
           </div>
           <p class="wind-note">The optional evidence file enables only the density-fit component of proton inertial-length uncertainty when it matches the accepted CDF identity. It does not establish full measurement error.</p>
-          <button type="button" class="primary-button" data-wind-import>Inspect import and QC</button>
+          <button type="button" class="primary-button" data-wind-import>Inspect import and quality checks</button>
           <p class="wind-status" data-wind-status role="status" aria-live="polite">Choose local files to begin.</p>
         </section>
         <section class="wind-panel" data-wind-intake-panel hidden aria-label="Source, mapping and quality control">
@@ -358,14 +358,14 @@
           <ul class="wind-assumptions">
             <li>H⁺ number density and <code>fit_flag=10</code> only; rejected rows never enter a formula.</li>
             <li>WI_H1_SWE co-reported GSE mean-field components stay paired to their proton spectrum. No independent H0 alignment is performed.</li>
-            <li>Wind trace and perpendicular speeds use <code>W=sqrt(2 k T / m_p)</code> separately. Trace speed is never substituted for perpendicular speed.</li>
+            <li>Wind trace and perpendicular speeds use W<sub>trace</sub> = √(2kT<sub>trace</sub>/m<sub>p</sub>) and W<sub>⊥</sub> = √(2kT<sub>⊥</sub>/m<sub>p</sub>) separately. Trace speed is never substituted for perpendicular speed.</li>
             <li>Beta is proton beta; electron pressure for total beta is unavailable. Alfvén speed assumes proton-only mass density, not measured total composition.</li>
             <li>Nominal 92-second support is declared; exact per-spectrum endpoints and calibration/covariance errors are not established.</li>
           </ul>
-          <button type="button" class="primary-button" data-wind-run>Run accepted analysis</button>
+          <button type="button" class="primary-button" data-wind-run>Analyze interval</button>
         </section>
         <section class="wind-panel" data-wind-results hidden aria-label="Wind analysis results">
-          <h2>3. Review qualified results</h2>
+          <h2>3. Review results and limitations</h2>
           <p class="wind-note" data-wind-results-qc></p>
           <div class="wind-table-scroll" data-wind-summary></div>
           <h3>Row-by-row series</h3>
@@ -400,22 +400,25 @@
     <section id="validationView" class="view" aria-labelledby="validationHeading">
       <div class="page-column">
         <header class="page-header">
-          <p class="eyebrow">Semantic evidence taxonomy</p>
-          <h1 id="validationHeading">Classified validation evidence</h1>
-          <p>Every in-browser record has one explicit semantic class. Source-anchored comparators, identities, unit checks, scientific properties, domain guardrails, regressions, and provenance controls are distinguished rather than treated as equivalent evidence.</p>
+          <p class="eyebrow">Scientific evidence</p>
+          <h1 id="validationHeading">How the calculations are checked</h1>
+          <p>Reference comparisons, analytical relations, units, and applicability limits provide different kinds of support. Software consistency and source identity are checked separately; neither establishes that a physical model applies to a particular observation.</p>
         </header>
-        <div class="release-status" role="group" aria-label="Release provenance">
-          <span><strong>Version</strong> 1.1.0</span>
-          <span><strong>Released</strong> 22 August 2026</span>
-          <span><strong>Source provenance</strong> immutable Git tag <code>v1.1.0</code>; browser source-commit field remains unavailable rather than fabricated</span>
-          <span><strong>Physics-core provenance</strong> v1.0.0 baseline <a href="https://github.com/mkchettri8/alfvenica/commit/9ad37ae88fddba4cf898099cf96b821a75829ee9">9ad37ae</a>; v1.1.0 core includes the approved SD-10 correction</span>
-        </div>
         <div id="validationSummary" class="validation-summary"></div>
-        <div id="validationGroups" class="validation-groups"></div>
-        <section id="implementationIntegrity" class="integrity-card" aria-labelledby="integrityHeading"></section>
+        <section id="implementationIntegrity" class="integrity-card" aria-label="Additional checks">
+          <h2>Additional checks</h2>
+          <p>Additional implementation, regression, and provenance checks are documented in the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a> and <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">public test suite</a>. They detect software changes but do not independently validate a physical model.</p>
+        </section>
+        <details class="validation-technical">
+          <summary>Technical validation details</summary>
+          <div class="validation-technical-content">
+            <p>Selected numerical comparisons at stated reference inputs are shown below. The <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a> and <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">public tests</a> retain the complete evidence record, methods, and limitations.</p>
+            <div id="validationGroups" class="validation-groups"></div>
+          </div>
+        </details>
         <div class="method-note">
-          <h2>Interpretation</h2>
-          <p>The semantic class states what each check can support. A_REFERENCE and C_UNIT require independently anchored expected results; E_DOMAIN exercises a defensible implemented applicability boundary; F_REGRESSION covers internal restatements, fixed regression targets, nominal examples, and smoke checks; P_PROVENANCE identifies artifacts but is not correctness evidence. Passing the present checks does not establish model applicability beyond the specifically exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
+          <h2>Limits of these checks</h2>
+          <p>Reference values and unit conversions have independent anchors. Analytical relations test stated identities; applicability checks exercise specific implemented boundaries. Fixed regression cases and execution checks detect unintended software changes, but are not independent scientific benchmarks. These checks do not establish model applicability beyond the exercised boundaries or turn reduced formulas, empirical fits, or simplified instability criteria into general kinetic solvers.</p>
           <p class="small-text"><a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">Read the formula audit</a> · <a href="https://github.com/mkchettri8/alfvenica/actions/workflows/tests.yml">View public test runs</a></p>
         </div>
       </div>
@@ -424,25 +427,25 @@
     <section class="view" data-view-section="notation" aria-label="Notation and conventions">
       <div class="page-column notation-page">
         <header class="page-header">
-          <p class="eyebrow">Canonical semantic notation</p>
+          <p class="eyebrow">Symbols and units</p>
           <h1>Notation &amp; Conventions</h1>
-          <p>Project-wide notation, units, species meanings, and convention notes are generated from the same canonical registry used by every calculator.</p>
+          <p>Definitions, units, species meanings, and conventions used throughout Alfvenica.</p>
         </header>
         <div class="notation-sections" data-notation-sections></div>
         <section class="unit-system-guide" aria-label="Display unit systems">
           <div class="unit-system-guide-heading">
-            <p class="eyebrow">Display boundary</p>
+            <p class="eyebrow">Unit display</p>
             <h2>Unit-system selectors</h2>
-            <p>All selectors convert presentation around the same canonical calculator values. They do not select a different physics implementation.</p>
+            <p>Unit choices change how values are displayed; the calculated physical quantities remain the same.</p>
           </div>
           <div class="unit-system-grid" data-unit-system-guide></div>
         </section>
         <section class="symbol-glossary" aria-label="Searchable symbol glossary">
           <div class="glossary-heading">
             <div>
-              <p class="eyebrow">Complete registry</p>
+              <p class="eyebrow">Symbols and meanings</p>
               <h2>Searchable symbol glossary</h2>
-              <p>Search rendered symbols, plain forms, canonical names, semantic IDs, and concise aliases.</p>
+              <p>Search symbols, names, and common aliases.</p>
             </div>
             <label class="glossary-search-label">Search symbols
               <input class="search-input" data-symbol-glossary-search type="search" placeholder="e.g. μ, mu, beta, Debye length" autocomplete="off">
@@ -451,7 +454,7 @@
           <p class="search-status" data-symbol-glossary-status aria-live="polite"></p>
           <div class="symbol-table-wrap glossary-table-wrap">
             <table class="symbol-table glossary-table">
-              <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>Canonical/display units</th><th>Species and convention</th></tr></thead>
+              <thead><tr><th>Symbol</th><th>Name and physical definition</th><th>SI and display units</th><th>Species and convention</th></tr></thead>
               <tbody data-symbol-glossary-body></tbody>
             </table>
           </div>
@@ -477,11 +480,11 @@
           </section>
           <section>
             <h2>Design, units, and privacy</h2>
-            <p>Calculations and plots run locally through one registered calculation core with explicit unit conventions; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices are interface conversions only; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Formula definitions, assumptions, references, interpretations, plots, and tests remain separated to reduce scientific drift.</p>
+            <p>Calculations and plots run locally with explicit unit conventions; input values are not transmitted. Space, SI display, and CGS-oriented mixed choices change how results are shown; the mixed mode is not a complete Gaussian/esu/emu implementation and retains electrical resistivity and conductivity in SI. Each calculator states its assumptions and references.</p>
           </section>
           <section>
             <h2>Scientific basis and validation evidence</h2>
-            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. The current in-browser evidence includes six source-anchored A_REFERENCE coefficient comparators and one C_UNIT conversion anchor; identities and regression or implementation checks remain separately classified. Development-only scaling checks and the P_PROVENANCE core hash are reported separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
+            <p>Constants cite CODATA 2022, standard coefficient targets cite the 2023 NRL Plasma Formulary, and model-specific entries retain literature references and stated conditions. In-browser checks include independently anchored coefficient comparisons and a unit conversion, alongside analytical, applicability, and numerical consistency checks. Development scaling tests and software integrity checks are documented separately in <a href="?view=validation">Validation</a> and the <a href="https://github.com/mkchettri8/alfvenica/blob/main/FORMULA_AUDIT.md">formula audit</a>.</p>
           </section>
           <section>
             <h2>Scope and limitations</h2>

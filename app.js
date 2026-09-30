@@ -281,11 +281,19 @@
   }
 
   function symbolUnitSummary(symbol) {
-    const parts = [symbol.dimensionless ? 'Dimensionless (1)' : `Canonical SI: ${symbol.canonicalSiUnit}`];
-    if (symbol.productionUnit !== symbol.canonicalSiUnit) parts.push(`calculation boundary: ${symbol.productionUnit}`);
-    const alternateUnits = symbol.acceptedDisplayUnits.filter(unit => unit !== symbol.canonicalSiUnit && unit !== symbol.productionUnit);
-    if (alternateUnits.length) parts.push(`displays: ${alternateUnits.join(', ')}`);
+    if (symbol.quantityType === 'temperature') return 'Display units: eV, K · SI temperature unit: K';
+    const parts = [symbol.dimensionless ? 'Dimensionless (1)' : `SI unit: ${symbol.canonicalSiUnit}`];
+    const alternateUnits = symbol.acceptedDisplayUnits.filter(unit => unit !== symbol.canonicalSiUnit);
+    if (alternateUnits.length) parts.push(`Other display units: ${alternateUnits.join(', ')}`);
     return parts.join(' · ');
+  }
+
+  function symbolDefinitionForDisplay(symbol) {
+    const descriptions = {
+      'vacuum-permeability': 'Magnetic permeability of vacuum used in the SI equations.',
+      'vacuum-permittivity': 'Electric permittivity of vacuum used in the SI equations.',
+    };
+    return descriptions[symbol.id] || symbol.definition;
   }
 
   function symbolConventionNotes(symbol) {
@@ -297,18 +305,23 @@
       notes.push(species);
     }
     for (const item of symbol.indexMeaning) notes.push(`Index ${item.rendered}: ${item.meaning}`);
-    notes.push(...symbol.conventionNotes);
-    if (symbol.scope !== 'global') notes.push(`Scope: ${readableSemanticToken(symbol.scope)}`);
-    if (symbol.reviewStatus !== 'CONFIRMED_IMPLEMENTATION') notes.push(Symbols.reviewStatuses[symbol.reviewStatus]);
+    const clearerNotes = {
+      'The production relation is m_i = mu m_p.': 'Selected-ion mass follows mᵢ = μmₚ.',
+      'Production inputs store the energy-equivalent k_B T in eV.': 'Temperature in eV represents the energy-equivalent k_B T.',
+    };
+    notes.push(...symbol.conventionNotes.map(note => clearerNotes[note] || note));
+    if (symbol.scope === 'formula-local') notes.push('Meaning specific to this equation.');
+    if (symbol.reviewStatus === 'REVIEW_PENDING') notes.push('Notation or convention remains under review.');
+    if (symbol.reviewStatus === 'QUARANTINED_SCIENCE') notes.push('Scientific convention remains unresolved; this description does not validate the formula.');
     return notes;
   }
 
   function formulaRoleSummary(symbol, use) {
     const roles = [];
     if (use.roles.includes('input')) roles.push('Input');
-    if (use.roles.includes('numeric-output')) roles.push('Numeric output');
+    if (use.roles.includes('numeric-output')) roles.push('Calculated result');
     if (use.roles.includes('equation') && !use.roles.some(role => role === 'input' || role === 'numeric-output')) {
-      roles.push({ constant:'Constant', derived:'Derived quantity', index:'Index', 'formula-local':'Formula-local equation term' }[symbol.scope] || 'Equation quantity');
+      roles.push({ constant:'Constant', derived:'Derived quantity', index:'Index', 'formula-local':'Equation term' }[symbol.scope] || 'Equation quantity');
     }
     const localLabels = use.localLabels.filter(label => label && Search.normalizeText(label) !== Search.normalizeText(symbol.canonicalName));
     return { roles, localLabels };
@@ -317,9 +330,9 @@
   function formulaSymbolRow(resolved) {
     const { symbol, use } = resolved;
     const role = formulaRoleSummary(symbol, use);
-    const roleNote = role.localLabels.length ? `<span class="symbol-local-note">Local role: ${escapeXml(role.localLabels.join(', '))}</span>` : '';
+    const roleNote = role.localLabels.length ? `<span class="symbol-local-note">Used here as: ${escapeXml(role.localLabels.join(', '))}</span>` : '';
     const conventionNotes = symbolConventionNotes(symbol);
-    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-role">${escapeXml(role.roles.join(' · '))}</span>${roleNote}</td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span>${conventionNotes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('')}</td></tr>`;
+    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbolDefinitionForDisplay(symbol))}</span></td><td><span class="symbol-role">${escapeXml(role.roles.join(' · '))}</span>${roleNote}</td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span>${conventionNotes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('')}</td></tr>`;
   }
 
   function renderSymbolsAndDefinitions(formula) {
@@ -328,18 +341,24 @@
     if (!body) throw new Error('Symbols & Definitions container is missing');
     body.innerHTML = resolved.map(formulaSymbolRow).join('');
     const status = document.querySelector('[data-symbol-definitions-status]');
-    status.textContent = `${resolved.length} canonical definition${resolved.length === 1 ? '' : 's'}, deduplicated by semantic ID.`;
+    status.textContent = 'Definitions shown for this calculator.';
   }
 
   function notationSymbolCard(symbol) {
     const notes = symbolConventionNotes(symbol);
-    return `<article class="notation-symbol-card" data-semantic-id="${escapeXml(symbol.id)}"><div class="notation-symbol-heading"><span class="notation-glyph">${escapeXml(symbol.unicode)}</span><strong>${escapeXml(symbol.canonicalName)}</strong></div><p>${escapeXml(symbol.definition)}</p><p class="notation-symbol-meta">${escapeXml(symbolUnitSummary(symbol))}</p>${notes.length ? `<p class="notation-symbol-note">${escapeXml(notes.join(' · '))}</p>` : ''}</article>`;
+    return `<article class="notation-symbol-card" data-semantic-id="${escapeXml(symbol.id)}"><div class="notation-symbol-heading"><span class="notation-glyph">${escapeXml(symbol.unicode)}</span><strong>${escapeXml(symbol.canonicalName)}</strong></div><p>${escapeXml(symbolDefinitionForDisplay(symbol))}</p><p class="notation-symbol-meta">${escapeXml(symbolUnitSummary(symbol))}</p>${notes.length ? `<p class="notation-symbol-note">${escapeXml(notes.join(' · '))}</p>` : ''}</article>`;
   }
 
   function renderNotationSections() {
     const container = document.querySelector('[data-notation-sections]');
     if (!container) throw new Error('Notation sections container is missing');
-    container.innerHTML = Symbols.notationSections.map(section => `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(section.title)}</h2><p>${escapeXml(section.summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`).join('');
+    container.innerHTML = Symbols.notationSections.map(section => {
+      const title = section.id === 'calculation-boundary' ? 'Calculation and display units' : section.title;
+      const summary = section.id === 'calculation-boundary'
+        ? 'Unit choices change how values are displayed. Temperature entered in eV represents the energy-equivalent k_B T; the SI temperature unit is kelvin. Values are converted consistently for each calculation.'
+        : section.summary;
+      return `<section class="notation-section" data-notation-section="${escapeXml(section.id)}"><h2>${escapeXml(title)}</h2><p>${escapeXml(summary)}</p><div class="notation-symbol-grid">${section.symbolIds.map(id => notationSymbolCard(semanticSymbol(id))).join('')}</div></section>`;
+    }).join('');
   }
 
   function renderUnitSystemGuide() {
@@ -354,7 +373,7 @@
 
   function glossaryRow(symbol) {
     const notes = symbolConventionNotes(symbol);
-    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbol.definition)}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
+    return `<tr data-semantic-id="${escapeXml(symbol.id)}"><td class="symbol-glyph"><span>${escapeXml(symbol.unicode)}</span><small>${escapeXml(symbol.plainText)}</small></td><td><strong>${escapeXml(symbol.canonicalName)}</strong><span class="symbol-definition">${escapeXml(symbolDefinitionForDisplay(symbol))}</span></td><td><span class="symbol-unit-summary">${escapeXml(symbolUnitSummary(symbol))}</span></td><td>${notes.length ? notes.map(note => `<span class="symbol-convention-note">${escapeXml(note)}</span>`).join('') : '<span class="symbol-convention-note">No additional project convention note.</span>'}</td></tr>`;
   }
 
   function renderSymbolGlossary() {
@@ -364,7 +383,7 @@
     if (!input || !body || !status) throw new Error('Symbol glossary controls are missing');
     const matches = Search.findSymbolMatches(Symbols, input.value);
     body.innerHTML = matches.map(glossaryRow).join('');
-    status.textContent = `${matches.length} of ${Object.keys(Symbols.symbols).length} canonical symbols shown.`;
+    status.textContent = `${matches.length} of ${Object.keys(Symbols.symbols).length} symbols shown.`;
   }
 
   function renderNotation() {
@@ -429,9 +448,9 @@
       const observed = warning.conditionEvaluated && Number.isFinite(warning.conditionEvaluated.actual)
         ? `<span class="warning-observed">Observed: ${escapeXml(formatNumber(warning.conditionEvaluated.actual, 6))}</span>`
         : '';
-      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong><span>${escapeXml(warning.id)}</span></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p></details></article>`;
+      return `<article class="calculation-warning calculation-warning-${warning.severity.toLowerCase()}" data-warning-id="${escapeXml(warning.id)}" data-warning-severity="${escapeXml(warning.severity)}"><div class="warning-heading"><strong>${escapeXml(severity.label)}</strong></div><p>${escapeXml(warning.message)}</p>${observed}<details><summary>Why this warning appears</summary><p>${escapeXml(warning.rationale)}</p><p>Warning ID: ${escapeXml(warning.id)}</p></details></article>`;
     }).join('');
-    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong><span>${escapeXml(diagnostic.id)}</span></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
+    const diagnosticHtml = diagnostics.map(diagnostic => `<article class="calculation-domain-note" data-domain-diagnostic-id="${escapeXml(diagnostic.id)}"><div class="warning-heading"><strong>Model applicability metric</strong></div><p><span class="diagnostic-relation">${escapeXml(diagnostic.quantity)} = ${escapeXml(formatNumber(diagnostic.value, 6))}</span> ${escapeXml(diagnostic.interpretation)}</p></article>`).join('');
     list.innerHTML = warningHtml + diagnosticHtml;
     container.hidden = warnings.length === 0 && diagnostics.length === 0;
   }
@@ -1038,27 +1057,26 @@
 
   function renderValidation() {
     const tests = Validation.run();
-    const passed = tests.filter(t => t.pass).length;
-    const groupDefinitions = Object.values(Validation.validationClasses);
-    const classCounts = Object.fromEntries(groupDefinitions.map(definition => [definition.id, tests.filter(test => test.validationClass === definition.id).length]));
-    const countSummary = groupDefinitions.map(definition => `${definition.id} ${classCounts[definition.id]}`).join(' · ');
-    $('validationSummary').innerHTML = `<strong>${passed}/${tests.length} classified validation records passed</strong><span>${countSummary}</span>`;
+    const failed = tests.filter(test => !test.pass);
+    const presentation = {
+      A_REFERENCE: ['Reference comparisons', 'Published plasma-parameter coefficients are compared with independently generated values from the NRL Plasma Formulary and CODATA constants.'],
+      B_IDENTITY: ['Analytical consistency', 'Stated relations and limiting cases are checked directly. Additional scaling checks are documented in the public test suite.'],
+      C_UNIT: ['Units and dimensions', 'The electronvolt-to-kelvin conversion is checked against an independent SI anchor. Units and conventions are stated with each calculation.'],
+      E_DOMAIN: ['Applicability checks', 'Selected physical and mathematical boundaries are exercised to verify that the corresponding warnings appear. Other applicability limits still require scientific judgment.'],
+      F_REGRESSION: ['Numerical consistency', 'Fixed cases and execution checks detect unintended software changes. They are not independent scientific benchmarks.'],
+    };
+    $('validationSummary').innerHTML = `<div class="validation-result${failed.length ? ' validation-result-issue' : ''}"><strong>${failed.length ? `${failed.length} validation check${failed.length === 1 ? '' : 's'} need review` : 'Checks shown here meet their stated criteria'}</strong><span>${failed.length ? 'Inspect the affected records and their scientific scope before relying on the results.' : 'The categories below describe what each check supports and where its evidence stops.'}</span>${failed.length ? `<ul>${failed.map(test => `<li>${escapeXml(test.name)}</li>`).join('')}</ul>` : ''}</div><div class="validation-overview">${Object.entries(presentation).map(([id, [title, description]]) => { const groupFailed = tests.some(test => test.validationClass === id && !test.pass); return `<article class="validation-overview-item"><h2>${title}</h2><p>${description}</p>${groupFailed ? '<strong class="status-fail">Check needs review</strong>' : ''}</article>`; }).join('')}</div>`;
 
-    const firstNonEmptyClass = groupDefinitions.find(definition => classCounts[definition.id] > 0)?.id;
-    $('validationGroups').innerHTML = groupDefinitions.map(definition => {
-      const group = tests.filter(test => test.validationClass === definition.id);
-      const groupPassed = group.filter(test => test.pass).length;
-      const rows = group.length
-        ? group.map(test => {
-          const basis = Validation.evidenceBases[test.evidenceBasis];
-          return `<tr><td>${test.name}<br><span class="small-text">Evidence basis: ${basis.label}. ${test.source}<br>Tolerance: ${test.toleranceRationale}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td><td class="${test.pass?'status-pass':'status-fail'}">${test.pass?'Pass':'Check'}</td></tr>`;
-        }).join('')
-        : '<tr><td colspan="5"><span class="small-text">No current in-browser validation record is assigned to this class.</span></td></tr>';
-      return `<details class="validation-group"${definition.id === firstNonEmptyClass ? ' open' : ''}><summary><span><span class="validation-group-title">${definition.id} — ${definition.label}</span><br><span class="validation-group-summary">${definition.description}</span></span><span class="validation-group-summary">${group.length ? `${groupPassed}/${group.length} passed` : '0 records'}</span></summary><div class="table-wrap"><table class="validation-table"><thead><tr><th>Check and evidence basis</th><th>Computed</th><th>Expected</th><th>Relative difference</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+    const comparisons = [
+      ['A_REFERENCE', 'Reference comparisons'],
+      ['C_UNIT', 'Unit conversion'],
+    ];
+    $('validationGroups').innerHTML = comparisons.map(([validationClass, title]) => {
+      const group = tests.filter(test => test.validationClass === validationClass);
+      if (!group.length) return '';
+      const rows = group.map(test => `<tr><td>${escapeXml(test.name)}${test.pass ? '' : '<br><strong class="status-fail">Needs review</strong>'}<br><span class="small-text">${escapeXml(test.source)}</span></td><td>${formatNumber(test.actual,6)}</td><td>${formatNumber(test.expected,6)}</td><td>${formatNumber(test.error*100,4)}%</td></tr>`).join('');
+      return `<section class="validation-group"><h3 class="validation-group-title">${title}</h3><p class="validation-scroll-hint">Scroll sideways to see the comparison values.</p><div class="table-wrap"><table class="validation-table"><thead><tr><th>Comparison and source</th><th>Calculated</th><th>Reference</th><th>Relative difference</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
     }).join('');
-
-    const smoke = tests.find(test => test.evidenceBasis === 'EXECUTION_SMOKE');
-    $('implementationIntegrity').innerHTML = `<h2 id="integrityHeading">Implementation and provenance controls</h2><p>F_REGRESSION checks guard implementation behaviour. P_PROVENANCE checks detect artifact changes. Neither class is independent evidence that a formula is scientifically correct.</p><div class="integrity-grid"><div class="integrity-item"><strong>F_REGRESSION · ${smoke ? `${smoke.actual}/${smoke.expected}` : Meta.formulaSmokeCount}</strong><span>calculator defaults execute without error; this is an execution-only smoke result</span></div><div class="integrity-item"><strong>F_REGRESSION · ${Meta.plotMetricCount}/${Meta.plotMetricCount}</strong><span>plot metrics return finite default values; separate D_PROPERTY scaling checks run in the development test suite</span></div><div class="integrity-item"><strong>P_PROVENANCE · SHA-256</strong><span>the physics-core hash is pinned in development tests as a change detector, not as scientific correctness evidence</span></div></div>`;
   }
 
   function applyTheme() {
